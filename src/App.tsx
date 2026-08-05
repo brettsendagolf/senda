@@ -1,25 +1,41 @@
-/*
- * Placeholder shell — confirms the toolchain (Vite + React + Tailwind v4 tokens)
- * is wired up. Real screens and routing land in the next step.
- */
-function App() {
+import { Outlet, Route, Routes } from 'react-router-dom'
+import { BottomNav } from '@/components/BottomNav'
+import { useHydrate } from '@/store/useHydrate'
+import { Today } from '@/screens/Today'
+import { SessionRunner } from '@/screens/SessionRunner'
+import { Drills } from '@/screens/Drills'
+import { DrillDetailScreen } from '@/screens/DrillDetailScreen'
+import { Progress } from '@/screens/Progress'
+import { Settings } from '@/screens/Settings'
+
+/** Tabbed shell: one scroll container (`main`), fixed nav below it. */
+function AppLayout() {
   return (
-    <div
-      className="flex min-h-full flex-col items-center justify-center gap-3 px-6 text-center"
-      style={{ paddingTop: 'var(--safe-top)', paddingBottom: 'var(--safe-bottom)' }}
-    >
-      <span className="rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
-        Practice Book
-      </span>
-      <h1 className="text-3xl font-bold tracking-tight text-ink">Scaffold ready</h1>
-      <p className="max-w-xs text-sm text-ink-soft">
-        Tooling is wired up. Types, storage, the session generator and the four
-        screens come next.
-      </p>
-      <p className="tabular mt-2 rounded-md border border-line bg-card px-3 py-1 text-sm text-ink-soft">
-        393&nbsp;px&nbsp;target · safe-area&nbsp;aware
-      </p>
+    <div className="flex h-full flex-col">
+      <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        <Outlet />
+      </main>
+      <BottomNav />
     </div>
+  )
+}
+
+function App() {
+  const ready = useHydrate()
+  if (!ready) return <div className="h-full bg-paper" />
+
+  return (
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route index element={<Today />} />
+        <Route path="drills" element={<Drills />} />
+        <Route path="drills/:id" element={<DrillDetailScreen />} />
+        <Route path="progress" element={<Progress />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
+      {/* Runner is full-screen and distraction-free — no bottom tabs. */}
+      <Route path="run" element={<SessionRunner />} />
+    </Routes>
   )
 }
 
