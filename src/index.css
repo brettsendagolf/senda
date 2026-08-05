@@ -1,0 +1,58 @@
+@import 'tailwindcss';
+
+/*
+  Design foundation — a yardage-book / training-log feel, not a neon golf app.
+  Paper-toned light mode, one restrained accent, tabular figures for numerics.
+  These tokens are provisional and will be refined when we build the screens.
+*/
+@theme {
+  /* Paper + ink */
+  --color-paper: #f6f3ec; /* page background — warm off-white */
+  --color-card: #fffdf8; /* raised surfaces */
+  --color-ink: #1c1a17; /* primary text, condensed headings */
+  --color-ink-soft: #6b655c; /* secondary text */
+  --color-line: #e3ddd1; /* hairline borders */
+
+  /* One accent — a muted flag red, used sparingly */
+  --color-accent: #b23a2e;
+  --color-accent-soft: #f0d9d5;
+
+  /* Mode chips get their own restrained hues (warmup/build/pressure/test) */
+  --color-warmup: #4f7a63;
+  --color-build: #3f6079;
+  --color-pressure: #b23a2e;
+  --color-test: #8a6d3b;
+}
+
+/*
+  Safe-area insets are a first-class concern: this ships to iPhone and headers
+  must never collide with the status bar or the home indicator.
+*/
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* Prevent the whole page from bouncing/scrolling behind fixed chrome. */
+  overscroll-behavior-y: none;
+}
+
+/* Anything numeric should line up in columns — scores, minutes, benchmarks. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}

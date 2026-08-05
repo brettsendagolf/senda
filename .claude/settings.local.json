@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Read(//Users/brettbailey/.nvm/versions/**)",
+      "Read(//opt/homebrew/**)",
+      "Bash(command -v brew)",
+      "Bash(command -v curl)",
+      "Bash(command -v git)",
+      "Bash(command -v python3)",
+      "Bash(curl -sI --max-time 8 https://nodejs.org)",
+      "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh)",
+      "Bash(bash)"
+    ]
+  }
+}
