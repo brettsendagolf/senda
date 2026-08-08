@@ -9,8 +9,10 @@ import { useSettings } from '@/store/settings'
 import { useSession } from '@/store/session'
 import { GENERATABLE_DRILLS, getDrill } from '@/data/drills'
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/data/labels'
+import { WARMUPS, WARMUP_ADDONS } from '@/data/warmups'
 
 const TIME_PRESETS = [15, 30, 45, 60]
+type Entry = 'practice' | 'warmup'
 
 /** Categories with a generatable drill at this set of capabilities. */
 function availableCategories(caps: Capability[]): Category[] {
@@ -33,6 +35,7 @@ export function Today() {
       ? lastVenueId
       : (venues.find((v) => v.isDefault) ?? venues[0])?.id
 
+  const [entry, setEntry] = useState<Entry>('practice')
   const [venueId, setVenueId] = useState<string | undefined>(firstVenueId)
   const [minutes, setMinutes] = useState(30)
   const [customOpen, setCustomOpen] = useState(false)
@@ -57,9 +60,35 @@ export function Today() {
     <div className="pb-8">
       <ScreenHeader
         title="Today"
-        subtitle="Time and place — we'll build the session."
+        subtitle={
+          entry === 'practice'
+            ? "Time and place — we'll build the session."
+            : 'Before a round — a fixed routine to the first tee.'
+        }
       />
 
+      {/* Practice vs Warm up */}
+      <div className="px-4 pt-4">
+        <div className="grid grid-cols-2 gap-1 rounded-xl border border-line bg-card p-1">
+          {(['practice', 'warmup'] as Entry[]).map((e) => (
+            <button
+              key={e}
+              type="button"
+              onClick={() => setEntry(e)}
+              className={
+                'min-h-11 rounded-lg text-sm font-semibold capitalize ' +
+                (entry === e ? 'bg-accent text-white' : 'text-ink-soft')
+              }
+            >
+              {e === 'practice' ? 'Practice' : 'Warm up'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {entry === 'warmup' && <WarmupPanel />}
+
+      {entry === 'practice' && (
       <div className="space-y-6 px-4 pt-5">
         {/* Venue */}
         <section>
@@ -74,6 +103,7 @@ export function Today() {
                 onClick={() => {
                   setVenueId(v.id)
                   setFocus(undefined)
+                  setReason(undefined)
                 }}
               >
                 {v.name}
@@ -151,6 +181,13 @@ export function Today() {
           Build my session
         </button>
 
+        {/* Honest empty state — a venue with nothing that fits */}
+        {reason && !planIsForThisVenue && (
+          <p className="rounded-lg border border-line bg-card px-3 py-3 text-sm text-ink-soft">
+            {reason}
+          </p>
+        )}
+
         {/* Result */}
         {planIsForThisVenue && (
           <section className="space-y-3">
@@ -210,6 +247,98 @@ export function Today() {
           </section>
         )}
       </div>
+      )}
+    </div>
+  )
+}
+
+/** Warm-up entry point — pick a routine and optional greens / short-game blocks. */
+function WarmupPanel() {
+  const navigate = useNavigate()
+  const [warmupId, setWarmupId] = useState(WARMUPS[1].id) // default 30 min
+  const [addons, setAddons] = useState<Set<string>>(new Set())
+
+  const warmup = WARMUPS.find((w) => w.id === warmupId)!
+  const addonMinutes = WARMUP_ADDONS.filter((a) => addons.has(a.id)).reduce(
+    (sum, a) => sum + a.minutes,
+    0,
+  )
+  const total = warmup.totalMinutes + addonMinutes
+
+  const toggleAddon = (id: string) =>
+    setAddons((prev) => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+
+  return (
+    <div className="space-y-6 px-4 pt-5">
+      <section>
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-soft">
+          How long before you tee off?
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {WARMUPS.map((w) => (
+            <Chip
+              key={w.id}
+              selected={w.id === warmupId}
+              onClick={() => setWarmupId(w.id)}
+            >
+              {w.label}
+            </Chip>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-soft">
+          Add before the tee <span className="font-normal">(optional)</span>
+        </h2>
+        <div className="space-y-2">
+          {WARMUP_ADDONS.map((a) => (
+            <button
+              key={a.id}
+              type="button"
+              onClick={() => toggleAddon(a.id)}
+              aria-pressed={addons.has(a.id)}
+              className={
+                'flex min-h-11 w-full items-center justify-between rounded-lg border px-3 py-2 text-left ' +
+                (addons.has(a.id)
+                  ? 'border-accent bg-accent-soft'
+                  : 'border-line bg-card')
+              }
+            >
+              <span
+                className={
+                  'font-medium ' +
+                  (addons.has(a.id) ? 'text-accent' : 'text-ink')
+                }
+              >
+                {a.name}
+              </span>
+              <span className="tabular text-sm text-ink-soft">+{a.minutes} min</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <div className="flex items-center justify-between rounded-lg border border-line bg-card px-3 py-3">
+        <span className="text-sm text-ink-soft">Total</span>
+        <span className="tabular text-lg font-semibold text-ink">{total} min</span>
+      </div>
+
+      <button
+        type="button"
+        onClick={() =>
+          navigate('/warmup', {
+            state: { warmupId, addonIds: [...addons] },
+          })
+        }
+        className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-white active:opacity-90"
+      >
+        Start warm-up
+      </button>
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { useSettings } from '@/store/settings'
 import { getDrill } from '@/data/drills'
 import { ModeBadge } from '@/components/ModeBadge'
 import { BenchmarkStrip } from '@/components/BenchmarkStrip'
-import { AggregateEntry, PerShotEntry } from '@/components/ScoreEntry'
+import { DrillScoreInput } from '@/components/DrillScoreInput'
 
 const firstIncomplete = (s: Session) => {
   const i = s.blocks.findIndex((b) => !b.completed)
@@ -119,19 +119,11 @@ export function SessionRunner() {
               Your score
             </h2>
             <p className="mb-3 text-sm text-ink-soft">{drill.scoring}</p>
-            {drill.logType === 'per_shot' ? (
-              <PerShotEntry
-                key={block.drillId + index}
-                metric={drill.metric}
-                onValueChange={setValue}
-              />
-            ) : (
-              <AggregateEntry
-                key={block.drillId + index}
-                metric={drill.metric}
-                onValueChange={setValue}
-              />
-            )}
+            <DrillScoreInput
+              key={block.drillId + index}
+              drill={drill}
+              onValueChange={setValue}
+            />
 
             <div className="mt-4">
               <BenchmarkStrip

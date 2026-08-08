@@ -4,7 +4,7 @@ import { getDrill } from '@/data/drills'
 import { CATEGORY_LABELS } from '@/data/labels'
 import { ModeBadge } from '@/components/ModeBadge'
 import { BenchmarkStrip } from '@/components/BenchmarkStrip'
-import { AggregateEntry, PerShotEntry } from '@/components/ScoreEntry'
+import { DrillScoreInput } from '@/components/DrillScoreInput'
 import { useSettings } from '@/store/settings'
 import { useEntries } from '@/store/entries'
 
@@ -113,11 +113,7 @@ export function DrillDetailScreen() {
           </div>
         ) : (
           <div className="mt-5">
-            {drill.logType === 'per_shot' ? (
-              <PerShotEntry metric={drill.metric} onValueChange={setValue} />
-            ) : (
-              <AggregateEntry metric={drill.metric} onValueChange={setValue} />
-            )}
+            <DrillScoreInput drill={drill} onValueChange={setValue} />
             <div className="mt-3 flex gap-2">
               <button
                 type="button"

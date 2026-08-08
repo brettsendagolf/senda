@@ -3,6 +3,7 @@ import { BottomNav } from '@/components/BottomNav'
 import { useHydrate } from '@/store/useHydrate'
 import { Today } from '@/screens/Today'
 import { SessionRunner } from '@/screens/SessionRunner'
+import { WarmupRunner } from '@/screens/WarmupRunner'
 import { Drills } from '@/screens/Drills'
 import { DrillDetailScreen } from '@/screens/DrillDetailScreen'
 import { Progress } from '@/screens/Progress'
@@ -33,8 +34,9 @@ function App() {
         <Route path="progress" element={<Progress />} />
         <Route path="settings" element={<Settings />} />
       </Route>
-      {/* Runner is full-screen and distraction-free — no bottom tabs. */}
+      {/* Runners are full-screen and distraction-free — no bottom tabs. */}
       <Route path="run" element={<SessionRunner />} />
+      <Route path="warmup" element={<WarmupRunner />} />
     </Routes>
   )
 }
