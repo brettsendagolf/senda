@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "coverage": "vitest run src/lib/coverage.report.test.ts --disableConsoleIntercept"
   },
   "dependencies": {
     "idb-keyval": "^6.3.0",
