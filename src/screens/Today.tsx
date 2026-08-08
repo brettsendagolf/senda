@@ -7,15 +7,15 @@ import { ModeBadge } from '@/components/ModeBadge'
 import { useVenues } from '@/store/venues'
 import { useSettings } from '@/store/settings'
 import { useSession } from '@/store/session'
-import { DRILLS, getDrill } from '@/data/drills'
+import { GENERATABLE_DRILLS, getDrill } from '@/data/drills'
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/data/labels'
 
 const TIME_PRESETS = [15, 30, 45, 60]
 
-/** Categories that actually have an eligible drill at this set of capabilities. */
+/** Categories with a generatable drill at this set of capabilities. */
 function availableCategories(caps: Capability[]): Category[] {
   const present = new Set<Category>()
-  for (const d of DRILLS) {
+  for (const d of GENERATABLE_DRILLS) {
     if (d.requires.some((r) => caps.includes(r))) present.add(d.category)
   }
   return CATEGORY_ORDER.filter((c) => present.has(c))

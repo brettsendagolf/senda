@@ -8,6 +8,7 @@ const COLORS: Record<Mode, { fg: string; bg: string }> = {
   build: { fg: '#345169', bg: '#e5edf2' },
   pressure: { fg: '#9c3327', bg: '#f4e2df' },
   test: { fg: '#7a5f33', bg: '#efe7d7' },
+  course: { fg: '#5b5750', bg: '#e9e5dd' },
 }
 
 export function ModeBadge({ mode }: { mode: Mode }) {

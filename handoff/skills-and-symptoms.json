@@ -1,0 +1,165 @@
+{
+  "skills": {
+    "strike": {
+      "label": "Strike",
+      "desc": "Centre contact and low point control. Catching the ball before the ground."
+    },
+    "distance_control": {
+      "label": "Distance control",
+      "desc": "Hitting a number. Carry, speed, and how far it runs out."
+    },
+    "start_line": {
+      "label": "Start line",
+      "desc": "Where the ball begins. Face and path at impact."
+    },
+    "trajectory": {
+      "label": "Flight and spin",
+      "desc": "Height, spin and roll out. Shaping the shot."
+    },
+    "lie_adjustment": {
+      "label": "Lie adjustment",
+      "desc": "Adapting to rough, sand, slopes and awkward stances."
+    },
+    "club_selection": {
+      "label": "Club selection",
+      "desc": "Choosing the right tool and the right target."
+    },
+    "routine": {
+      "label": "Routine",
+      "desc": "Pre-shot process and committing to the decision."
+    },
+    "pressure": {
+      "label": "Pressure",
+      "desc": "Delivering when a miss actually costs you."
+    },
+    "green_reading": {
+      "label": "Green reading",
+      "desc": "Slope, break and how the ball behaves on the surface."
+    }
+  },
+  "symptoms": [
+    {
+      "id": "thin_fat_chips",
+      "label": "I thin or fat my chips",
+      "categories": [
+        "chipping"
+      ],
+      "skills": [
+        "strike",
+        "lie_adjustment"
+      ]
+    },
+    {
+      "id": "chip_distance",
+      "label": "My chips finish nowhere near the hole",
+      "categories": [
+        "chipping"
+      ],
+      "skills": [
+        "distance_control",
+        "trajectory"
+      ]
+    },
+    {
+      "id": "rough_trouble",
+      "label": "I struggle out of thick rough",
+      "categories": [
+        "chipping",
+        "wedges"
+      ],
+      "skills": [
+        "lie_adjustment",
+        "strike"
+      ]
+    },
+    {
+      "id": "wedge_short",
+      "label": "I leave wedges short of the flag",
+      "categories": [
+        "wedges"
+      ],
+      "skills": [
+        "distance_control",
+        "strike"
+      ]
+    },
+    {
+      "id": "wedge_inbetween",
+      "label": "In-between yardages catch me out",
+      "categories": [
+        "wedges"
+      ],
+      "skills": [
+        "distance_control",
+        "club_selection"
+      ]
+    },
+    {
+      "id": "three_putts",
+      "label": "I three-putt from distance",
+      "categories": [
+        "putting"
+      ],
+      "skills": [
+        "distance_control",
+        "green_reading"
+      ]
+    },
+    {
+      "id": "short_putts",
+      "label": "I miss short putts",
+      "categories": [
+        "putting"
+      ],
+      "skills": [
+        "start_line",
+        "pressure",
+        "routine"
+      ]
+    },
+    {
+      "id": "tee_wayward",
+      "label": "I lose balls off the tee",
+      "categories": [
+        "driving"
+      ],
+      "skills": [
+        "start_line",
+        "club_selection",
+        "routine"
+      ]
+    },
+    {
+      "id": "tee_inconsistent",
+      "label": "My driving is fine until it isn't",
+      "categories": [
+        "driving"
+      ],
+      "skills": [
+        "routine",
+        "pressure",
+        "start_line"
+      ]
+    },
+    {
+      "id": "bunker",
+      "label": "I can't get out of bunkers first time",
+      "categories": [
+        "bunker"
+      ],
+      "skills": [
+        "strike",
+        "lie_adjustment"
+      ]
+    },
+    {
+      "id": "falls_apart",
+      "label": "I practise well but it falls apart on the course",
+      "categories": [],
+      "skills": [
+        "pressure",
+        "routine"
+      ]
+    }
+  ]
+}

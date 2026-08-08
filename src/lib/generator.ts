@@ -1,10 +1,21 @@
-import type { Capability, Category, Drill, Mode, SessionBlock } from '@/types'
+import type {
+  Capability,
+  Category,
+  Drill,
+  Mode,
+  SessionBlock,
+  SkillId,
+} from '@/types'
+
+/** Id of the composed warm-up block the generator prepends to every session. */
+export const LOOSENER_ID = 'loosener'
 
 /**
- * The result of the solver. `blocks` are in the order they should be performed.
- * `reason` is set only when the session had to degrade (few facilities, no
- * pressure drill available, time too tight to keep every block) — it is written
- * as user-facing copy so the Today screen can show it verbatim.
+ * The result of the solver. `blocks` are in the order they should be performed
+ * and always open with the composed loosener. `reason` is set only when the
+ * session had to degrade (few facilities, no pressure drill available, time too
+ * tight to keep every block) — it is user-facing copy the Today screen shows
+ * verbatim.
  */
 export interface GeneratedSession {
   blocks: SessionBlock[]
@@ -29,22 +40,31 @@ const CONSEQUENCE: Record<Mode, number> = {
   build: 1,
   pressure: 2,
   test: 3,
+  course: 4, // never appears in a generated session; here for completeness
 }
 
 const sum = (ns: number[]) => ns.reduce((a, b) => a + b, 0)
 
+/** A brief loosener, scaled a little with the session but always short. */
+function loosenerMinutes(minutes: number): number {
+  if (minutes < 25) return 2
+  if (minutes < 50) return 3
+  return 5
+}
+
 /**
- * The ordered list of modes to try to fill, by time available.
- *  - under 20 min: warm up, then build. No pressure — no time to earn it.
- *  - 20–40 min: warm up, build, pressure.
- *  - over 40 min: warm up, two builds, pressure, and a test when there's room.
+ * The scored modes to fill, by time available (the warm-up slot is handled
+ * separately by the composed loosener, so it's not in these lists).
+ *  - under 20 min: one build. No pressure — no time to earn it.
+ *  - 20–40 min: build, pressure.
+ *  - over 40 min: two builds, pressure, and a test when there's room.
+ * Only one pressure block ever, unless the session is over 45 minutes.
  */
-function shapeFor(minutes: number): Mode[] {
-  if (minutes < 20) return ['warmup', 'build']
-  if (minutes <= 40) return ['warmup', 'build', 'pressure']
-  return minutes >= 55
-    ? ['warmup', 'build', 'build', 'pressure', 'test']
-    : ['warmup', 'build', 'build', 'pressure']
+function scoredShape(minutes: number): Mode[] {
+  if (minutes < 20) return ['build']
+  if (minutes <= 40) return ['build', 'pressure']
+  if (minutes < 55) return ['build', 'build', 'pressure']
+  return ['build', 'build', 'pressure', 'test']
 }
 
 /** A drill fits a venue if the venue has ANY of the drill's required caps. */
@@ -58,20 +78,22 @@ interface PickContext {
   recent: Set<string>
   focus?: Category
   usedCategories: Map<Category, number>
+  usedSkills: Map<SkillId, number>
 }
 
 /**
  * Rank a candidate for a slot. Higher is better. The weights encode the rules:
- *  - focus bias dominates (×4) so a focus session stays on-focus…
- *  - …but freshness (×2) still breaks ties within the focus category, so we
- *    avoid a recently-used drill when an equivalent one exists;
- *  - a small variety bonus (×1) nudges toward an unused category on ties.
+ *  - focus bias dominates (×5) so a focus session stays on-focus;
+ *  - freshness (×2) avoids a recently-used drill when an equivalent exists;
+ *  - skill variety (×2) stops three distance-control drills in a row;
+ *  - category variety (×1) breaks remaining ties toward a new shot type.
  */
 function rank(d: Drill, ctx: PickContext): number {
   const focusMatch = ctx.focus && d.category === ctx.focus ? 1 : 0
   const fresh = ctx.recent.has(d.id) ? 0 : 1
+  const unusedSkill = (ctx.usedSkills.get(d.primarySkill) ?? 0) === 0 ? 1 : 0
   const unusedCategory = (ctx.usedCategories.get(d.category) ?? 0) === 0 ? 1 : 0
-  return focusMatch * 4 + fresh * 2 + unusedCategory * 1
+  return focusMatch * 5 + fresh * 2 + unusedSkill * 2 + unusedCategory * 1
 }
 
 /** Best available drill for a given mode, or undefined if none fit. */
@@ -80,17 +102,15 @@ function pickForMode(mode: Mode, ctx: PickContext): Drill | undefined {
     (d) => d.mode === mode && !ctx.chosenIds.has(d.id),
   )
   if (pool.length === 0) return undefined
-  // Sort by rank desc, then id for a stable, deterministic choice.
   return [...pool].sort(
     (a, b) => rank(b, ctx) - rank(a, ctx) || a.id.localeCompare(b.id),
   )[0]
 }
 
 /**
- * Rule 5: never let a session be 100% one category unless the venue only
- * supports one. If everything landed in a single category but another category
- * is actually available, swap one non-final block for a same-mode drill in a
- * different category.
+ * Rule: never let a session be 100% one category unless the venue only supports
+ * one. If everything landed in a single category but another is available, swap
+ * one non-final block for a same-mode drill in a different category.
  */
 function diversify(chosen: Drill[], eligible: Drill[]): Drill[] {
   if (chosen.length < 2) return chosen
@@ -99,7 +119,7 @@ function diversify(chosen: Drill[], eligible: Drill[]): Drill[] {
 
   const onlyCategory = chosen[0].category
   const anotherExists = eligible.some((d) => d.category !== onlyCategory)
-  if (!anotherExists) return chosen // venue genuinely supports one category
+  if (!anotherExists) return chosen
 
   for (let i = 0; i < chosen.length - 1; i++) {
     const used = new Set(chosen.map((d) => d.id))
@@ -120,10 +140,9 @@ function diversify(chosen: Drill[], eligible: Drill[]): Drill[] {
 }
 
 /**
- * Spread `budget` minutes across the drills. Each block sits between its
- * `minMinutes` floor and a generous soft cap, and time above the floors is
- * distributed in proportion to each drill's typical length. Returns whole
- * minutes that sum as close to the budget as the floors/caps allow.
+ * Spread `budget` minutes across the drills, each between its `minMinutes` floor
+ * and a generous soft cap, in proportion to typical length. Whole minutes that
+ * sum as close to the budget as the floors/caps allow.
  */
 function allocate(drills: Drill[], budget: number): number[] {
   const floor = drills.map((d) => Math.max(1, Math.floor(d.minMinutes)))
@@ -132,12 +151,11 @@ function allocate(drills: Drill[], budget: number): number[] {
   const alloc = [...floor]
 
   let remaining = budget - sum(alloc)
-  if (remaining <= 0) return alloc // already at/over budget at the floors
+  if (remaining <= 0) return alloc
 
   const openSlots = () =>
     drills.map((_, i) => i).filter((i) => alloc[i] < cap[i])
 
-  // Proportional pass.
   const first = openSlots()
   if (first.length > 0) {
     const wsum = sum(first.map((i) => weight[i]))
@@ -147,7 +165,6 @@ function allocate(drills: Drill[], budget: number): number[] {
     }
   }
 
-  // Hand out any leftover a minute at a time, biggest drills first.
   remaining = budget - sum(alloc)
   let idxs = openSlots().sort((a, b) => weight[b] - weight[a] || a - b)
   let guard = 10_000
@@ -166,11 +183,7 @@ function allocate(drills: Drill[], budget: number): number[] {
   return alloc
 }
 
-/**
- * Pick a block to drop when the floors alone overshoot the time budget. Prefer
- * a duplicated mode (the "extra" build), never the final block, and otherwise
- * the lowest-consequence non-final block.
- */
+/** Pick a block to drop when the floors overshoot the time budget. */
 function chooseDropIndex(drills: Drill[]): number {
   const lastIdx = drills.length - 1
   if (lastIdx < 1) return -1
@@ -197,32 +210,38 @@ function chooseDropIndex(drills: Drill[]): number {
 /**
  * Build a practice session that fits the time available and the venue's
  * facilities. Pure — no React, no storage, no randomness — so it is trivially
- * testable and always produces the same session for the same inputs.
+ * testable and always produces the same session for the same inputs. Every
+ * session opens with a short composed loosener, then the scored blocks.
  */
 export function generateSession(opts: GenerateOptions): GeneratedSession {
   const { minutes, capabilities, focus, allDrills } = opts
   const recent = new Set(opts.recentDrillIds ?? [])
   const reasons: string[] = []
 
-  const eligible = allDrills.filter((d) => isEligible(d, capabilities))
+  // Course (Ghost Nine) drills are standalone and never generated.
+  const eligible = allDrills.filter(
+    (d) => d.mode !== 'course' && isEligible(d, capabilities),
+  )
   if (eligible.length === 0) {
     return {
       blocks: [],
       totalMinutes: 0,
-      reason: 'None of your drills match this venue’s facilities yet.',
+      reason:
+        'Nothing in the library fits this venue yet. Try a different place, or add drills for it.',
     }
   }
 
-  // 1) Fill each slot in the shape; skip a slot the venue can't support.
+  // 1) Fill each scored slot; skip a slot the venue can't support.
   const ctx: PickContext = {
     eligible,
     chosenIds: new Set(),
     recent,
     focus,
     usedCategories: new Map(),
+    usedSkills: new Map(),
   }
   let chosen: Drill[] = []
-  for (const mode of shapeFor(minutes)) {
+  for (const mode of scoredShape(minutes)) {
     const pick = pickForMode(mode, ctx)
     if (!pick) continue
     chosen.push(pick)
@@ -231,10 +250,12 @@ export function generateSession(opts: GenerateOptions): GeneratedSession {
       pick.category,
       (ctx.usedCategories.get(pick.category) ?? 0) + 1,
     )
+    ctx.usedSkills.set(
+      pick.primarySkill,
+      (ctx.usedSkills.get(pick.primarySkill) ?? 0) + 1,
+    )
   }
 
-  // Fallback: the shape's modes matched nothing, but drills do exist — give the
-  // single most consequential drill rather than an empty session.
   if (chosen.length === 0) {
     const best = [...eligible].sort(
       (a, b) =>
@@ -244,8 +265,7 @@ export function generateSession(opts: GenerateOptions): GeneratedSession {
     reasons.push('Limited options here — this is the best single drill that fits.')
   }
 
-  // 2) Enforce category variety, then order so the last block is the most
-  //    consequential thing available (rule 3: finish on a consequence).
+  // 2) Category variety, then order so the last block is the most consequential.
   chosen = diversify(chosen, eligible)
   chosen.sort((a, b) => CONSEQUENCE[a.mode] - CONSEQUENCE[b.mode])
 
@@ -256,31 +276,33 @@ export function generateSession(opts: GenerateOptions): GeneratedSession {
     )
   }
 
-  // 3) Fit the time budget. Compress toward floors first; only drop a block if
-  //    the floors still overshoot by more than the tolerance.
-  let allocation = allocate(chosen, minutes)
+  // 3) Fit the scored blocks into the budget left after the loosener.
+  const loose = loosenerMinutes(minutes)
+  const scoredBudget = Math.max(1, minutes - loose)
+  let allocation = allocate(chosen, scoredBudget)
   let trimmed = false
-  while (
-    sum(allocation) > minutes * (1 + TOLERANCE) &&
-    chosen.length > 1
-  ) {
+  while (sum(allocation) > scoredBudget * (1 + TOLERANCE) && chosen.length > 1) {
     const dropIdx = chooseDropIndex(chosen)
     if (dropIdx < 0) break
     chosen.splice(dropIdx, 1)
     trimmed = true
-    allocation = allocate(chosen, minutes)
+    allocation = allocate(chosen, scoredBudget)
   }
   if (trimmed) reasons.push('Trimmed the session to fit the time you have.')
 
-  const blocks: SessionBlock[] = chosen.map((d, i) => ({
-    drillId: d.id,
-    minutes: allocation[i],
-    completed: false,
-  }))
+  // 4) Prepend the composed loosener; scored blocks follow.
+  const blocks: SessionBlock[] = [
+    { drillId: LOOSENER_ID, minutes: loose, completed: false },
+    ...chosen.map((d, i) => ({
+      drillId: d.id,
+      minutes: allocation[i],
+      completed: false,
+    })),
+  ]
 
   return {
     blocks,
-    totalMinutes: sum(allocation),
+    totalMinutes: loose + sum(allocation),
     reason: reasons.length ? Array.from(new Set(reasons)).join(' ') : undefined,
   }
 }

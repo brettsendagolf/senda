@@ -112,35 +112,37 @@ export function SessionRunner() {
           </p>
         </div>
 
-        {/* Score */}
-        <div className="mt-5">
-          <h2 className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-soft">
-            Your score
-          </h2>
-          <p className="mb-3 text-sm text-ink-soft">{drill.scoring}</p>
-          {drill.logType === 'per_shot' ? (
-            <PerShotEntry
-              key={block.drillId + index}
-              metric={drill.metric}
-              onValueChange={setValue}
-            />
-          ) : (
-            <AggregateEntry
-              key={block.drillId + index}
-              metric={drill.metric}
-              onValueChange={setValue}
-            />
-          )}
+        {/* Score — unless this is the unscored loosener */}
+        {drill.logType !== 'none' && (
+          <div className="mt-5">
+            <h2 className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-soft">
+              Your score
+            </h2>
+            <p className="mb-3 text-sm text-ink-soft">{drill.scoring}</p>
+            {drill.logType === 'per_shot' ? (
+              <PerShotEntry
+                key={block.drillId + index}
+                metric={drill.metric}
+                onValueChange={setValue}
+              />
+            ) : (
+              <AggregateEntry
+                key={block.drillId + index}
+                metric={drill.metric}
+                onValueChange={setValue}
+              />
+            )}
 
-          <div className="mt-4">
-            <BenchmarkStrip
-              benchmarks={drill.benchmarks}
-              metric={drill.metric}
-              handicap={handicap}
-              score={value}
-            />
+            <div className="mt-4">
+              <BenchmarkStrip
+                benchmarks={drill.benchmarks}
+                metric={drill.metric}
+                handicap={handicap}
+                score={value}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Advance — fixed above the home indicator. */}
@@ -153,13 +155,15 @@ export function SessionRunner() {
           onClick={onNext}
           className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-white active:opacity-90"
         >
-          {value !== undefined
-            ? isLast
-              ? 'Log & finish'
-              : 'Log & next'
-            : isLast
-              ? 'Finish'
-              : 'Skip'}
+          {drill.logType === 'none'
+            ? 'Ready — start'
+            : value !== undefined
+              ? isLast
+                ? 'Log & finish'
+                : 'Log & next'
+              : isLast
+                ? 'Finish'
+                : 'Skip'}
         </button>
       </div>
     </div>
@@ -173,7 +177,11 @@ function Summary({
   session: Session
   onDone: () => void
 }) {
-  const logged = session.blocks.filter((b) => b.score !== undefined)
+  // The loosener has no score, so don't count it in "X of Y scored".
+  const scorable = session.blocks.filter(
+    (b) => getDrill(b.drillId)?.logType !== 'none',
+  )
+  const logged = scorable.filter((b) => b.score !== undefined)
   return (
     <div className="flex h-full flex-col bg-paper">
       <div
@@ -187,8 +195,8 @@ function Summary({
           Nicely done.
         </h1>
         <p className="mt-1 text-ink-soft">
-          {logged.length} of {session.blocks.length} block
-          {session.blocks.length === 1 ? '' : 's'} scored and saved.
+          {logged.length} of {scorable.length} block
+          {scorable.length === 1 ? '' : 's'} scored and saved.
         </p>
       </div>
 

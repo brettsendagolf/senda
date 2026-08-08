@@ -2,9 +2,10 @@ import type { Benchmark, Metric } from '@/types'
 import { BANDS, bandForHandicap, type BandName } from '@/lib/handicap'
 
 /**
- * Shows the handicap bands left (easiest) to right (hardest) with each band's
- * target. The player's own band is ringed. If a score is supplied, the best
- * band it reaches is filled — so you can see at a glance where the number lands.
+ * Shows the handicap bands that actually have a target, easiest → hardest, with
+ * the player's own band ringed. If a score is supplied, the best band it reaches
+ * is filled. The library currently only carries an "Under 9" target per drill,
+ * so this is honest about empty bands rather than inventing numbers.
  */
 export function BenchmarkStrip({
   benchmarks,
@@ -21,22 +22,39 @@ export function BenchmarkStrip({
   const targetOf = (band: BandName) =>
     benchmarks.find((b) => b.band === band)?.target
 
+  // Only the bands with a real target, easiest → hardest for left-to-right read.
+  const populated = [...BANDS]
+    .reverse()
+    .filter((b) => targetOf(b.band) !== undefined)
+
+  const directionNote = `${metric.label} · ${
+    metric.lowerIsBetter ? 'lower is better' : 'higher is better'
+  }`
+
+  if (populated.length === 0) {
+    return (
+      <div className="rounded-md border border-line bg-card px-3 py-3 text-center">
+        <p className="text-sm text-ink-soft">No target for this drill yet.</p>
+        <p className="mt-0.5 text-[11px] text-ink-soft">{directionNote}</p>
+      </div>
+    )
+  }
+
   const meets = (target: number | undefined) => {
     if (target === undefined || score === undefined) return false
     return metric.lowerIsBetter ? score <= target : score >= target
   }
-
-  // Hardest band first (BANDS order) → the achieved band is the first one met.
+  // Hardest band first — the achieved band is the first one met.
   const achieved = BANDS.find((b) => meets(targetOf(b.band)))?.band
-
-  // Display easiest → hardest so improvement reads left to right.
-  const display = [...BANDS].reverse()
+  const userBandPopulated = populated.some((b) => b.band === userBand)
 
   return (
     <div>
-      <div className="grid grid-cols-4 gap-1.5">
-        {display.map(({ band }) => {
-          const target = targetOf(band)
+      <div
+        className="grid gap-1.5"
+        style={{ gridTemplateColumns: `repeat(${populated.length}, minmax(0, 1fr))` }}
+      >
+        {populated.map(({ band }) => {
           const isUser = band === userBand
           const isAchieved = band === achieved
           return (
@@ -59,15 +77,17 @@ export function BenchmarkStrip({
                   (isAchieved ? 'text-accent' : 'text-ink')
                 }
               >
-                {target ?? '—'}
+                {targetOf(band)}
               </div>
             </div>
           )
         })}
       </div>
       <p className="mt-1.5 text-center text-[11px] text-ink-soft">
-        Ringed band is yours ({userBand}). {metric.label} ·{' '}
-        {metric.lowerIsBetter ? 'lower is better' : 'higher is better'}
+        {userBandPopulated
+          ? `Ringed band is yours (${userBand}).`
+          : `No target for your band (${userBand}) yet — showing what's set.`}{' '}
+        {directionNote}
       </p>
     </div>
   )

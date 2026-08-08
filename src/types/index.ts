@@ -4,6 +4,8 @@ export type {
   Category,
   Mode,
   LogType,
+  SkillId,
+  SpecialDrill,
   Benchmark,
   Metric,
   Drill,

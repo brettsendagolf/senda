@@ -46,7 +46,7 @@ export const CATEGORY_ORDER: Category[] = [
 interface ModeMeta {
   label: string
   /** The theme colour token this mode maps to (see index.css @theme). */
-  color: 'warmup' | 'build' | 'pressure' | 'test'
+  color: 'warmup' | 'build' | 'pressure' | 'test' | 'course'
 }
 
 export const MODE_META: Record<Mode, ModeMeta> = {
@@ -54,4 +54,5 @@ export const MODE_META: Record<Mode, ModeMeta> = {
   build: { label: 'Build', color: 'build' },
   pressure: { label: 'Pressure', color: 'pressure' },
   test: { label: 'Test', color: 'test' },
+  course: { label: 'On the course', color: 'course' },
 }

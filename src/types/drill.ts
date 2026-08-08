@@ -11,13 +11,40 @@ export type Category =
   | 'driving'
 
 /**
- * The role a drill plays inside a session. The generator shapes a session by
- * mode: warm up, build a skill, then apply it under pressure or in a test.
+ * The role a drill plays inside a session. warmup/build/pressure/test are the
+ * session-shaping modes; `course` marks a standalone on-course drill (the Ghost
+ * Nine set) that must never appear in a generated practice session.
  */
-export type Mode = 'warmup' | 'build' | 'pressure' | 'test'
+export type Mode = 'warmup' | 'build' | 'pressure' | 'test' | 'course'
 
-/** How a score is captured: one aggregate number, or shot by shot. */
-export type LogType = 'aggregate' | 'per_shot'
+/**
+ * How a score is captured. `none` is a block with no score at all — the
+ * composed warm-up loosener uses it.
+ */
+export type LogType = 'aggregate' | 'per_shot' | 'none'
+
+/**
+ * The nine skills a drill can train, independent of its category. Two chipping
+ * drills can train completely different skills — the generator balances on this
+ * as well as on shot type. Defined in data/skills.ts.
+ */
+export type SkillId =
+  | 'strike'
+  | 'distance_control'
+  | 'start_line'
+  | 'trajectory'
+  | 'lie_adjustment'
+  | 'club_selection'
+  | 'routine'
+  | 'pressure'
+  | 'green_reading'
+
+/**
+ * Drills that need a bespoke input in the runner rather than a plain number:
+ *  - carry_table: a 3×2 wedge-carry grid; the score is the largest gap.
+ *  - random_yardage: draws a random target (25-75 yd) before each shot.
+ */
+export type SpecialDrill = 'carry_table' | 'random_yardage'
 
 /** A target score for a handicap band, e.g. { band: 'Under 9', target: 7 }. */
 export interface Benchmark {
@@ -37,15 +64,19 @@ export interface Drill {
   name: string
   category: Category
   mode: Mode
-  requires: Capability[] //  ANY of these satisfies it
-  minutes: number //         typical duration
-  minMinutes: number //      shortest sensible version
-  purpose: string //         one line, what it trains
-  why: string //             one or two sentences, why it matters
-  setup: string[] //         numbered steps
+  requires: Capability[] //     ANY of these satisfies it
+  minutes: number //            typical duration
+  minMinutes: number //         shortest sensible version
+  purpose: string //            one line, what it trains
+  why?: string //               optional: why it matters
+  setup: string[] //            numbered steps
   tip: string
-  scoring: string //         how the score is derived, in words
+  scoring: string //            how the score is derived, in words
   metric: Metric
-  benchmarks: Benchmark[] //  targets by handicap band
+  benchmarks: Benchmark[] //     targets by handicap band (may be sparse)
   logType: LogType
+  primarySkill: SkillId //       the main skill trained
+  skills: SkillId[] //           all skills trained, primary first
+  focusArea?: string //          short label, e.g. "25–75 yd wedges"
+  special?: SpecialDrill //      bespoke runner input, if any
 }

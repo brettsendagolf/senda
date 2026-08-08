@@ -55,7 +55,7 @@ export function DrillDetailScreen() {
         <h1 className="text-2xl font-bold tracking-tight text-ink">{drill.name}</h1>
         <p className="mt-1 text-ink-soft">{drill.purpose}</p>
 
-        <p className="mt-3 text-sm text-ink">{drill.why}</p>
+        {drill.why && <p className="mt-3 text-sm text-ink">{drill.why}</p>}
 
         <div className="mt-4 rounded-lg border border-line bg-card p-3">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-soft">

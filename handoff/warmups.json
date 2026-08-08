@@ -1,0 +1,365 @@
+{
+  "warmups": [
+    {
+      "id": "warmup_15",
+      "label": "15 min",
+      "totalMinutes": 15,
+      "blocks": [
+        {
+          "name": "Stretch",
+          "minutes": 4,
+          "needs": "anywhere",
+          "items": [
+            {
+              "name": "Torso rotations",
+              "reps": "8 each side",
+              "note": "Club across the chest, turn back and through. Wake the coil up."
+            },
+            {
+              "name": "Hip openers",
+              "reps": "6 each leg",
+              "note": "Stand on one leg, circle the other knee out and round."
+            },
+            {
+              "name": "Shoulder windmills",
+              "reps": "5 each direction",
+              "note": "Big arm circles, forwards then backwards."
+            },
+            {
+              "name": "Wrist flexors",
+              "reps": "10s each way",
+              "note": "Arm out straight, pull the fingers back, then push them down."
+            }
+          ]
+        },
+        {
+          "name": "Loosen up",
+          "minutes": 6,
+          "needs": "balls",
+          "items": [
+            {
+              "name": "58° wedge",
+              "reps": "4 balls",
+              "note": "Half swings. Find the middle of the face."
+            },
+            {
+              "name": "50° wedge",
+              "reps": "3 balls",
+              "note": "Three quarters, let it release."
+            },
+            {
+              "name": "9 iron",
+              "reps": "3 balls",
+              "note": "Easy full swings, carrying the tempo up from the wedges."
+            }
+          ]
+        },
+        {
+          "name": "Commit",
+          "minutes": 5,
+          "needs": "balls",
+          "items": [
+            {
+              "name": "7 iron",
+              "reps": "2 balls",
+              "note": "Trust the feel. There have been some lovely strikes lately."
+            },
+            {
+              "name": "Driver",
+              "reps": "3 balls",
+              "note": "Tight landing zone, commit to the shape."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup_30",
+      "label": "30 min",
+      "totalMinutes": 30,
+      "blocks": [
+        {
+          "name": "Stretch",
+          "minutes": 7,
+          "needs": "anywhere",
+          "items": [
+            {
+              "name": "Torso rotations",
+              "reps": "12 each way",
+              "note": "Arms crossed, hips still, shoulders turning as far as they will go."
+            },
+            {
+              "name": "Hip openers",
+              "reps": "8 each side",
+              "note": "Deep lunge, press the hips forward. Nothing forced."
+            },
+            {
+              "name": "Arm circles",
+              "reps": "10 fwd / 10 back",
+              "note": "Start small, finish big. Shoulders and upper back."
+            },
+            {
+              "name": "Wrist flexor stretch",
+              "reps": "20s each hand",
+              "note": "Arm out, pull the fingers back gently. Soft hands for the wedges."
+            },
+            {
+              "name": "Standing torso twist",
+              "reps": "15 each side",
+              "note": "Club behind the shoulders, easy twists side to side."
+            }
+          ]
+        },
+        {
+          "name": "Loosen up",
+          "minutes": 8,
+          "needs": "balls",
+          "items": [
+            {
+              "name": "58° wedge",
+              "reps": "4 balls",
+              "note": "Half swings. Rhythm first, distance later."
+            },
+            {
+              "name": "54° wedge",
+              "reps": "4 balls",
+              "note": "Three quarters. This is a scoring club, so give it a proper look."
+            },
+            {
+              "name": "50° wedge",
+              "reps": "4 balls",
+              "note": "Full tempo now."
+            }
+          ]
+        },
+        {
+          "name": "Dial in",
+          "minutes": 8,
+          "needs": "balls",
+          "items": [
+            {
+              "name": "8 iron",
+              "reps": "4 balls",
+              "note": "Full swings at a target. Mid irons have been holding up."
+            },
+            {
+              "name": "6 iron",
+              "reps": "4 balls",
+              "note": "Commit to each one. These are a strength."
+            },
+            {
+              "name": "4 iron",
+              "reps": "4 balls",
+              "note": "Full swings with intent."
+            },
+            {
+              "name": "3 iron",
+              "reps": "3 balls",
+              "note": "Game speed. Get comfortable with it off a tee."
+            }
+          ]
+        },
+        {
+          "name": "Commit",
+          "minutes": 7,
+          "needs": "balls",
+          "items": [
+            {
+              "name": "3 wood",
+              "reps": "4 balls",
+              "note": "Tight target. Extra reps, contact has been patchy."
+            },
+            {
+              "name": "Driver",
+              "reps": "5 balls",
+              "note": "Fairway targets. The strikes are there, the consistency is not."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup_60",
+      "label": "60 min",
+      "totalMinutes": 50,
+      "blocks": [
+        {
+          "name": "Stretch",
+          "minutes": 10,
+          "needs": "anywhere",
+          "items": [
+            {
+              "name": "Hip rotations",
+              "reps": "12 each way",
+              "note": "Wide stance, hands on hips, big slow circles."
+            },
+            {
+              "name": "Torso twists",
+              "reps": "15 each side",
+              "note": "Club across the shoulders, turn it like a backswing."
+            },
+            {
+              "name": "Shoulder rolls",
+              "reps": "10 each way",
+              "note": "Big slow circles, forwards then backwards."
+            },
+            {
+              "name": "Wrist flexion and extension",
+              "reps": "20s each",
+              "note": "Arm out, fingers back, then fingers down. Both hands."
+            },
+            {
+              "name": "Dynamic leg swings",
+              "reps": "12 each leg",
+              "note": "Hold onto something and swing the leg front to back."
+            },
+            {
+              "name": "Side bends",
+              "reps": "10 each side",
+              "note": "Club overhead, lean one way then the other."
+            }
+          ]
+        },
+        {
+          "name": "Loosen up",
+          "minutes": 12,
+          "needs": "balls",
+          "items": [
+            {
+              "name": "58° wedge",
+              "reps": "8 balls",
+              "note": "Half swings, middle of the face, nothing else."
+            },
+            {
+              "name": "54° wedge",
+              "reps": "8 balls",
+              "note": "Three quarters, feel it release through the ball."
+            },
+            {
+              "name": "50° wedge",
+              "reps": "6 balls",
+              "note": "Full tempo, trusting what you just built."
+            }
+          ]
+        },
+        {
+          "name": "Dial in",
+          "minutes": 15,
+          "needs": "balls",
+          "items": [
+            {
+              "name": "9 iron",
+              "reps": "6 balls",
+              "note": "Solid lately, so keep it clean."
+            },
+            {
+              "name": "7 iron",
+              "reps": "6 balls",
+              "note": "Full swings, pick a line and commit."
+            },
+            {
+              "name": "5 iron",
+              "reps": "5 balls",
+              "note": "Trust the strike, the long irons are coming round."
+            },
+            {
+              "name": "3 iron",
+              "reps": "5 balls",
+              "note": "Full release. Good when you commit, poor when you steer."
+            }
+          ]
+        },
+        {
+          "name": "Commit",
+          "minutes": 13,
+          "needs": "balls",
+          "items": [
+            {
+              "name": "Driver",
+              "reps": "10 balls",
+              "note": "Tight fairway lines, full commitment."
+            },
+            {
+              "name": "3 wood",
+              "reps": "6 balls",
+              "note": "Game speed, trust the setup."
+            },
+            {
+              "name": "Driver",
+              "reps": "6 balls",
+              "note": "Last reps. Narrow the focus, see the shot first."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "addons": [
+    {
+      "id": "addon_putt",
+      "name": "Greens",
+      "minutes": 10,
+      "needs": "putting",
+      "items": [
+        {
+          "name": "Speed calibration",
+          "reps": "6 balls",
+          "note": "From 30 to 40 feet at a fringe, not a hole. You are learning today’s pace. Every one finishing within a putter length."
+        },
+        {
+          "name": "Slope check",
+          "reps": "4 balls",
+          "note": "Same 20 footer up the slope then back down it. Feel what the slope is worth today."
+        },
+        {
+          "name": "Short circle",
+          "reps": "6 balls at 3 ft",
+          "note": "Six around the hole at three feet. Make all six before you move on."
+        },
+        {
+          "name": "Gate putt",
+          "reps": "4 balls at 5 ft",
+          "note": "Two tees just wider than the ball. Same gate as your Pressure Gate drill, four clean ones."
+        },
+        {
+          "name": "Last putt",
+          "reps": "1 ball at 5 ft",
+          "note": "One five footer, full routine. Hole it, then walk to the first tee."
+        }
+      ]
+    },
+    {
+      "id": "addon_chip",
+      "name": "Short game",
+      "minutes": 10,
+      "needs": "shortgame",
+      "items": [
+        {
+          "name": "Bump and run",
+          "reps": "6 balls",
+          "note": "8 iron or 54. Landing spot a third of the way, let it release out."
+        },
+        {
+          "name": "Standard chip",
+          "reps": "6 balls",
+          "note": "54 degree, ball back, hands forward. Land it on your spot every time."
+        },
+        {
+          "name": "Higher soft chip",
+          "reps": "4 balls",
+          "note": "58 degree, face slightly open. For the short-sided ones."
+        },
+        {
+          "name": "From the rough",
+          "reps": "4 balls",
+          "note": "Drop them in rough at 15 to 20 yards. Your weakest lie, so get a look at it before you tee off."
+        },
+        {
+          "name": "Up and down test",
+          "reps": "3 balls",
+          "note": "Three chips, putt each one out. Two up and downs before you leave."
+        }
+      ]
+    }
+  ]
+}

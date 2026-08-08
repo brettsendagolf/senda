@@ -4,7 +4,7 @@ import type { Category } from '@/types'
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { Chip } from '@/components/Chip'
 import { ModeBadge } from '@/components/ModeBadge'
-import { DRILLS } from '@/data/drills'
+import { DRILLS, GENERATABLE_DRILLS, COURSE_DRILLS } from '@/data/drills'
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/data/labels'
 import { useVenues } from '@/store/venues'
 
@@ -17,13 +17,19 @@ export function Drills() {
   const venue = venues.find((v) => v.id === venueId)
 
   const filtered = useMemo(() => {
-    return DRILLS.filter((d) => {
+    return GENERATABLE_DRILLS.filter((d) => {
       if (category !== 'all' && d.category !== category) return false
       if (venue && !d.requires.some((r) => venue.capabilities.includes(r)))
         return false
       return true
     })
   }, [category, venue])
+
+  // Ghost Nine — standalone, not tied to a venue's facilities.
+  const courseFiltered = useMemo(
+    () => COURSE_DRILLS.filter((d) => category === 'all' || d.category === category),
+    [category],
+  )
 
   const categoriesPresent = CATEGORY_ORDER.filter((c) =>
     DRILLS.some((d) => d.category === c),
@@ -101,6 +107,41 @@ export function Drills() {
               </li>
             ))}
           </ul>
+        )}
+
+        {/* On the course — standalone Ghost Nine drills */}
+        {courseFiltered.length > 0 && (
+          <section className="pt-2">
+            <h2 className="text-sm font-semibold text-ink">On the course</h2>
+            <p className="mb-2 mt-0.5 text-xs text-ink-soft">
+              Standalone — play these during a practice round, not in a built
+              session.
+            </p>
+            <ul className="space-y-2">
+              {courseFiltered.map((d) => (
+                <li key={d.id}>
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/drills/${d.id}`)}
+                    className="flex w-full items-center gap-3 rounded-lg border border-line bg-card px-3 py-3 text-left active:bg-paper"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate font-medium text-ink">
+                        {d.name}
+                      </div>
+                      <div className="mt-0.5 flex items-center gap-2">
+                        <ModeBadge mode={d.mode} />
+                        <span className="text-xs text-ink-soft">
+                          {CATEGORY_LABELS[d.category]}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="shrink-0 text-ink-soft">›</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
       </div>
     </div>
