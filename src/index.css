@@ -1,33 +1,121 @@
 @import 'tailwindcss';
 
 /*
-  Design foundation — a yardage-book / training-log feel, not a neon golf app.
-  Paper-toned light mode, one restrained accent, tabular figures for numerics.
-  These tokens are provisional and will be refined when we build the screens.
+  "Links" design system (Senda Master Brief §5). Warm linen paper, one deep
+  Fairway green for every action, an electric Signal lime reserved for progress
+  and completion. Token names are kept stable so every existing utility class
+  (bg-accent, text-ink, border-line…) restyles automatically; dark mode is a
+  selected palette, not an inverted flip.
 */
 @theme {
   /* Paper + ink */
-  --color-paper: #f6f3ec; /* page background — warm off-white */
-  --color-card: #fffdf8; /* raised surfaces */
-  --color-ink: #1c1a17; /* primary text, condensed headings */
-  --color-ink-soft: #6b655c; /* secondary text */
-  --color-line: #e3ddd1; /* hairline borders */
+  --color-paper: #f5f3ee; /* page — warm linen */
+  --color-card: #ffffff; /* raised surfaces */
+  --color-sunken: #edeae2; /* wells, tracks */
+  --color-ink: #0d1a15; /* primary text */
+  --color-ink-soft: #4c5c55; /* secondary text */
+  --color-ink-mute: #7c8a84; /* labels, axis ticks only */
+  --color-line: #e3e0d8; /* hairline */
 
-  /* One accent — a muted flag red, used sparingly */
-  --color-accent: #b23a2e;
-  --color-accent-soft: #f0d9d5;
+  /* Fairway — the one action colour */
+  --color-accent: #0b5c42;
+  --color-accent-press: #08402e;
+  --color-accent-soft: #e6f0eb;
+  --color-on-accent: #ffffff; /* ink on a Fairway fill */
 
-  /* Mode chips get their own restrained hues (warmup/build/pressure/test) */
-  --color-warmup: #4f7a63;
-  --color-build: #3f6079;
-  --color-pressure: #b23a2e;
+  /* Signal — progress + completion only */
+  --color-signal: #c9f24c;
+
+  /* Status — always paired with an icon/label */
+  --color-good: #146b3a;
+  --color-warn: #8a5a00;
+  --color-crit: #b3261e;
+
+  /* Fairway sequential ramp for single-series charts */
+  --color-g100: #dcebe4;
+  --color-g200: #b9d7c9;
+  --color-g300: #8dbda8;
+  --color-g400: #5c9e82;
+  --color-g500: #2e7d5d;
+  --color-g600: #0b5c42;
+  --color-g700: #08402e;
+
+  /* Multi-series (capped at three) */
+  --color-s1: #2a78d6;
+  --color-s2: #eb6834;
+  --color-s3: #1baf7a;
+
+  /* Drill-mode chips keep their own restrained hues */
+  --color-warmup: #3f6b52;
+  --color-build: #345169;
+  --color-pressure: #9c3327;
   --color-test: #8a6d3b;
+  --color-course: #5b5750;
 }
 
-/*
-  Safe-area insets are a first-class concern: this ships to iPhone and headers
-  must never collide with the status bar or the home indicator.
-*/
+/* Dark — stepped for the dark surface (Master Brief §5.3). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-paper: #0b1310;
+    --color-card: #141c19;
+    --color-sunken: #1e2a25;
+    --color-ink: #f2f5f3;
+    --color-ink-soft: #a7b5ae;
+    --color-ink-mute: #7c8a84;
+    --color-line: #26332d;
+    --color-accent: #35b084;
+    --color-accent-press: #2a8e6a;
+    --color-accent-soft: #16241e;
+    --color-on-accent: #08221a;
+    --color-signal: #c9f24c;
+    --color-good: #3fbf6e;
+    --color-warn: #e0a32e;
+    --color-crit: #ff6b60;
+    --color-g100: #16241e;
+    --color-g200: #1d3229;
+    --color-g300: #2a5342;
+    --color-g400: #2e7d5d;
+    --color-g500: #2c9a72;
+    --color-g600: #35b084;
+    --color-g700: #5fc9a2;
+    --color-s1: #3987e5;
+    --color-s2: #d95926;
+    --color-s3: #199e70;
+    color-scheme: dark;
+  }
+}
+
+/* Explicit toggle wins over the OS preference in both directions. */
+:root[data-theme='dark'] {
+  --color-paper: #0b1310;
+  --color-card: #141c19;
+  --color-sunken: #1e2a25;
+  --color-ink: #f2f5f3;
+  --color-ink-soft: #a7b5ae;
+  --color-ink-mute: #7c8a84;
+  --color-line: #26332d;
+  --color-accent: #35b084;
+  --color-accent-press: #2a8e6a;
+  --color-accent-soft: #16241e;
+  --color-on-accent: #08221a;
+  --color-signal: #c9f24c;
+  --color-good: #3fbf6e;
+  --color-warn: #e0a32e;
+  --color-crit: #ff6b60;
+  --color-g100: #16241e;
+  --color-g200: #1d3229;
+  --color-g300: #2a5342;
+  --color-g400: #2e7d5d;
+  --color-g500: #2c9a72;
+  --color-g600: #35b084;
+  --color-g700: #5fc9a2;
+  --color-s1: #3987e5;
+  --color-s2: #d95926;
+  --color-s3: #199e70;
+  color-scheme: dark;
+}
+
+/* Safe-area insets are a first-class concern for the iPhone target. */
 :root {
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -47,11 +135,10 @@ body {
   font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  /* Prevent the whole page from bouncing/scrolling behind fixed chrome. */
   overscroll-behavior-y: none;
 }
 
-/* Anything numeric should line up in columns — scores, minutes, benchmarks. */
+/* Anything numeric lines up in columns — scores, minutes, benchmarks. */
 .tabular {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum';

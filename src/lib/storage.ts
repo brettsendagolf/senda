@@ -85,7 +85,7 @@ export async function importAll(
   opts?: { merge?: boolean },
 ): Promise<void> {
   if (!bundle || bundle.app !== 'practice-book' || !bundle.data) {
-    throw new Error('Not a Practice Book export file.')
+    throw new Error('Not a Senda export file.')
   }
   if (!opts?.merge) await idbClear(store)
   for (const [k, v] of Object.entries(bundle.data)) await idbSet(k, v, store)

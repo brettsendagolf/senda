@@ -78,7 +78,7 @@ export function Settings() {
         {/* Appearance */}
         <Section title="Appearance">
           <p className="text-sm text-ink-soft">
-            Paper light theme. A dark theme is coming later.
+            Follows your device's light or dark setting.
           </p>
         </Section>
 
@@ -328,7 +328,7 @@ function AddVenue() {
           type="button"
           onClick={save}
           disabled={!name.trim() || caps.length === 0}
-          className="h-11 flex-1 rounded-lg bg-accent text-sm font-semibold text-white disabled:opacity-40"
+          className="h-11 flex-1 rounded-lg bg-accent text-sm font-semibold text-on-accent disabled:opacity-40"
         >
           Add
         </button>
@@ -349,7 +349,7 @@ function DataSection() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `practice-book-${bundle.exportedAt.slice(0, 10)}.json`
+    a.download = `senda-${bundle.exportedAt.slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(url)
     setMessage('Exported your data as JSON.')
@@ -368,7 +368,7 @@ function DataSection() {
       ])
       setMessage('Imported and reloaded your data.')
     } catch {
-      setMessage('That file was not a valid Practice Book export.')
+      setMessage('That file was not a valid Senda export.')
     }
   }
 

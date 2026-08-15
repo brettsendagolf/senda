@@ -165,7 +165,7 @@ export function SessionRunner() {
         <button
           type="button"
           onClick={onNext}
-          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-white active:opacity-90"
+          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
         >
           {drill.logType === 'none'
             ? 'Ready — start'
@@ -241,7 +241,7 @@ function Summary({
         <button
           type="button"
           onClick={onDone}
-          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-white active:opacity-90"
+          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
         >
           Done
         </button>

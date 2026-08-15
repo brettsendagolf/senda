@@ -102,7 +102,7 @@ export function Today() {
               onClick={() => setEntry(e)}
               className={
                 'min-h-11 rounded-lg text-sm font-semibold capitalize ' +
-                (entry === e ? 'bg-accent text-white' : 'text-ink-soft')
+                (entry === e ? 'bg-accent text-on-accent' : 'text-ink-soft')
               }
             >
               {e === 'practice' ? 'Practice' : 'Warm up'}
@@ -214,7 +214,7 @@ export function Today() {
           type="button"
           onClick={onBuild}
           disabled={!venueId}
-          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-white active:opacity-90 disabled:opacity-40"
+          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90 disabled:opacity-40"
         >
           Build my session
         </button>
@@ -373,7 +373,7 @@ function WarmupPanel() {
             state: { warmupId, addonIds: [...addons] },
           })
         }
-        className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-white active:opacity-90"
+        className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
       >
         Start warm-up
       </button>
