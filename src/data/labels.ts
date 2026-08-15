@@ -1,27 +1,7 @@
-import type { Capability, Category, Mode } from '@/types'
+import type { Category, Mode } from '@/types'
 
-export const CAPABILITY_LABELS: Record<Capability, string> = {
-  range: 'Range',
-  net: 'Net',
-  putting_green: 'Putting green',
-  short_game: 'Short game area',
-  bunker: 'Bunker',
-  sim: 'Simulator',
-  course: 'On course',
-  home: 'At home',
-}
-
-/** Order the capabilities appear in the venue editor. */
-export const CAPABILITY_ORDER: Capability[] = [
-  'putting_green',
-  'short_game',
-  'bunker',
-  'range',
-  'net',
-  'sim',
-  'course',
-  'home',
-]
+// Capability + equipment labels live in data/capabilities.ts (they carry group
+// and help text too). This module is just categories and modes.
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   putting: 'Putting',

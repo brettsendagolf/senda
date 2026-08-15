@@ -77,6 +77,16 @@ export function DrillDetailScreen() {
           </p>
         </div>
 
+        {drill.surfaceNote && (
+          <p
+            className="mt-3 rounded-lg border border-line bg-card px-3 py-2 text-sm text-ink"
+            style={{ borderLeftWidth: '4px', borderLeftColor: 'var(--color-test)' }}
+          >
+            <span className="font-semibold">Surface. </span>
+            {drill.surfaceNote}
+          </p>
+        )}
+
         <div className="mt-4">
           <h2 className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-soft">
             Scoring

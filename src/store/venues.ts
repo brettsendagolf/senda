@@ -1,8 +1,9 @@
 import { create } from 'zustand'
-import type { Capability, Venue } from '@/types'
+import type { Capability, Equipment, Venue } from '@/types'
 import { storage, keys } from '@/lib/storage'
 import { newId } from '@/lib/id'
 import { STARTER_VENUES } from '@/data/venues'
+import { CAPABILITY_ORDER } from '@/data/capabilities'
 
 // IndexedDB returns keys in lexicographic order, which would reshuffle venues on
 // every reload. Sort starters into their intended order first, others by name.
@@ -18,11 +19,36 @@ function sortVenues(vs: Venue[]): Venue[] {
   })
 }
 
+// Legacy capabilities from the first data model, mapped onto the current one.
+const LEGACY_CAP: Record<string, Capability[]> = {
+  range: ['range_mat'],
+  home: ['home_putting'],
+}
+const KNOWN_CAPS = new Set<string>(CAPABILITY_ORDER)
+
+/** Bring an older stored venue up to the current shape (caps + equipment). */
+function migrateVenue(v: Venue): Venue {
+  const caps: Capability[] = []
+  for (const c of v.capabilities ?? []) {
+    if (LEGACY_CAP[c]) caps.push(...LEGACY_CAP[c])
+    else if (KNOWN_CAPS.has(c)) caps.push(c)
+  }
+  return {
+    ...v,
+    capabilities: [...new Set(caps)],
+    equipment: (v.equipment ?? []) as Equipment[],
+  }
+}
+
 interface VenuesState {
   venues: Venue[]
   hydrated: boolean
   hydrate: () => Promise<void>
-  addVenue: (name: string, capabilities: Capability[]) => Venue
+  addVenue: (
+    name: string,
+    capabilities: Capability[],
+    equipment: Equipment[],
+  ) => Venue
   updateVenue: (id: string, patch: Partial<Omit<Venue, 'id'>>) => void
   removeVenue: (id: string) => void
 }
@@ -34,16 +60,19 @@ export const useVenues = create<VenuesState>((set, get) => ({
   hydrate: async () => {
     let venues = await storage.list<Venue>(keys.venuePrefix)
     if (venues.length === 0) {
-      // First run — seed the three starter venues and persist them.
       venues = STARTER_VENUES
       await Promise.all(venues.map((v) => storage.set(keys.venue(v.id), v)))
+    } else {
+      // Migrate any legacy venues and persist the upgraded shape.
+      const migrated = venues.map(migrateVenue)
+      await Promise.all(migrated.map((v) => storage.set(keys.venue(v.id), v)))
+      venues = migrated
     }
-    // Keep the starter order stable; user-added venues fall in after.
     set({ venues: sortVenues(venues), hydrated: true })
   },
 
-  addVenue: (name, capabilities) => {
-    const venue: Venue = { id: newId(), name, capabilities }
+  addVenue: (name, capabilities, equipment) => {
+    const venue: Venue = { id: newId(), name, capabilities, equipment }
     void storage.set(keys.venue(venue.id), venue)
     set({ venues: [...get().venues, venue] })
     return venue

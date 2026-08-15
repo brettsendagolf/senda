@@ -1,380 +1,122 @@
-import type { Drill } from '@/types'
+import type {
+  Benchmark,
+  Capability,
+  Category,
+  Drill,
+  Equipment,
+  LogType,
+  Mode,
+  SkillId,
+  SpecialDrill,
+} from '@/types'
 import { LOOSENER_ID } from '@/lib/generator'
+import rawOriginal from './library/drills.json'
+import rawBatch2 from './library/drills-batch-2.json'
+import rawBatch3 from './library/drills-batch-3-home.json'
 
 /**
- * Brett's real drill library — 13 drills ported from drills.json.
- *
- * Mapping notes:
- *  - `metric.myTarget` (his personal 9-handicap target) becomes a single
- *    `Under 9` benchmark. The other bands are deliberately left empty — four
- *    honest bands later beats ten invented ones now.
- *  - `minMinutes` was missing from the source; sensible values added here.
- *    Confidence flagged in the handoff notes. The four `course` (Ghost Nine)
- *    drills are standalone and never generated, so their minMinutes equals
- *    minutes — they don't compress.
- *  - `why` was absent in the source, so it's omitted (optional in the type).
+ * The full 35-drill library, merged from the three authored JSON batches and
+ * normalised to the Drill shape:
+ *  - metric.myTarget (Brett's 9-handicap target) becomes a single Under 9 band;
+ *    the other bands stay empty until there's real data.
+ *  - special 'random_yardage_20_100' maps to our 'random_yardage'.
+ *  - minMinutes was missing on the original 13 — injected below. Least
+ *    confident: p3 Draw and Hit, d2 Nine Tee Shots, p1 Four Rungs. The four
+ *    course (Ghost Nine) drills get minMinutes = minutes; they never generate.
  */
+
+interface RawMetric {
+  label: string
+  max: number
+  lowerIsBetter: boolean
+  myTarget?: number
+}
+interface RawDrill {
+  id: string
+  name: string
+  category: string
+  mode: string
+  requires: string[]
+  equipment?: string[]
+  minutes: number
+  minMinutes?: number
+  purpose: string
+  why?: string
+  setup: string[]
+  tip: string
+  scoring: string
+  metric: RawMetric
+  logType: string
+  focusArea?: string
+  special?: string
+  surfaceNote?: string
+  primarySkill: string
+  skills: string[]
+}
+
+// minMinutes for the original 13 (missing in source). Course drills = minutes.
+const MIN_MINUTES: Record<string, number> = {
+  r1: 12, r2: 10, r3: 25, p1: 15, p2: 12, p3: 12, p4: 25,
+  u1: 12, u2: 10, u3: 20, d1: 12, d2: 15, d3: 120,
+}
+
+function mapSpecial(s?: string): SpecialDrill | undefined {
+  if (s === 'carry_table') return 'carry_table'
+  if (s === 'random_yardage_20_100' || s === 'random_yardage') return 'random_yardage'
+  return undefined
+}
+
+function normalize(raw: RawDrill): Drill {
+  const benchmarks: Benchmark[] =
+    raw.metric.myTarget !== undefined
+      ? [{ band: 'Under 9', target: raw.metric.myTarget }]
+      : []
+  return {
+    id: raw.id,
+    name: raw.name,
+    category: raw.category as Category,
+    mode: raw.mode as Mode,
+    requires: raw.requires as Capability[],
+    equipment: (raw.equipment ?? []) as Equipment[],
+    minutes: raw.minutes,
+    minMinutes: raw.minMinutes ?? MIN_MINUTES[raw.id] ?? Math.round(raw.minutes * 0.6),
+    purpose: raw.purpose,
+    why: raw.why,
+    setup: raw.setup,
+    tip: raw.tip,
+    scoring: raw.scoring,
+    metric: {
+      label: raw.metric.label,
+      max: raw.metric.max,
+      lowerIsBetter: raw.metric.lowerIsBetter,
+    },
+    benchmarks,
+    logType: raw.logType as LogType,
+    primarySkill: raw.primarySkill as SkillId,
+    skills: raw.skills as SkillId[],
+    focusArea: raw.focusArea,
+    special: mapSpecial(raw.special),
+    surfaceNote: raw.surfaceNote,
+  }
+}
+
 export const DRILLS: Drill[] = [
-  // ---- Chipping / rough (r) --------------------------------------------
-  {
-    id: 'r1',
-    name: 'Towel Drop',
-    category: 'chipping',
-    mode: 'build',
-    requires: ['range', 'short_game'],
-    minutes: 20,
-    minMinutes: 12,
-    purpose: 'Land a short pitch out of rough on a spot you have picked.',
-    setup: [
-      'Find a patch of rough on the practice ground.',
-      'Throw a towel down 20 yards away. That is the target, not the flag.',
-      'Hit 10, trying to land each one inside five feet of the towel.',
-      'Move the towel after every set of 10, anywhere between 15 and 30 yards.',
-      'Three sets, 30 balls.',
-      'Change the lie as you go. Sitting up, sitting down, thick, thin.',
-    ],
-    tip: 'Most lofted wedge to start. Early on the only thing that matters is catching the ball before the grass.',
-    scoring: 'How many of the 30 finish within 10 feet of the towel.',
-    metric: { label: 'Inside 10 ft', max: 30, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 15 }],
-    logType: 'aggregate',
-    primarySkill: 'distance_control',
-    skills: ['distance_control', 'strike', 'lie_adjustment'],
-    focusArea: '15–30 yds from rough',
-  },
-  {
-    id: 'r2',
-    name: 'Five to Pass',
-    category: 'chipping',
-    mode: 'pressure',
-    requires: ['range', 'short_game'],
-    minutes: 15,
-    minMinutes: 10,
-    purpose: 'Put a consequence on a short pitch so it stops being a practice swing.',
-    setup: [
-      'Set up in rough on the practice ground.',
-      'Pick a flag or a marker at 25 yards.',
-      'Five balls. Three have to finish inside 15 feet or you have failed.',
-      'Pass and you move to a new distance, 20 or 30 yards.',
-      'Fail and you hit the same distance again until you pass it.',
-      'Four distances passed and you are done.',
-    ],
-    tip: 'Slow it down. These get lost by rushing far more often than by technique.',
-    scoring: 'Total attempts to pass all four distances. Six or fewer is the mark.',
-    metric: { label: 'Attempts used', max: 20, lowerIsBetter: true },
-    benchmarks: [{ band: 'Under 9', target: 6 }],
-    logType: 'aggregate',
-    primarySkill: 'pressure',
-    skills: ['pressure', 'distance_control', 'lie_adjustment'],
-    focusArea: '15–30 yds from rough',
-  },
-  {
-    id: 'r3',
-    name: 'Ghost Nine: Rough',
-    category: 'chipping',
-    mode: 'course',
-    requires: ['course'],
-    minutes: 25,
-    minMinutes: 25,
-    purpose: 'Nine holes where every missed green costs you unless you get it up and down.',
-    setup: [
-      'Play a normal practice round, nine holes.',
-      'Miss a green and you drop a second ball in the nearest rough, 15 to 30 yards out.',
-      'Chip and one putt, or hole it, and you halve the hole. Anything else and the ghost takes it.',
-      'Keep a running count of conversions.',
-      'Four out of nine beats the ghost.',
-      'Watch the contact and how far it runs out. Rough kills spin.',
-    ],
-    tip: 'Take the flatter lies in light rough first. Build the count before you go looking for trouble.',
-    scoring: 'Up and downs out of nine. Four is a win, six is a good day.',
-    metric: { label: 'Up and downs', max: 9, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 4 }],
-    logType: 'aggregate',
-    primarySkill: 'lie_adjustment',
-    skills: ['lie_adjustment', 'pressure', 'distance_control'],
-    focusArea: '15–30 yds from rough',
-  },
-
-  // ---- Wedges (p) ------------------------------------------------------
-  {
-    id: 'p1',
-    name: 'Four Rungs',
-    category: 'wedges',
-    mode: 'build',
-    requires: ['range', 'short_game'],
-    minutes: 25,
-    minMinutes: 15,
-    purpose: 'Get four wedge distances you actually trust.',
-    setup: [
-      'Set targets at roughly 25, 40, 55 and 70 yards.',
-      'Five balls at 25, then five at each rung working up.',
-      'One point inside 15 feet, two points inside eight.',
-      'Under five points out of ten on a rung and you hit it again before moving up.',
-      'Finish with one ball to each of the four, in order.',
-      'Say the number out loud before each of those last four.',
-    ],
-    tip: 'Same tempo throughout. The backswing changes length, the swing does not change speed.',
-    scoring: 'Points out of 40. Twenty four is a decent session.',
-    metric: { label: 'Points', max: 40, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 24 }],
-    logType: 'aggregate',
-    primarySkill: 'distance_control',
-    skills: ['distance_control', 'strike'],
-    focusArea: '25–75 yd wedges',
-  },
-  {
-    id: 'p2',
-    name: 'Carry Numbers',
-    category: 'wedges',
-    mode: 'build',
-    requires: ['range'],
-    minutes: 20,
-    minMinutes: 12,
-    purpose: 'Write down what each wedge actually carries instead of guessing.',
-    setup: [
-      '50, 54 and 58 out in front of you.',
-      'Five balls with each at a half swing, hands roughly to hip height.',
-      'Five with each at three quarters, hands to chest.',
-      'Average the carry for each combination and throw out the obvious duffs.',
-      'Put the six numbers in the table below and look at the gaps.',
-      'Do it again next time. These move with the ground and the wind.',
-    ],
-    tip: 'You are measuring, not competing. Resist the urge to chase a number.',
-    scoring: 'The biggest gap between two consecutive numbers. Under 12 yards means the set covers everything.',
-    metric: { label: 'Largest gap (yds)', max: 40, lowerIsBetter: true },
-    benchmarks: [{ band: 'Under 9', target: 12 }],
-    logType: 'aggregate',
-    primarySkill: 'distance_control',
-    skills: ['distance_control'],
-    focusArea: '25–75 yd wedges',
-    special: 'carry_table',
-  },
-  {
-    id: 'p3',
-    name: 'Draw and Hit',
-    category: 'wedges',
-    mode: 'pressure',
-    requires: ['range', 'short_game'],
-    minutes: 20,
-    minMinutes: 12,
-    purpose: 'Handle the numbers you never practise, which are the ones you keep getting.',
-    setup: [
-      'Tap the button below for a yardage between 25 and 75.',
-      'Choose the club and the swing length, then hit one ball.',
-      'Two points inside 15 feet, one inside 30, nothing outside that.',
-      'No rehearsals and no second go. One look, one ball.',
-      'Fifteen numbers.',
-      'Write down any band that keeps coming back zero.',
-    ],
-    tip: 'Commit before you look up. Second-guessing the club costs more than a slightly wrong number.',
-    scoring: 'Points out of 30 across 15 shots. Eighteen is the mark.',
-    metric: { label: 'Points', max: 30, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 18 }],
-    logType: 'aggregate',
-    primarySkill: 'club_selection',
-    skills: ['club_selection', 'distance_control', 'routine', 'pressure'],
-    focusArea: '25–75 yd wedges',
-    special: 'random_yardage',
-  },
-  {
-    id: 'p4',
-    name: 'Ghost Nine: Wedges',
-    category: 'wedges',
-    mode: 'course',
-    requires: ['course'],
-    minutes: 25,
-    minMinutes: 25,
-    purpose: 'Nine wedge shots that matter, on the course, with a putt on the end of each.',
-    setup: [
-      'Nine holes in a practice round, second ball in the pocket.',
-      'Hole out as normal, then drop somewhere between 25 and 75 yards. Different number every hole.',
-      'Wedge it, putt it out. Up and down or the ghost takes the hole.',
-      'Move the lie around. Fairway, light rough, above your feet, below them.',
-      'Count conversions out of nine.',
-      'Five wins it.',
-    ],
-    tip: 'Pick the spot you want it to land on. These get missed long and short, almost never left and right.',
-    scoring: 'Up and downs out of nine. Five or better passes.',
-    metric: { label: 'Up and downs', max: 9, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 5 }],
-    logType: 'aggregate',
-    primarySkill: 'distance_control',
-    skills: ['distance_control', 'pressure', 'lie_adjustment'],
-    focusArea: '25–75 yd wedges',
-  },
-
-  // ---- Putting (u) -----------------------------------------------------
-  {
-    id: 'u1',
-    name: 'Ten Through the Gate',
-    category: 'putting',
-    mode: 'pressure',
-    requires: ['putting_green'],
-    minutes: 20,
-    minMinutes: 12,
-    purpose: 'Make the stroke hold up when a miss actually costs you something.',
-    setup: [
-      'Two tees 4.5 inches apart, just wider than a ball, on flat ground five feet from the hole.',
-      'Ten balls behind the gate.',
-      'Every one has to go through cleanly and drop.',
-      'Clip a tee or miss the hole and you are back to ball one.',
-      'Ten in a row to finish.',
-      'Two or three goes at it.',
-    ],
-    tip: 'Set the putter to the gate before every stroke. Alignment first, then speed.',
-    scoring: 'How many attempts it took to string ten together.',
-    metric: { label: 'Attempts', max: 80, lowerIsBetter: true },
-    benchmarks: [{ band: 'Under 9', target: 20 }],
-    logType: 'aggregate',
-    primarySkill: 'start_line',
-    skills: ['start_line', 'pressure', 'routine'],
-    focusArea: '4–7 ft putting',
-  },
-  {
-    id: 'u2',
-    name: 'Step Out',
-    category: 'putting',
-    mode: 'build',
-    requires: ['putting_green'],
-    minutes: 15,
-    minMinutes: 10,
-    purpose: 'Work from tap-ins out to the ones that make you think.',
-    setup: [
-      'Tees at 3, 4, 5, 6 and 7 feet from a hole on a flat bit of green.',
-      'Start at three. Three in a row moves you back.',
-      'Three in a row at every distance to advance.',
-      'One miss and you step back in.',
-      'Finish by making three in a row from seven feet.',
-      'Count every putt it takes.',
-    ],
-    tip: 'Speed first. From inside seven feet these break far less than you think they do.',
-    scoring: 'Total putts to get from three feet out to seven.',
-    metric: { label: 'Total putts', max: 120, lowerIsBetter: true },
-    benchmarks: [{ band: 'Under 9', target: 25 }],
-    logType: 'aggregate',
-    primarySkill: 'start_line',
-    skills: ['start_line', 'distance_control', 'pressure'],
-    focusArea: '4–7 ft putting',
-  },
-  {
-    id: 'u3',
-    name: 'Ghost Nine: Gate',
-    category: 'putting',
-    mode: 'course',
-    requires: ['course'],
-    minutes: 20,
-    minMinutes: 20,
-    purpose: 'Five footers with a card in your hand and no second attempt.',
-    setup: [
-      'Pick nine holes in a practice round.',
-      'Hole out as normal, then drop a ball five to six feet away. Change the look each time: up, down, left to right, right to left.',
-      'Two tees either side of the hole, about five inches apart.',
-      'Through the gate and in, or it is a miss. No exceptions.',
-      'Score out of nine.',
-      'Once you get to seven, narrow the gate to four inches.',
-    ],
-    tip: 'Take the straight ones early. Get the stroke moving before you take on a big breaker.',
-    scoring: 'Holed through the gate, out of nine.',
-    metric: { label: 'Made', max: 9, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 7 }],
-    logType: 'aggregate',
-    primarySkill: 'pressure',
-    skills: ['pressure', 'start_line', 'green_reading'],
-    focusArea: '4–7 ft putting',
-  },
-
-  // ---- Driving (d) -----------------------------------------------------
-  {
-    id: 'd1',
-    name: 'The Corridor',
-    category: 'driving',
-    mode: 'build',
-    requires: ['range'],
-    minutes: 20,
-    minMinutes: 12,
-    purpose: 'Give the driver a fairway to hit instead of open space.',
-    setup: [
-      'Two markers about 25 to 30 yards apart at your driver distance. That is your fairway.',
-      'Ten drives, all trying to finish between them.',
-      'Call it after each one. In, left, or right.',
-      'Start on ten points and lose one per miss.',
-      'Go again and try to beat the score.',
-      'Finish with five where you name the side of the corridor out loud before you swing.',
-    ],
-    tip: 'Widen the corridor if ten out of ten is impossible. Narrow it when it stops being.',
-    scoring: 'Points left after the ten, plus how many of the last five found it.',
-    metric: { label: 'Points left', max: 10, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 7 }],
-    logType: 'aggregate',
-    primarySkill: 'start_line',
-    skills: ['start_line', 'routine'],
-    focusArea: 'Driving',
-  },
-  {
-    id: 'd2',
-    name: 'Nine Tee Shots',
-    category: 'driving',
-    mode: 'pressure',
-    requires: ['range'],
-    minutes: 25,
-    minMinutes: 15,
-    purpose: 'Nine drives that each mean something, with the last one meaning the most.',
-    setup: [
-      'Nine drives, each one a different hole in your head.',
-      'Pick a real target first, a flag or a sign, and build the hole around it.',
-      'Two points if it finishes in a 30 yard window on your line, one if it is playable but offline, nothing if it costs you a shot.',
-      'Running total out of 18.',
-      'Shot nine has to be two points or the whole round starts again.',
-      'Three rounds, beating the last one each time.',
-    ],
-    tip: 'Treat the ninth like the 18th at Stockport with a card to sign. That is the whole point of the drill.',
-    scoring: 'Points per round out of 18. Log your best round.',
-    metric: { label: 'Points', max: 18, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 12 }],
-    logType: 'aggregate',
-    primarySkill: 'routine',
-    skills: ['routine', 'start_line', 'pressure', 'club_selection'],
-    focusArea: 'Driving',
-  },
-  {
-    id: 'd3',
-    name: 'Ghost Nine: Fairways',
-    category: 'driving',
-    mode: 'course',
-    requires: ['course'],
-    minutes: 120,
-    minMinutes: 120,
-    purpose: 'Nine holes where the tee shot is the only thing being scored.',
-    setup: [
-      'Nine holes, practice round or a quiet evening.',
-      'Commit to a club and a line on every tee. Tight hole, take the 3 wood or the hybrid. That is a good decision, not a soft one.',
-      'Fairway is a point, first cut is nothing, a miss means re-tee and you have lost the hole.',
-      'Play the hole out as normal afterwards.',
-      'Count fairways out of nine.',
-      'Six is the target.',
-    ],
-    tip: 'Start on the holes you usually find. Get some in the bank before the ones that scare you.',
-    scoring: 'Fairways hit out of nine.',
-    metric: { label: 'Fairways', max: 9, lowerIsBetter: false },
-    benchmarks: [{ band: 'Under 9', target: 6 }],
-    logType: 'aggregate',
-    primarySkill: 'club_selection',
-    skills: ['club_selection', 'routine', 'pressure'],
-    focusArea: 'Driving',
-  },
-]
+  ...(rawOriginal as unknown as RawDrill[]),
+  ...(rawBatch2 as unknown as RawDrill[]),
+  ...(rawBatch3 as unknown as RawDrill[]),
+].map(normalize)
 
 /**
  * The composed warm-up loosener. Not part of the browsable library and never
- * selected by the generator — the generator prepends it to every session as a
- * brief opener. No score: it exists to get you moving, not to be measured.
+ * selected by the generator — it's prepended to every session as a brief opener.
  */
 export const LOOSENER: Drill = {
   id: LOOSENER_ID,
   name: 'Quick loosener',
   category: 'full_swing',
   mode: 'warmup',
-  requires: ['range', 'net', 'short_game', 'putting_green', 'home', 'sim', 'course'],
+  requires: ['range_grass', 'range_mat', 'net', 'sim', 'short_game', 'putting_green', 'home_swing'],
+  equipment: [],
   minutes: 3,
   minMinutes: 2,
   purpose: 'Wake the swing up before you start scoring.',
@@ -392,7 +134,6 @@ export const LOOSENER: Drill = {
   skills: ['routine'],
 }
 
-/** Fast lookup across the browsable library plus the loosener. */
 const BY_ID = new Map<string, Drill>(
   [...DRILLS, LOOSENER].map((d) => [d.id, d]),
 )
@@ -403,3 +144,15 @@ export const COURSE_DRILLS = DRILLS.filter((d) => d.mode === 'course')
 
 /** Everything the generator may draw from (course drills excluded). */
 export const GENERATABLE_DRILLS = DRILLS.filter((d) => d.mode !== 'course')
+
+/** Generatable drills a venue can actually run: ANY capability, ALL equipment. */
+export function eligibleDrills(
+  caps: Capability[],
+  equipment: Equipment[],
+): Drill[] {
+  return GENERATABLE_DRILLS.filter(
+    (d) =>
+      d.requires.some((r) => caps.includes(r)) &&
+      d.equipment.every((e) => equipment.includes(e)),
+  )
+}

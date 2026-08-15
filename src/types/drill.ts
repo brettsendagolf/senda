@@ -1,4 +1,4 @@
-import type { Capability } from './venue'
+import type { Capability, Equipment } from './venue'
 
 /** Which part of the game a drill trains. */
 export type Category =
@@ -65,6 +65,7 @@ export interface Drill {
   category: Category
   mode: Mode
   requires: Capability[] //     ANY of these satisfies it
+  equipment: Equipment[] //     ALL of these are needed (empty = just a club)
   minutes: number //            typical duration
   minMinutes: number //         shortest sensible version
   purpose: string //            one line, what it trains
@@ -79,4 +80,5 @@ export interface Drill {
   skills: SkillId[] //           all skills trained, primary first
   focusArea?: string //          short label, e.g. "25–75 yd wedges"
   special?: SpecialDrill //      bespoke runner input, if any
+  surfaceNote?: string //        honest caveat shown when the venue is mats-only
 }

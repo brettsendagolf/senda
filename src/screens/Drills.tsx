@@ -19,8 +19,11 @@ export function Drills() {
   const filtered = useMemo(() => {
     return GENERATABLE_DRILLS.filter((d) => {
       if (category !== 'all' && d.category !== category) return false
-      if (venue && !d.requires.some((r) => venue.capabilities.includes(r)))
-        return false
+      if (venue) {
+        const capOk = d.requires.some((r) => venue.capabilities.includes(r))
+        const kitOk = d.equipment.every((e) => venue.equipment.includes(e))
+        if (!capOk || !kitOk) return false
+      }
       return true
     })
   }, [category, venue])

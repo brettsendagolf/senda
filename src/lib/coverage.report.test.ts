@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest'
 import type { Mode, SkillId } from '@/types'
 import { DRILLS } from '@/data/drills'
 import { SKILLS, SYMPTOMS } from '@/data/skills'
-import { CATEGORY_ORDER, CAPABILITY_ORDER, CATEGORY_LABELS } from '@/data/labels'
+import { CATEGORY_ORDER, CATEGORY_LABELS } from '@/data/labels'
+import { CAPABILITY_ORDER } from '@/data/capabilities'
 import { computeCoverage } from './coverage'
 
 /**

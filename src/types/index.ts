@@ -1,5 +1,5 @@
 // Barrel — import domain types from '@/types'.
-export type { Capability, Venue } from './venue'
+export type { Capability, CapabilityGroup, Equipment, Venue } from './venue'
 export type {
   Category,
   Mode,

@@ -1,0 +1,137 @@
+{
+  "capabilities": {
+    "range_grass": {
+      "label": "Range — real grass",
+      "group": "range",
+      "help": "Hitting off turf. Divots, real low point feedback."
+    },
+    "range_mat": {
+      "label": "Range — mats",
+      "group": "range",
+      "help": "Hitting off artificial mats. Ball flight yes, turf feedback no."
+    },
+    "net": {
+      "label": "Net",
+      "group": "enclosed",
+      "help": "Hitting into a net. No ball flight to judge."
+    },
+    "sim": {
+      "label": "Simulator / launch monitor",
+      "group": "enclosed",
+      "help": "Indoor bay with distance and dispersion numbers."
+    },
+    "putting_green": {
+      "label": "Putting green",
+      "group": "short",
+      "help": "Full outdoor putting surface."
+    },
+    "short_game": {
+      "label": "Short game area",
+      "group": "short",
+      "help": "Chipping and pitching area with a green to land on."
+    },
+    "bunker": {
+      "label": "Practice bunker",
+      "group": "short",
+      "help": "Sand you are allowed to practise in."
+    },
+    "course": {
+      "label": "On the course",
+      "group": "course",
+      "help": "Playing holes, quiet enough for a second ball."
+    },
+    "home_putting": {
+      "label": "Home — carpet or mat",
+      "group": "home",
+      "help": "Somewhere flat to putt indoors."
+    },
+    "home_swing": {
+      "label": "Home — room to swing",
+      "group": "home",
+      "help": "Space for a small swing with foam balls."
+    },
+    "home_mirror": {
+      "label": "Home — mirror only",
+      "group": "home",
+      "help": "No ball, no space. Rehearsal and setup work."
+    }
+  },
+  "equipment": {
+    "towel": "Towel",
+    "alignment_sticks": "Alignment sticks",
+    "face_spray": "Face spray or impact tape",
+    "line_spray": "Line spray or chalk",
+    "foam_balls": "Foam or plastic balls",
+    "mirror": "Full length mirror",
+    "putter": "Putter",
+    "two_coins": "Two coins or tees",
+    "wedge": "Wedge"
+  },
+  "honesty": {
+    "rule": "When a venue has fewer than three eligible drills, say so plainly and offer what exists. Never pad a session with drills that do not fit the facility.",
+    "example": "Two drills fit a mirror and nothing else. Here they are — about 14 minutes."
+  },
+  "limits": {
+    "home_mirror": {
+      "maxSessionMinutes": 15,
+      "maxBlockMinutes": 15,
+      "note": "No ball, no space. Short and focused or not at all."
+    },
+    "home_putting": {
+      "maxSessionMinutes": 20,
+      "maxBlockMinutes": 20,
+      "note": "Carpet work stays sharp for about twenty minutes."
+    },
+    "home_swing": {
+      "maxSessionMinutes": 25,
+      "maxBlockMinutes": 25,
+      "note": "Foam and small swings. Quality drops off quickly."
+    },
+    "net": {
+      "maxSessionMinutes": 45,
+      "maxBlockMinutes": 45,
+      "note": "No ball flight, so attention fades sooner than on a range."
+    },
+    "range_mat": {
+      "maxSessionMinutes": 60,
+      "maxBlockMinutes": 60
+    },
+    "range_grass": {
+      "maxSessionMinutes": 60,
+      "maxBlockMinutes": 60
+    },
+    "sim": {
+      "maxSessionMinutes": 60,
+      "maxBlockMinutes": 60
+    },
+    "putting_green": {
+      "maxSessionMinutes": 45,
+      "maxBlockMinutes": 45
+    },
+    "short_game": {
+      "maxSessionMinutes": 60,
+      "maxBlockMinutes": 60
+    },
+    "bunker": {
+      "maxSessionMinutes": 30,
+      "maxBlockMinutes": 30,
+      "note": "Hands and wrists tire in sand faster than people expect."
+    }
+  },
+  "limitRule": "SESSION CEILING is additive. Sum maxBlockMinutes across the venue's capabilities, then clamp to the highest groupCeiling among those capabilities, then round DOWN to the nearest pickerOption. Switching activity resets attention, so a mirror plus a carpet is a longer session than either alone.\nWITHIN a session, no single capability may exceed its own maxBlockMinutes. That is what makes combining safe: 15 minutes of mirror work plus 20 on the carpet is fine, 35 minutes of mirror work is not.\nThe time picker shows only options at or below the computed ceiling.",
+  "groupCeilings": {
+    "home": 45,
+    "enclosed": 60,
+    "range": 60,
+    "short": 60,
+    "course": 180
+  },
+  "pickerOptions": [
+    10,
+    15,
+    20,
+    30,
+    45,
+    60
+  ]
+}

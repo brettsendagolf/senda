@@ -1,0 +1,543 @@
+[
+  {
+    "id": "s1",
+    "name": "Towel Behind",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "net",
+      "range_grass",
+      "range_mat",
+      "sim"
+    ],
+    "minutes": 15,
+    "minMinutes": 8,
+    "primarySkill": "strike",
+    "skills": [
+      "strike"
+    ],
+    "purpose": "Move your low point in front of the ball so you catch it before the turf.",
+    "why": "Fat and thin are the same fault wearing different clothes: the club is bottoming out behind the ball. A towel gives you an instant yes or no on every swing.",
+    "setup": [
+      "Fold a towel flat and lay it a grip's length behind the ball. Flat, not rolled.",
+      "Take a 7 iron and swing at about half speed to start.",
+      "Hit 20 balls. A strike counts as clean if you miss the towel entirely.",
+      "Every time you clip it, that ball scores nothing. No second attempts.",
+      "Once you clear 15 out of 20, move the towel two inches closer and start again.",
+      "Note the closest distance you managed a clean 15."
+    ],
+    "tip": "Build up from half speed. Catching a folded towel flat out with a long iron is jarring and you will start steering to avoid it, which teaches the wrong thing.",
+    "scoring": "Clean strikes out of 20, and how close the towel was.",
+    "metric": {
+      "label": "Clean strikes",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 15
+    },
+    "logType": "aggregate",
+    "equipment": [
+      "towel"
+    ],
+    "surfaceNote": "On a mat the sole skids rather than digs, so a fat strike can still feel clean. Grass gives you the truth."
+  },
+  {
+    "id": "s2",
+    "name": "Face Tape",
+    "category": "full_swing",
+    "mode": "test",
+    "requires": [
+      "net",
+      "range_grass",
+      "range_mat",
+      "sim"
+    ],
+    "minutes": 12,
+    "minMinutes": 6,
+    "primarySkill": "strike",
+    "skills": [
+      "strike"
+    ],
+    "purpose": "Find out where on the face you are actually hitting it.",
+    "why": "Most golfers have a miss pattern on the face and have never seen it. Toe strikes and heel strikes feel similar and cost you very differently.",
+    "setup": [
+      "Spray the face with foot powder or stick a strip of impact tape on it.",
+      "Hit 15 balls with a 7 iron, checking and re-spraying every three.",
+      "Score a strike as centred if the mark touches the middle third of the face.",
+      "Photograph the pattern before you wipe it off.",
+      "Note whether your misses cluster toe, heel, high or low.",
+      "Repeat with the driver if you have time."
+    ],
+    "tip": "Do not try to fix anything on the day. This is a measurement. Look at where the pattern sits and bring it to your next lesson.",
+    "scoring": "Centred strikes out of 15, plus where the misses cluster.",
+    "metric": {
+      "label": "Centred strikes",
+      "max": 15,
+      "lowerIsBetter": false,
+      "myTarget": 9
+    },
+    "logType": "aggregate",
+    "equipment": [
+      "face_spray"
+    ]
+  },
+  {
+    "id": "s3",
+    "name": "Divot Line",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "range_grass"
+    ],
+    "minutes": 15,
+    "minMinutes": 8,
+    "primarySkill": "strike",
+    "skills": [
+      "strike"
+    ],
+    "purpose": "Train the divot to start at the ball and finish in front of it.",
+    "why": "A divot starting behind the ball means you have already lost the strike. Where the turf breaks tells you the truth in a way the ball flight does not.",
+    "setup": [
+      "Spray or scratch a line on the turf, square to your target.",
+      "Set the ball on the line and take a normal stance.",
+      "Hit 15 shots with an 8 iron.",
+      "Score one point if the divot starts on or in front of the line. Nothing if it starts behind.",
+      "Redraw the line and move along the turf every five shots.",
+      "Finish with five where you call the strike out loud before you look down."
+    ],
+    "tip": "Around 80 percent of your weight wants to be on the lead foot at impact. If the divots keep starting behind the line, that is usually where it has gone wrong.",
+    "scoring": "Divots starting on or past the line, out of 15.",
+    "metric": {
+      "label": "Good divots",
+      "max": 15,
+      "lowerIsBetter": false,
+      "myTarget": 11
+    },
+    "logType": "aggregate",
+    "equipment": [
+      "line_spray"
+    ]
+  },
+  {
+    "id": "s4",
+    "name": "Nine to Three",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "net",
+      "range_grass",
+      "range_mat",
+      "sim"
+    ],
+    "minutes": 12,
+    "minMinutes": 6,
+    "primarySkill": "strike",
+    "skills": [
+      "strike"
+    ],
+    "purpose": "Strip the swing back to the part that actually strikes the ball.",
+    "why": "A shorter swing removes most of the ways you can go wrong and leaves only contact. If you cannot flush it from nine to three, the full swing was never the problem.",
+    "setup": [
+      "Lead arm to nine o'clock going back, trail arm to three o'clock through. No further.",
+      "Use a 9 iron. Same length both sides.",
+      "Hit 20 balls, holding the finish for a beat each time.",
+      "Score a strike as clean if the contact sounds and feels solid, nothing thin or heavy.",
+      "If you drop below 15, shorten to eight and four and rebuild from there.",
+      "Finish with five full swings keeping the same feel."
+    ],
+    "tip": "The finish position is the tell. If you cannot hold it still for a second, you swung harder than the drill asks for.",
+    "scoring": "Clean strikes out of 20.",
+    "metric": {
+      "label": "Clean strikes",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 16
+    },
+    "logType": "aggregate",
+    "equipment": [],
+    "surfaceNote": "Mats flatter thin strikes. If you have the choice, do this one off grass."
+  },
+  {
+    "id": "s5",
+    "name": "Ten Flush",
+    "category": "full_swing",
+    "mode": "pressure",
+    "requires": [
+      "net",
+      "range_grass",
+      "range_mat",
+      "sim"
+    ],
+    "minutes": 15,
+    "minMinutes": 10,
+    "primarySkill": "strike",
+    "skills": [
+      "strike",
+      "pressure"
+    ],
+    "purpose": "Put a consequence on contact so it holds up when it matters.",
+    "why": "Clean strikes in a row is a different skill from clean strikes on average. One bad one on the course tends to bring another.",
+    "setup": [
+      "Pick one club. A 7 or 8 iron works best.",
+      "You need ten clean strikes in a row. Thin, heavy or off the toe all count as a miss.",
+      "Miss one and you are back to zero.",
+      "Full routine before every ball. No raking three in quickly.",
+      "Count every ball you hit until you string ten together.",
+      "Twenty five attempts or fewer is a good session."
+    ],
+    "tip": "The run usually breaks around six or seven, when you start thinking about the run rather than the shot. That is the whole point of the drill.",
+    "scoring": "Total balls hit to make ten clean strikes in a row.",
+    "metric": {
+      "label": "Attempts",
+      "max": 80,
+      "lowerIsBetter": true,
+      "myTarget": 25
+    },
+    "logType": "aggregate",
+    "equipment": [],
+    "surfaceNote": "Grass is the better surface here. On a mat, judge on sound and face contact rather than turf."
+  },
+  {
+    "id": "b1",
+    "name": "Line in the Sand",
+    "category": "bunker",
+    "mode": "build",
+    "requires": [
+      "bunker"
+    ],
+    "minutes": 12,
+    "minMinutes": 6,
+    "primarySkill": "strike",
+    "skills": [
+      "strike",
+      "lie_adjustment"
+    ],
+    "purpose": "Enter the sand in the same place every time, without a ball to distract you.",
+    "why": "Bunker shots are decided before the ball is involved. If the club enters the sand in a consistent spot, distance control becomes possible. If it does not, nothing else works.",
+    "setup": [
+      "Draw a straight line in the sand, long enough to move along.",
+      "No ball yet. Open the face, open the stance, and swing so the club enters on the line.",
+      "Take 20 swings, moving a step along the line each time.",
+      "Score one point when the sand breaks on the line, nothing when it breaks behind or in front.",
+      "Look at the divot each time. You want a shallow six inch splash, not a crater.",
+      "Vary the swing length as you go, from knee height to full."
+    ],
+    "tip": "Swing along the line of your feet, not at the flag. Most poor bunker contact starts with aiming the swing at the target.",
+    "scoring": "Entries on the line out of 20.",
+    "metric": {
+      "label": "On the line",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 14
+    },
+    "logType": "aggregate",
+    "equipment": []
+  },
+  {
+    "id": "b2",
+    "name": "Sand Ladder",
+    "category": "bunker",
+    "mode": "build",
+    "requires": [
+      "bunker"
+    ],
+    "minutes": 15,
+    "minMinutes": 10,
+    "primarySkill": "distance_control",
+    "skills": [
+      "distance_control",
+      "strike"
+    ],
+    "purpose": "Control how far it goes from sand, not just whether it comes out.",
+    "why": "Most golfers have one bunker shot and hope the flag is at that distance. Landing zones teach you there is a range.",
+    "setup": [
+      "Mark three landing zones on the green with tees or clubs: short, middle, long.",
+      "Same club and same open face throughout. Only the swing length changes.",
+      "Five balls to each zone, working short to long.",
+      "One point per ball that lands in its zone.",
+      "Then five balls where you call the zone out loud before each swing.",
+      "Twenty balls, twenty points available."
+    ],
+    "tip": "Take the same amount of sand every time and let the length of the swing do the work. Changing how much sand you take is the hardest way to control distance.",
+    "scoring": "Balls landing in the called zone, out of 20.",
+    "metric": {
+      "label": "In the zone",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 12
+    },
+    "logType": "aggregate",
+    "equipment": []
+  },
+  {
+    "id": "b3",
+    "name": "First Time Out",
+    "category": "bunker",
+    "mode": "pressure",
+    "requires": [
+      "bunker"
+    ],
+    "minutes": 12,
+    "minMinutes": 8,
+    "primarySkill": "pressure",
+    "skills": [
+      "pressure",
+      "lie_adjustment",
+      "strike"
+    ],
+    "purpose": "Get out and on the green first time, from lies you did not choose.",
+    "why": "The score damage from a bunker is almost never the shot itself. It is the second one from the same bunker.",
+    "setup": [
+      "Drop ten balls around the bunker without arranging them. Play them as they lie.",
+      "Include a couple under the lip and a couple on a downslope.",
+      "One point for out and on the green first time. Nothing otherwise.",
+      "No rehearsal swings in the sand beyond one.",
+      "Play them in the order you dropped them, no picking the easy ones.",
+      "Seven out of ten is a solid day."
+    ],
+    "tip": "On the bad lies, take the safe exit rather than the flag. Getting out sideways beats a second shot from the same footprint every time.",
+    "scoring": "Out and on the green first attempt, out of 10.",
+    "metric": {
+      "label": "Out first time",
+      "max": 10,
+      "lowerIsBetter": false,
+      "myTarget": 7
+    },
+    "logType": "aggregate",
+    "equipment": []
+  },
+  {
+    "id": "n1",
+    "name": "Path Gate",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "net",
+      "range_grass",
+      "range_mat",
+      "sim"
+    ],
+    "minutes": 12,
+    "minMinutes": 6,
+    "primarySkill": "start_line",
+    "skills": [
+      "start_line",
+      "strike"
+    ],
+    "purpose": "Feel your club path through impact when you cannot see the ball flight.",
+    "why": "A net takes the ball flight away, which is exactly why it is good for path work. You get an audible answer instead of a visual one.",
+    "setup": [
+      "Lay two alignment sticks on the ground forming a gate just wider than your clubhead, on the target line about six inches ahead of the ball.",
+      "Hit 20 balls with a 7 iron, swinging through the gate without touching either stick.",
+      "One point per ball that goes through cleanly.",
+      "Clip a stick and you will hear it. That ball scores nothing.",
+      "Narrow the gate once you clear 16 out of 20.",
+      "Note which stick you keep hitting. Outer means over the top, inner means too far from the inside."
+    ],
+    "tip": "Which stick you catch tells you more than the score does. Keep a note of it session to session.",
+    "scoring": "Clean passes through the gate, out of 20.",
+    "metric": {
+      "label": "Clean passes",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 15
+    },
+    "logType": "aggregate",
+    "equipment": [
+      "alignment_sticks"
+    ]
+  },
+  {
+    "id": "n2",
+    "name": "Tempo Count",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "home_swing",
+      "net",
+      "range_grass",
+      "range_mat",
+      "sim"
+    ],
+    "minutes": 10,
+    "minMinutes": 5,
+    "primarySkill": "routine",
+    "skills": [
+      "routine",
+      "strike"
+    ],
+    "purpose": "Build a repeatable rhythm without needing to see where it went.",
+    "why": "Tempo is the one thing that holds up under pressure when technique wobbles, and a net is the ideal place to groove it because there is no result to chase.",
+    "setup": [
+      "Count out loud: one and two on the way back, three at the ball. Same count every swing.",
+      "Hit 10 balls counting aloud, deliberately slower than feels natural.",
+      "Then 10 more without counting, holding the same rhythm.",
+      "Score a swing as good if the tempo held. Rushing the transition is a miss.",
+      "Listen to the strike. The sound gets more consistent as the tempo settles.",
+      "Finish with three swings, eyes closed, feeling the count."
+    ],
+    "tip": "Almost everyone's natural instinct is to go back too fast. Slower than feels right is usually about right.",
+    "scoring": "Swings that held the count, out of 20.",
+    "metric": {
+      "label": "On tempo",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 16
+    },
+    "logType": "aggregate",
+    "equipment": []
+  },
+  {
+    "id": "n3",
+    "name": "Routine Reps",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "net",
+      "range_grass",
+      "range_mat",
+      "sim"
+    ],
+    "minutes": 10,
+    "minMinutes": 5,
+    "primarySkill": "routine",
+    "skills": [
+      "routine"
+    ],
+    "purpose": "Rehearse the pre-shot routine until it runs itself.",
+    "why": "Range and net practice usually skips the routine entirely, then the routine is expected to appear on the first tee. It will not unless you have drilled it.",
+    "setup": [
+      "Pick a target on the net. A mark, a seam, a piece of tape.",
+      "Full routine on every ball: stand behind, pick the line, one rehearsal, step in, go.",
+      "Hit 15 balls this way. No raking a second ball over.",
+      "Score a rep as complete only if you did the whole routine without shortcutting.",
+      "Time yourself. It should be roughly the same length every time.",
+      "If you catch yourself skipping steps, stop and reset the count."
+    ],
+    "tip": "This one feels pointless in a garage, which is why nobody does it. It is also the cheapest shot you will ever save.",
+    "scoring": "Complete routines out of 15.",
+    "metric": {
+      "label": "Full routines",
+      "max": 15,
+      "lowerIsBetter": false,
+      "myTarget": 13
+    },
+    "logType": "aggregate",
+    "equipment": []
+  },
+  {
+    "id": "h1",
+    "name": "Carpet Gate",
+    "category": "putting",
+    "mode": "build",
+    "requires": [
+      "home_putting",
+      "putting_green"
+    ],
+    "minutes": 10,
+    "minMinutes": 5,
+    "primarySkill": "start_line",
+    "skills": [
+      "start_line"
+    ],
+    "purpose": "Start the ball where you aimed it, on a surface that never breaks.",
+    "why": "A carpet takes break and speed out of the equation and leaves only start line, which is the part of putting most worth grooving indoors.",
+    "setup": [
+      "Two coins or tees just wider than the ball, about a foot in front of you.",
+      "Putt 20 balls through the gate to a target beyond it.",
+      "One point per ball through cleanly.",
+      "Clip either side and it scores nothing.",
+      "Once you clear 17, narrow the gate.",
+      "Note which side you keep clipping."
+    ],
+    "tip": "Set the putter face to the gate before every stroke. Aim first, stroke second.",
+    "scoring": "Clean passes out of 20.",
+    "metric": {
+      "label": "Through the gate",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 16
+    },
+    "logType": "aggregate",
+    "equipment": [
+      "putter",
+      "two_coins"
+    ]
+  },
+  {
+    "id": "h2",
+    "name": "Mirror Check",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "home_mirror"
+    ],
+    "minutes": 8,
+    "minMinutes": 4,
+    "primarySkill": "routine",
+    "skills": [
+      "routine",
+      "strike"
+    ],
+    "purpose": "Rehearse setup and positions with no ball and no space needed.",
+    "why": "Setup faults are the cheapest thing in golf to fix and the easiest to let drift. A mirror is honest in a way that feel is not.",
+    "setup": [
+      "Stand square on to a mirror, club in hand, no ball.",
+      "Check grip, posture, ball position and alignment. Hold each for a count of three.",
+      "Ten rehearsals to the top of the backswing, checking the position each time.",
+      "Ten rehearsals to a held finish, balanced, checking you can stay there.",
+      "Turn side on and repeat both, watching the shaft plane.",
+      "Score a rep as good if you hit the position without adjusting after looking."
+    ],
+    "tip": "Adjusting once you have looked in the mirror does not count. The point is what you do before you check.",
+    "scoring": "Positions hit without correction, out of 20.",
+    "metric": {
+      "label": "Clean reps",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 15
+    },
+    "logType": "aggregate",
+    "equipment": [
+      "mirror"
+    ]
+  },
+  {
+    "id": "h3",
+    "name": "Foam Ball Strike",
+    "category": "chipping",
+    "mode": "build",
+    "requires": [
+      "home_swing"
+    ],
+    "minutes": 10,
+    "minMinutes": 5,
+    "primarySkill": "strike",
+    "skills": [
+      "strike",
+      "distance_control"
+    ],
+    "purpose": "Keep the chipping strike alive through the winter.",
+    "why": "Chipping is the first thing to go when you stop playing and the quickest to come back if you have kept your hand in.",
+    "setup": [
+      "Foam or plastic balls, a wedge, and a target: a cushion, a laundry basket, a chair.",
+      "Small chipping motion only. Hands and arms, minimal wrist.",
+      "Twenty balls at a target roughly ten feet away.",
+      "One point for a clean strike that finds the target area.",
+      "Move the target after every ten so you are not grooving one distance.",
+      "Stop if the strike goes. Twenty good ones beats fifty scrappy ones."
+    ],
+    "tip": "Foam balls exaggerate a thin strike, which makes them better feedback indoors than real balls would be.",
+    "scoring": "Clean strikes on target, out of 20.",
+    "metric": {
+      "label": "On target",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 14
+    },
+    "logType": "aggregate",
+    "equipment": [
+      "foam_balls",
+      "wedge"
+    ]
+  }
+]

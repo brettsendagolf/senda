@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import type { Session } from '@/types'
 import { useSession } from '@/store/session'
 import { useSettings } from '@/store/settings'
+import { useVenues } from '@/store/venues'
 import { getDrill } from '@/data/drills'
 import { ModeBadge } from '@/components/ModeBadge'
 import { BenchmarkStrip } from '@/components/BenchmarkStrip'
@@ -19,6 +20,7 @@ export function SessionRunner() {
   const scoreBlock = useSession((s) => s.scoreBlock)
   const finish = useSession((s) => s.finish)
   const handicap = useSettings((s) => s.handicap)
+  const venues = useVenues((s) => s.venues)
 
   const [index, setIndex] = useState(() => (current ? firstIncomplete(current) : 0))
   const [value, setValue] = useState<number | undefined>()
@@ -34,6 +36,14 @@ export function SessionRunner() {
   if (!drill) return <Navigate to="/" replace />
 
   const isLast = index === current.blocks.length - 1
+
+  // The surface caveat only applies at a mats-only range.
+  const venue = venues.find((v) => v.id === current.venueId)
+  const matsOnly =
+    !!venue &&
+    venue.capabilities.includes('range_mat') &&
+    !venue.capabilities.includes('range_grass')
+  const showSurfaceNote = matsOnly && !!drill.surfaceNote
 
   const onNext = () => {
     if (value !== undefined) scoreBlock(index, value)
@@ -91,6 +101,16 @@ export function SessionRunner() {
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-ink">{drill.name}</h1>
         <p className="mt-1 text-ink-soft">{drill.purpose}</p>
+
+        {showSurfaceNote && (
+          <p
+            className="mt-3 rounded-lg border border-line bg-card px-3 py-2 text-sm text-ink"
+            style={{ borderLeftWidth: '4px', borderLeftColor: 'var(--color-test)' }}
+          >
+            <span className="font-semibold">On mats: </span>
+            {drill.surfaceNote}
+          </p>
+        )}
 
         <div className="mt-4 rounded-lg border border-line bg-card p-3">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-soft">

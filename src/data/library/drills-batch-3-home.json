@@ -1,0 +1,303 @@
+[
+  {
+    "id": "h4",
+    "name": "Grip Rebuild",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "home_mirror",
+      "home_swing"
+    ],
+    "minutes": 6,
+    "minMinutes": 4,
+    "primarySkill": "routine",
+    "skills": [
+      "routine",
+      "start_line"
+    ],
+    "purpose": "Rebuild the grip properly, slowly, while nothing is at stake.",
+    "why": "Grip drifts over a season and you never notice, because every swing after it compensates. Ten minutes in a hallway in January is worth more than a lesson in April.",
+    "setup": [
+      "Club in hand, no ball. Stand where you can see your hands.",
+      "Build the grip one hand at a time. Lead hand first, check the knuckles, then trail hand on top.",
+      "Hold it for a count of five, then take the hands off completely.",
+      "Twenty reps. Rebuilding from scratch every time.",
+      "Score a rep as good if you got there without shuffling once you had gripped it.",
+      "Last five reps with your eyes closed, then open them and check."
+    ],
+    "tip": "The shuffle is the tell. If you have to adjust after you have taken hold, your first instinct is still wrong.",
+    "scoring": "Clean grips with no adjustment, out of 20.",
+    "metric": {
+      "label": "Clean grips",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 16
+    },
+    "equipment": [],
+    "logType": "aggregate"
+  },
+  {
+    "id": "h5",
+    "name": "Slow Motion Sequence",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "home_swing",
+      "home_mirror"
+    ],
+    "minutes": 8,
+    "minMinutes": 5,
+    "primarySkill": "routine",
+    "skills": [
+      "routine",
+      "strike"
+    ],
+    "purpose": "Move through the swing slowly enough to notice what you are actually doing.",
+    "why": "At full speed you feel almost nothing that is real. At a tenth of the speed you feel everything, and that is where a change actually gets made.",
+    "setup": [
+      "No ball. Enough room for a club, or grip down and use a shortened one.",
+      "Take ten seconds to reach the top. Genuinely ten. Count it.",
+      "Pause for three at the top, then ten seconds down to a held finish.",
+      "Fifteen reps. It should feel absurdly slow and slightly tiring.",
+      "Score a rep as good if you did not speed up anywhere to get through a position.",
+      "Finish with three at normal speed, keeping the same shape."
+    ],
+    "tip": "Everyone rushes the transition, even at this speed. That is exactly the part worth slowing down.",
+    "scoring": "Reps completed without rushing, out of 15.",
+    "metric": {
+      "label": "Clean reps",
+      "max": 15,
+      "lowerIsBetter": false,
+      "myTarget": 12
+    },
+    "equipment": [],
+    "logType": "aggregate"
+  },
+  {
+    "id": "h6",
+    "name": "Hold the Finish",
+    "category": "full_swing",
+    "mode": "pressure",
+    "requires": [
+      "home_swing",
+      "home_mirror"
+    ],
+    "minutes": 6,
+    "minMinutes": 4,
+    "primarySkill": "routine",
+    "skills": [
+      "routine",
+      "strike"
+    ],
+    "purpose": "Swing at speed and finish balanced, ten times running.",
+    "why": "If you cannot hold a finish, you swung harder than you can control. It is the simplest honest test of whether your speed is yours.",
+    "setup": [
+      "No ball, full speed swings, enough room to be safe.",
+      "Swing, then hold the finish still for three full seconds.",
+      "Any wobble, step or fall out of it and you are back to zero.",
+      "Ten in a row to finish the drill.",
+      "Count every swing it takes.",
+      "Fifteen or fewer is a good day."
+    ],
+    "tip": "Most people can do six or seven. The last three are where you find out how much speed you were borrowing.",
+    "scoring": "Total swings to hold ten finishes in a row.",
+    "metric": {
+      "label": "Swings",
+      "max": 60,
+      "lowerIsBetter": true,
+      "myTarget": 15
+    },
+    "equipment": [],
+    "logType": "aggregate"
+  },
+  {
+    "id": "h7",
+    "name": "Towel Connection",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "home_swing",
+      "net",
+      "sim"
+    ],
+    "minutes": 8,
+    "minMinutes": 5,
+    "primarySkill": "strike",
+    "skills": [
+      "strike",
+      "routine"
+    ],
+    "purpose": "Keep the arms and body working together instead of separately.",
+    "why": "Arms running away from the body is one of the most common causes of poor contact, and a towel under the armpits makes it impossible to hide.",
+    "setup": [
+      "Tuck a hand towel under both armpits. It should be snug, not clamped.",
+      "Ten half swings in slow motion, keeping the towel pinned.",
+      "Then ten at three quarter speed.",
+      "Score a rep as good if the towel was still there at the finish.",
+      "Drop it and that rep scores nothing. Reset and go again.",
+      "If you are near a net you can hit balls. Otherwise rehearse."
+    ],
+    "tip": "The towel usually goes at the top, not through impact. Watch for the arms lifting away as you turn back.",
+    "scoring": "Reps with the towel held, out of 20.",
+    "metric": {
+      "label": "Towel held",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 16
+    },
+    "equipment": [
+      "towel"
+    ],
+    "logType": "aggregate"
+  },
+  {
+    "id": "h8",
+    "name": "Carpet Ladder",
+    "category": "putting",
+    "mode": "build",
+    "requires": [
+      "home_putting",
+      "putting_green"
+    ],
+    "minutes": 10,
+    "minMinutes": 6,
+    "primarySkill": "distance_control",
+    "skills": [
+      "distance_control"
+    ],
+    "purpose": "Train speed control on a surface with no break to hide behind.",
+    "why": "Three putts are a speed problem far more often than a line problem, and speed is the one thing you can genuinely practise on a carpet.",
+    "setup": [
+      "Mark three targets on the floor at roughly six, twelve and eighteen feet. Books, coasters, tape.",
+      "Five balls to each, working short to long.",
+      "One point per ball finishing within a putter head of its target.",
+      "Then five balls where you call the target out loud first.",
+      "Twenty balls, twenty points available.",
+      "Carpets run slow. Judge yourself on consistency, not on the number of feet."
+    ],
+    "tip": "Use the same backstroke length for the same distance every time and let that be the control, rather than hitting it harder or softer.",
+    "scoring": "Balls finishing within a putter head, out of 20.",
+    "metric": {
+      "label": "On distance",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 13
+    },
+    "equipment": [],
+    "logType": "aggregate"
+  },
+  {
+    "id": "h9",
+    "name": "Twenty Straight",
+    "category": "putting",
+    "mode": "pressure",
+    "requires": [
+      "home_putting",
+      "putting_green"
+    ],
+    "minutes": 10,
+    "minMinutes": 6,
+    "primarySkill": "pressure",
+    "skills": [
+      "pressure",
+      "start_line"
+    ],
+    "purpose": "Hole twenty short ones in a row without your mind wandering.",
+    "why": "Short putting is a concentration skill as much as a stroke skill, and a carpet strips out every excuse about break, speed and spike marks.",
+    "setup": [
+      "Set a target roughly four feet away. A glass on its side, a cup, a coin.",
+      "Twenty in a row. Miss one and you go back to zero.",
+      "Full routine every putt. No dragging balls over quickly.",
+      "Count every putt it takes to get twenty consecutive.",
+      "Thirty five or fewer is strong.",
+      "Stop after ten minutes whatever happens. This one can eat an evening."
+    ],
+    "tip": "The misses come in the teens, when you start counting instead of putting. Notice when your attention moves to the number.",
+    "scoring": "Total putts to make twenty in a row.",
+    "metric": {
+      "label": "Putts",
+      "max": 120,
+      "lowerIsBetter": true,
+      "myTarget": 35
+    },
+    "equipment": [],
+    "logType": "aggregate"
+  },
+  {
+    "id": "h10",
+    "name": "Foam Ladder",
+    "category": "chipping",
+    "mode": "build",
+    "requires": [
+      "home_swing"
+    ],
+    "minutes": 10,
+    "minMinutes": 6,
+    "primarySkill": "distance_control",
+    "skills": [
+      "distance_control",
+      "strike"
+    ],
+    "purpose": "Practise landing it on a spot, indoors, with foam.",
+    "why": "Chipping distance is controlled by where it lands, and a landing spot works just as well in a living room as on a green.",
+    "setup": [
+      "Three targets at roughly six, ten and fifteen feet. Cushions, a towel, a laundry basket.",
+      "Foam or plastic balls and a wedge. Small motion, minimal wrist.",
+      "Five balls to each target, working short to long.",
+      "One point for landing on or touching the target.",
+      "Five more where you call the target before each shot.",
+      "Twenty balls total."
+    ],
+    "tip": "Foam balls fly shorter and stop dead, so ignore the distances and judge yourself on whether you landed it where you looked.",
+    "scoring": "Balls landing on target, out of 20.",
+    "metric": {
+      "label": "On target",
+      "max": 20,
+      "lowerIsBetter": false,
+      "myTarget": 13
+    },
+    "equipment": [
+      "foam_balls",
+      "wedge"
+    ],
+    "logType": "aggregate"
+  },
+  {
+    "id": "h11",
+    "name": "Pause at the Top",
+    "category": "full_swing",
+    "mode": "build",
+    "requires": [
+      "home_swing",
+      "net",
+      "sim"
+    ],
+    "minutes": 8,
+    "minMinutes": 5,
+    "primarySkill": "routine",
+    "skills": [
+      "routine",
+      "strike"
+    ],
+    "purpose": "Separate the backswing from the downswing so the transition stops rushing.",
+    "why": "Almost every amateur starts down before the backswing has finished. A deliberate pause makes that impossible.",
+    "setup": [
+      "Swing to the top and stop completely. Count three.",
+      "Then start down, unhurried, to a held finish.",
+      "Fifteen reps. No ball needed, but fine with foam or into a net.",
+      "Score a rep as good if you genuinely stopped rather than slowed.",
+      "Have a go at feeling the change of direction start from the ground up.",
+      "Finish with five normal swings keeping the same sequence."
+    ],
+    "tip": "A pause is not a slow down. If you can feel momentum carrying you through the top, you have not actually stopped.",
+    "scoring": "Reps with a genuine pause, out of 15.",
+    "metric": {
+      "label": "Clean pauses",
+      "max": 15,
+      "lowerIsBetter": false,
+      "myTarget": 12
+    },
+    "equipment": [],
+    "logType": "aggregate"
+  }
+]

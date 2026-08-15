@@ -1,7 +1,12 @@
 import { useRef, useState } from 'react'
-import type { Capability, Venue } from '@/types'
+import type { Capability, Equipment, Venue } from '@/types'
 import { ScreenHeader } from '@/components/ScreenHeader'
-import { CAPABILITY_LABELS, CAPABILITY_ORDER } from '@/data/labels'
+import {
+  CAPABILITY_META,
+  CAPABILITY_GROUPS,
+  EQUIPMENT_LABELS,
+  EQUIPMENT_ORDER,
+} from '@/data/capabilities'
 import { bandForHandicap } from '@/lib/handicap'
 import { exportAll, importAll, type ExportBundle } from '@/lib/storage'
 import { useSettings, type Units } from '@/store/settings'
@@ -141,6 +146,32 @@ function Stepper({
   )
 }
 
+function Pill({
+  on,
+  label,
+  onClick,
+}: {
+  on: boolean
+  label: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={on}
+      className={
+        'min-h-11 rounded-full border px-3 text-sm font-medium ' +
+        (on
+          ? 'border-accent bg-accent-soft text-accent'
+          : 'border-line bg-card text-ink-soft')
+      }
+    >
+      {label}
+    </button>
+  )
+}
+
 function CapabilityToggles({
   selected,
   onToggle,
@@ -149,33 +180,57 @@ function CapabilityToggles({
   onToggle: (cap: Capability) => void
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {CAPABILITY_ORDER.map((cap) => {
-        const on = selected.includes(cap)
-        return (
-          <button
-            key={cap}
-            type="button"
-            onClick={() => onToggle(cap)}
-            aria-pressed={on}
-            className={
-              'min-h-11 rounded-full border px-3 text-sm font-medium ' +
-              (on
-                ? 'border-accent bg-accent-soft text-accent'
-                : 'border-line bg-card text-ink-soft')
-            }
-          >
-            {CAPABILITY_LABELS[cap]}
-          </button>
-        )
-      })}
+    <div className="space-y-3">
+      {CAPABILITY_GROUPS.map((g) => (
+        <div key={g.group}>
+          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
+            {g.label}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {g.capabilities.map((cap) => (
+              <Pill
+                key={cap}
+                on={selected.includes(cap)}
+                label={CAPABILITY_META[cap].label}
+                onClick={() => onToggle(cap)}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function EquipmentToggles({
+  selected,
+  onToggle,
+}: {
+  selected: Equipment[]
+  onToggle: (e: Equipment) => void
+}) {
+  return (
+    <div>
+      <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
+        Kit you have here
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {EQUIPMENT_ORDER.map((e) => (
+          <Pill
+            key={e}
+            on={selected.includes(e)}
+            label={EQUIPMENT_LABELS[e]}
+            onClick={() => onToggle(e)}
+          />
+        ))}
+      </div>
     </div>
   )
 }
 
 function VenueEditor({ venue }: { venue: Venue }) {
   const { updateVenue, removeVenue } = useVenues()
-  const toggle = (cap: Capability) => {
+  const toggleCap = (cap: Capability) => {
     const has = venue.capabilities.includes(cap)
     updateVenue(venue.id, {
       capabilities: has
@@ -183,9 +238,17 @@ function VenueEditor({ venue }: { venue: Venue }) {
         : [...venue.capabilities, cap],
     })
   }
+  const toggleEquip = (e: Equipment) => {
+    const has = venue.equipment.includes(e)
+    updateVenue(venue.id, {
+      equipment: has
+        ? venue.equipment.filter((x) => x !== e)
+        : [...venue.equipment, e],
+    })
+  }
   return (
-    <div className="rounded-lg border border-line bg-card p-3">
-      <div className="mb-2 flex items-center gap-2">
+    <div className="space-y-3 rounded-lg border border-line bg-card p-3">
+      <div className="flex items-center gap-2">
         <input
           value={venue.name}
           onChange={(e) => updateVenue(venue.id, { name: e.target.value })}
@@ -200,7 +263,8 @@ function VenueEditor({ venue }: { venue: Venue }) {
           Delete
         </button>
       </div>
-      <CapabilityToggles selected={venue.capabilities} onToggle={toggle} />
+      <CapabilityToggles selected={venue.capabilities} onToggle={toggleCap} />
+      <EquipmentToggles selected={venue.equipment} onToggle={toggleEquip} />
     </div>
   )
 }
@@ -210,16 +274,23 @@ function AddVenue() {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [caps, setCaps] = useState<Capability[]>([])
+  const [equip, setEquip] = useState<Equipment[]>([])
 
-  const toggle = (cap: Capability) =>
+  const toggleCap = (cap: Capability) =>
     setCaps((c) => (c.includes(cap) ? c.filter((x) => x !== cap) : [...c, cap]))
+  const toggleEquip = (e: Equipment) =>
+    setEquip((c) => (c.includes(e) ? c.filter((x) => x !== e) : [...c, e]))
 
-  const save = () => {
-    if (!name.trim() || caps.length === 0) return
-    addVenue(name.trim(), caps)
+  const reset = () => {
     setName('')
     setCaps([])
+    setEquip([])
     setOpen(false)
+  }
+  const save = () => {
+    if (!name.trim() || caps.length === 0) return
+    addVenue(name.trim(), caps, equip)
+    reset()
   }
 
   if (!open) {
@@ -235,23 +306,20 @@ function AddVenue() {
   }
 
   return (
-    <div className="rounded-lg border border-line bg-card p-3">
+    <div className="space-y-3 rounded-lg border border-line bg-card p-3">
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Name (e.g. Range down the road)"
-        className="mb-2 w-full rounded-md border border-line bg-paper px-2 py-1.5 text-ink"
+        className="w-full rounded-md border border-line bg-paper px-2 py-1.5 text-ink"
         aria-label="New venue name"
       />
-      <CapabilityToggles selected={caps} onToggle={toggle} />
-      <div className="mt-3 flex gap-2">
+      <CapabilityToggles selected={caps} onToggle={toggleCap} />
+      <EquipmentToggles selected={equip} onToggle={toggleEquip} />
+      <div className="flex gap-2">
         <button
           type="button"
-          onClick={() => {
-            setOpen(false)
-            setName('')
-            setCaps([])
-          }}
+          onClick={reset}
           className="h-11 flex-1 rounded-lg border border-line bg-card text-sm font-medium text-ink-soft active:bg-paper"
         >
           Cancel

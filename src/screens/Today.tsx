@@ -1,25 +1,25 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { Capability, Category } from '@/types'
+import type { Category, Venue } from '@/types'
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { Chip } from '@/components/Chip'
 import { ModeBadge } from '@/components/ModeBadge'
 import { useVenues } from '@/store/venues'
 import { useSettings } from '@/store/settings'
 import { useSession } from '@/store/session'
-import { GENERATABLE_DRILLS, getDrill } from '@/data/drills'
+import { eligibleDrills, getDrill } from '@/data/drills'
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/data/labels'
+import { HONESTY_MIN_DRILLS } from '@/data/capabilities'
+import { pickerOptionsFor } from '@/lib/limits'
 import { WARMUPS, WARMUP_ADDONS } from '@/data/warmups'
 
-const TIME_PRESETS = [15, 30, 45, 60]
 type Entry = 'practice' | 'warmup'
 
-/** Categories with a generatable drill at this set of capabilities. */
-function availableCategories(caps: Capability[]): Category[] {
-  const present = new Set<Category>()
-  for (const d of GENERATABLE_DRILLS) {
-    if (d.requires.some((r) => caps.includes(r))) present.add(d.category)
-  }
+/** Categories with an eligible drill at this venue (capabilities + kit). */
+function availableCategories(venue: Venue): Category[] {
+  const present = new Set<Category>(
+    eligibleDrills(venue.capabilities, venue.equipment).map((d) => d.category),
+  )
   return CATEGORY_ORDER.filter((c) => present.has(c))
 }
 
@@ -44,13 +44,38 @@ export function Today() {
 
   const venue = venues.find((v) => v.id === venueId)
   const focusOptions = useMemo(
-    () => (venue ? availableCategories(venue.capabilities) : []),
+    () => (venue ? availableCategories(venue) : []),
     [venue],
   )
 
+  // Time options are governed by the venue's additive session-length ceiling.
+  const timeOptions = useMemo(
+    () => (venue ? pickerOptionsFor(venue.capabilities) : []),
+    [venue],
+  )
+  const ceiling = timeOptions.length ? timeOptions[timeOptions.length - 1] : 0
+  const eligibleCount = venue
+    ? eligibleDrills(venue.capabilities, venue.equipment).length
+    : 0
+
+  // Keep the requested time within what the venue supports.
+  const effectiveMinutes = ceiling ? Math.min(minutes, ceiling) : minutes
+
+  const selectVenue = (v: Venue) => {
+    setVenueId(v.id)
+    setFocus(undefined)
+    setReason(undefined)
+    const opts = pickerOptionsFor(v.capabilities)
+    const max = opts.length ? opts[opts.length - 1] : 0
+    if (max && minutes > max) {
+      setMinutes(max)
+      setCustomOpen(false)
+    }
+  }
+
   const onBuild = () => {
     if (!venueId) return
-    const result = build({ venueId, minutes, focus })
+    const result = build({ venueId, minutes: effectiveMinutes, focus })
     setReason(result?.reason)
   }
 
@@ -100,11 +125,7 @@ export function Today() {
               <Chip
                 key={v.id}
                 selected={v.id === venueId}
-                onClick={() => {
-                  setVenueId(v.id)
-                  setFocus(undefined)
-                  setReason(undefined)
-                }}
+                onClick={() => selectVenue(v)}
               >
                 {v.name}
               </Chip>
@@ -112,16 +133,16 @@ export function Today() {
           </div>
         </section>
 
-        {/* Time */}
+        {/* Time — only options the venue's session-length ceiling allows */}
         <section>
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-soft">
             How long have you got?
           </h2>
           <div className="flex flex-wrap gap-2">
-            {TIME_PRESETS.map((m) => (
+            {timeOptions.map((m) => (
               <Chip
                 key={m}
-                selected={!customOpen && m === minutes}
+                selected={!customOpen && m === effectiveMinutes}
                 onClick={() => {
                   setMinutes(m)
                   setCustomOpen(false)
@@ -130,23 +151,31 @@ export function Today() {
                 {m} min
               </Chip>
             ))}
-            <Chip selected={customOpen} onClick={() => setCustomOpen(true)}>
-              Custom
-            </Chip>
+            {ceiling > timeOptions[0] && (
+              <Chip selected={customOpen} onClick={() => setCustomOpen(true)}>
+                Custom
+              </Chip>
+            )}
           </div>
+          {ceiling > 0 && ceiling < 45 && (
+            <p className="mt-2 text-xs text-ink-soft">
+              This venue tops out around {ceiling} min — the picker only offers
+              what it can honestly support.
+            </p>
+          )}
           {customOpen && (
             <div className="mt-3 flex items-center gap-3">
               <input
                 type="range"
-                min={5}
-                max={120}
+                min={10}
+                max={ceiling || 60}
                 step={5}
-                value={minutes}
+                value={effectiveMinutes}
                 onChange={(e) => setMinutes(Number(e.target.value))}
                 className="flex-1 accent-[var(--color-accent)]"
               />
               <span className="tabular w-16 text-right text-lg font-semibold text-ink">
-                {minutes} min
+                {effectiveMinutes} min
               </span>
             </div>
           )}
@@ -169,6 +198,15 @@ export function Today() {
               ))}
             </div>
           </section>
+        )}
+
+        {/* Honesty: few drills fit this venue */}
+        {venue && eligibleCount > 0 && eligibleCount < HONESTY_MIN_DRILLS && (
+          <p className="rounded-lg border border-line bg-card px-3 py-2 text-sm text-ink-soft">
+            Only {eligibleCount} drill{eligibleCount === 1 ? '' : 's'} fit{' '}
+            {venue.name} right now — you'll get those rather than a padded
+            session. Tick more kit or capabilities to unlock more.
+          </p>
         )}
 
         {/* Build */}

@@ -3,6 +3,7 @@ import type { Category, Session } from '@/types'
 import { storage } from '@/lib/storage'
 import { newId } from '@/lib/id'
 import { generateSession } from '@/lib/generator'
+import { capabilityMaxBlock } from '@/lib/limits'
 import { DRILLS } from '@/data/drills'
 import { useSettings } from './settings'
 import { useVenues } from './venues'
@@ -57,9 +58,11 @@ export const useSession = create<SessionState>((set, get) => ({
     const result = generateSession({
       minutes,
       capabilities: venue.capabilities,
+      equipment: venue.equipment,
       focus,
       recentDrillIds,
       allDrills: DRILLS,
+      capabilityMaxBlock,
     })
     if (result.blocks.length === 0) {
       return { session: emptySession(venueId, minutes, focus), reason: result.reason }
