@@ -263,6 +263,15 @@ export function computeGameProfile(opts: DiagnoseOptions): GameProfile {
   }
 }
 
+/** Plain-English cold-start headlines, by how the user rated the area. */
+const COLD_HEADLINE: Record<Area, [string, string]> = {
+  // [rated a problem, rated fine]
+  ott: ['Losing balls off the tee is costing you most.', 'Off the tee is steady enough for now.'],
+  app: ['Getting to the green is where the shots go.', 'Your approach play is holding up.'],
+  short: ['Chipping and pitching is the soft spot.', 'Your short game is in decent shape.'],
+  putt: ['Putting is where you feel least sure.', "Putting isn't your main problem."],
+}
+
 function coldStart(opts: DiagnoseOptions, now: string): GameProfile {
   const priors = opts.priors ?? {}
   const order = (['ott', 'app', 'short', 'putt'] as Area[]).sort(
@@ -274,7 +283,7 @@ function coldStart(opts: DiagnoseOptions, now: string): GameProfile {
     z: priors[area] ?? 0,
     shotsLostVsScratch: null,
     recoverableShots: null,
-    headline: `${AREA_LABEL[area]} — from your answers so far.`,
+    headline: COLD_HEADLINE[area][(priors[area] ?? 0) > 0.3 ? 0 : 1],
   }))
   return {
     computedAt: now,

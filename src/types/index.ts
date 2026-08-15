@@ -16,6 +16,8 @@ export type {
   Area,
   HandicapSource,
   Confidence,
+  Experience,
+  OnboardingProfile,
   Round,
   NormalisedRound,
   AreaResult,

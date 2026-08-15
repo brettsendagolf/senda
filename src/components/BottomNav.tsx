@@ -6,10 +6,13 @@ interface Tab {
   icon: string // simple glyph for now; real icons come later
 }
 
+// The Brief specifies four tabs (Today · Practice · Progress · Learn) with
+// settings behind an avatar. Settings still has a tab until that lands.
 const TABS: Tab[] = [
   { to: '/', label: 'Today', icon: '⛳' },
-  { to: '/drills', label: 'Drills', icon: '☰' },
+  { to: '/drills', label: 'Practice', icon: '☰' },
   { to: '/progress', label: 'Progress', icon: '📈' },
+  { to: '/learn', label: 'Learn', icon: '📖' },
   { to: '/settings', label: 'Settings', icon: '⚙' },
 ]
 
@@ -19,7 +22,7 @@ export function BottomNav() {
       className="shrink-0 border-t border-line bg-card"
       style={{ paddingBottom: 'var(--safe-bottom)' }}
     >
-      <ul className="grid grid-cols-4">
+      <ul className="grid grid-cols-5">
         {TABS.map((tab) => (
           <li key={tab.to}>
             <NavLink

@@ -9,6 +9,23 @@ export type Area = 'ott' | 'app' | 'short' | 'putt'
 export type HandicapSource = 'whs' | 'estimated' | 'self_assessed'
 export type Confidence = 'estimate' | 'low' | 'medium' | 'good'
 
+/** Where a user says they are, chosen on the first onboarding screen. */
+export type Experience = 'never' | 'learning' | 'handicap' | 'untracked'
+
+/**
+ * What onboarding captures — the inputs to the cold-start Game Profile and the
+ * signal for how much beginner content to surface in Learn.
+ */
+export interface OnboardingProfile {
+  experience: Experience
+  handicap?: number
+  /** Self-rated severity per area, 0 (rarely a problem) … 3 (my worst). */
+  selfRatings: Partial<Record<Area, number>>
+  /** Facilities the user can reach, as capability-group keys. */
+  facilities: string[]
+  completedAt: string
+}
+
 /** A logged round — everything recallable from memory in ~30 seconds. */
 export interface Round {
   id: string

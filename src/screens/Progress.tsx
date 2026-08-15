@@ -1,6 +1,8 @@
 import type { Drill } from '@/types'
 import { ScreenHeader } from '@/components/ScreenHeader'
+import { GameProfileCard } from '@/components/GameProfileCard'
 import { Sparkline } from '@/components/Sparkline'
+import { useProfile } from '@/store/profile'
 import { DRILLS } from '@/data/drills'
 import { CATEGORY_LABELS } from '@/data/labels'
 import { BANDS } from '@/lib/handicap'
@@ -22,6 +24,8 @@ function bandForScore(drill: Drill, score: number): string | undefined {
 
 export function Progress() {
   const entries = useEntries((s) => s.entries)
+  const gameProfile = useProfile((s) => s.gameProfile())
+  const roundCount = useProfile((s) => s.rounds.length)
 
   // Drills that have at least one logged score, most-recently-used first.
   const rows = DRILLS.map((drill) => {
@@ -35,9 +39,34 @@ export function Progress() {
 
   return (
     <div className="pb-8">
-      <ScreenHeader title="Progress" subtitle="Your last ten, per drill" />
+      <ScreenHeader
+        title="Progress"
+        subtitle={
+          roundCount > 0
+            ? `${roundCount} round${roundCount === 1 ? '' : 's'} logged`
+            : 'Your last ten, per drill'
+        }
+      />
 
-      <div className="px-4 pt-4">
+      {/* Game Profile — where the shots are going */}
+      {gameProfile && (
+        <section className="px-4 pt-4">
+          <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
+            Game Profile{' '}
+            {gameProfile.totalShotsLostVsScratch !== null &&
+              '· shots lost per round'}
+          </h2>
+          <GameProfileCard profile={gameProfile} showStartHere={false} />
+        </section>
+      )}
+
+      <div className="px-4 pt-6">
+        <h2 className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
+          Drill scores
+        </h2>
+      </div>
+
+      <div className="px-4">
         {rows.length === 0 ? (
           <p className="rounded-lg border border-line bg-card px-3 py-8 text-center text-sm text-ink-soft">
             Log a score in a session or from a drill and it'll show up here.
