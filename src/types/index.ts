@@ -12,3 +12,12 @@ export type {
 } from './drill'
 export type { SessionBlock, Session } from './session'
 export type { Entry } from './entry'
+export type {
+  Area,
+  HandicapSource,
+  Confidence,
+  Round,
+  NormalisedRound,
+  AreaResult,
+  GameProfile,
+} from './round'
