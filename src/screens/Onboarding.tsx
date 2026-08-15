@@ -19,13 +19,23 @@ import { useSettings } from '@/store/settings'
 export function Onboarding() {
   const navigate = useNavigate()
   const saveOnboarding = useProfile((s) => s.saveOnboarding)
+  const existing = useProfile((s) => s.onboarding)
   const setHandicap = useSettings((s) => s.setHandicap)
 
+  // Re-taking from Profile: start from the previous answers and go back there.
+  const isRetake = existing !== null
+
   const [step, setStep] = useState(0)
-  const [experience, setExperience] = useState<Experience>('learning')
-  const [handicap, setHcp] = useState<number | undefined>()
-  const [ratings, setRatings] = useState<Partial<Record<Area, number>>>({})
-  const [facilities, setFacilities] = useState<string[]>(['range', 'short'])
+  const [experience, setExperience] = useState<Experience>(
+    existing?.experience ?? 'learning',
+  )
+  const [handicap, setHcp] = useState<number | undefined>(existing?.handicap)
+  const [ratings, setRatings] = useState<Partial<Record<Area, number>>>(
+    existing?.selfRatings ?? {},
+  )
+  const [facilities, setFacilities] = useState<string[]>(
+    existing?.facilities ?? ['range', 'short'],
+  )
 
   const draft: OnboardingProfile = useMemo(
     () => ({
@@ -42,7 +52,7 @@ export function Onboarding() {
   const finish = async () => {
     await saveOnboarding(draft)
     if (handicap !== undefined) setHandicap(handicap)
-    navigate('/', { replace: true })
+    navigate(isRetake ? '/profile' : '/', { replace: true })
   }
 
   return (
@@ -62,6 +72,16 @@ export function Onboarding() {
             />
           ))}
         </div>
+
+        {isRetake && step === 0 && (
+          <button
+            type="button"
+            onClick={() => navigate('/profile')}
+            className="-ml-1 mb-2 flex min-h-11 items-center text-sm font-medium text-ink-soft"
+          >
+            ‹ Profile
+          </button>
+        )}
 
         {step === 0 && (
           <StepWhere
@@ -102,6 +122,8 @@ export function Onboarding() {
               ? experience === 'never'
                 ? 'Show me where to start'
                 : 'Build my Game Profile'
+            : isRetake
+              ? 'Save'
               : "Let's go"}
         </button>
         {step === 0 && (

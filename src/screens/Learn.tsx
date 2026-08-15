@@ -17,7 +17,7 @@ export function Learn() {
 
   return (
     <div className="pb-8">
-      <ScreenHeader title="Learn" subtitle="Free, forever" />
+      <ScreenHeader back backLabel="Profile" title="Learn" subtitle="Free, forever" />
 
       <div className="space-y-6 px-4 pt-4">
         {beginner && (

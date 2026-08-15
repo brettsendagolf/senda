@@ -10,6 +10,7 @@ import { Drills } from '@/screens/Drills'
 import { DrillDetailScreen } from '@/screens/DrillDetailScreen'
 import { Progress } from '@/screens/Progress'
 import { Learn, LearnArticleScreen } from '@/screens/Learn'
+import { Profile } from '@/screens/Profile'
 import { Settings } from '@/screens/Settings'
 
 /** Tabbed shell: one scroll container (`main`), fixed nav below it. */
@@ -39,8 +40,13 @@ function App() {
           index
           element={onboarding ? <Today /> : <Navigate to="/onboarding" replace />}
         />
-        <Route path="drills" element={<Drills />} />
+        <Route path="practice" element={<Drills />} />
+        {/* Older links kept working. */}
+        <Route path="drills" element={<Navigate to="/practice" replace />} />
         <Route path="drills/:id" element={<DrillDetailScreen />} />
+
+        <Route path="profile" element={<Profile />} />
+        {/* Reached from Profile, not from a tab. */}
         <Route path="progress" element={<Progress />} />
         <Route path="learn" element={<Learn />} />
         <Route path="learn/:id" element={<LearnArticleScreen />} />

@@ -20,7 +20,7 @@ export function Settings() {
 
   return (
     <div className="pb-10">
-      <ScreenHeader title="Settings" />
+      <ScreenHeader back backLabel="Profile" title="Settings" />
 
       <div className="space-y-7 px-4 pt-4">
         {/* Handicap */}

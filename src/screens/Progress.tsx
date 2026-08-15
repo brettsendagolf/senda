@@ -2,7 +2,7 @@ import type { Drill } from '@/types'
 import { ScreenHeader } from '@/components/ScreenHeader'
 import { GameProfileCard } from '@/components/GameProfileCard'
 import { Sparkline } from '@/components/Sparkline'
-import { useProfile } from '@/store/profile'
+import { useGameProfile, useProfile } from '@/store/profile'
 import { DRILLS } from '@/data/drills'
 import { CATEGORY_LABELS } from '@/data/labels'
 import { BANDS } from '@/lib/handicap'
@@ -24,7 +24,7 @@ function bandForScore(drill: Drill, score: number): string | undefined {
 
 export function Progress() {
   const entries = useEntries((s) => s.entries)
-  const gameProfile = useProfile((s) => s.gameProfile())
+  const gameProfile = useGameProfile()
   const roundCount = useProfile((s) => s.rounds.length)
 
   // Drills that have at least one logged score, most-recently-used first.
@@ -40,6 +40,8 @@ export function Progress() {
   return (
     <div className="pb-8">
       <ScreenHeader
+        back
+        backLabel="Profile"
         title="Progress"
         subtitle={
           roundCount > 0

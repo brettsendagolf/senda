@@ -12,6 +12,8 @@ import { CATEGORY_LABELS, CATEGORY_ORDER } from '@/data/labels'
 import { HONESTY_MIN_DRILLS } from '@/data/capabilities'
 import { pickerOptionsFor } from '@/lib/limits'
 import { WARMUPS, WARMUP_ADDONS } from '@/data/warmups'
+import { isBeginner } from '@/lib/onboarding'
+import { useProfile } from '@/store/profile'
 
 type Entry = 'practice' | 'warmup'
 
@@ -34,6 +36,9 @@ export function Today() {
     lastVenueId && venues.some((v) => v.id === lastVenueId)
       ? lastVenueId
       : (venues.find((v) => v.isDefault) ?? venues[0])?.id
+
+  const onboarding = useProfile((s) => s.onboarding)
+  const beginner = onboarding ? isBeginner(onboarding.experience) : false
 
   const [entry, setEntry] = useState<Entry>('practice')
   const [venueId, setVenueId] = useState<string | undefined>(firstVenueId)
@@ -198,6 +203,26 @@ export function Today() {
               ))}
             </div>
           </section>
+        )}
+
+        {/* New to golf: keep the guides one tap away, not buried in Profile. */}
+        {beginner && (
+          <button
+            type="button"
+            onClick={() => navigate('/learn')}
+            className="w-full rounded-2xl bg-ink p-4 text-left active:opacity-90"
+          >
+            <div className="text-[11px] font-semibold uppercase tracking-wide text-paper/60">
+              New to this?
+            </div>
+            <p className="mt-1 font-semibold text-paper">
+              What happens at a driving range
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-paper/75">
+              What it costs, what to bring, and what to do when you get there.
+              Free guides in Learn.
+            </p>
+          </button>
         )}
 
         {/* Honesty: few drills fit this venue */}

@@ -272,18 +272,35 @@ const COLD_HEADLINE: Record<Area, [string, string]> = {
   putt: ['Putting is where you feel least sure.', "Putting isn't your main problem."],
 }
 
+/** When nothing was self-rated, fall back to where amateurs typically lose most. */
+const TYPICAL_HEADLINE: Record<Area, string> = {
+  app: 'Approach play is where most amateurs lose the most.',
+  ott: 'Penalty shots off the tee are the next biggest cost.',
+  putt: 'Putting matters less than most golfers think.',
+  short: 'Short game is worth less than the long game, but it is quick to fix.',
+}
+
 function coldStart(opts: DiagnoseOptions, now: string): GameProfile {
   const priors = opts.priors ?? {}
-  const order = (['ott', 'app', 'short', 'putt'] as Area[]).sort(
-    (a, b) => (priors[b] ?? 0) - (priors[a] ?? 0),
-  )
+  const rated = Object.values(priors).some((v) => v !== undefined)
+
+  // Nothing rated: rank by the population prior rather than inventing a focus
+  // from four identical zeros.
+  const order = rated
+    ? (['ott', 'app', 'short', 'putt'] as Area[]).sort(
+        (a, b) => (priors[b] ?? 0) - (priors[a] ?? 0),
+      )
+    : (['app', 'ott', 'putt', 'short'] as Area[])
+
   const areas: AreaResult[] = order.map((area, i) => ({
     area,
     rank: (i + 1) as 1 | 2 | 3 | 4,
     z: priors[area] ?? 0,
     shotsLostVsScratch: null,
     recoverableShots: null,
-    headline: COLD_HEADLINE[area][(priors[area] ?? 0) > 0.3 ? 0 : 1],
+    headline: rated
+      ? COLD_HEADLINE[area][(priors[area] ?? 0) > 0.3 ? 0 : 1]
+      : TYPICAL_HEADLINE[area],
   }))
   return {
     computedAt: now,

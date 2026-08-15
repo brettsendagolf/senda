@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { create } from 'zustand'
 import type { GameProfile, OnboardingProfile, Round } from '@/types'
 import { storage } from '@/lib/storage'
@@ -15,8 +16,6 @@ interface ProfileState {
   hydrate: () => Promise<void>
   saveOnboarding: (p: OnboardingProfile) => Promise<void>
   addRound: (r: Round) => Promise<void>
-  /** The current Game Profile: from rounds when there are any, else cold start. */
-  gameProfile: () => GameProfile | null
 }
 
 export const useProfile = create<ProfileState>((set, get) => ({
@@ -48,16 +47,29 @@ export const useProfile = create<ProfileState>((set, get) => ({
       console.error('Could not save round:', e),
     )
   },
+}))
 
-  gameProfile: () => {
-    const { onboarding, rounds } = get()
+/**
+ * The current Game Profile: computed from logged rounds when there are any,
+ * otherwise the cold start from onboarding answers.
+ *
+ * Memoised on the raw state — computing inside a Zustand selector would return
+ * a fresh object every render and spin React into an update loop.
+ */
+export function useGameProfile(): GameProfile | null {
+  const onboarding = useProfile((s) => s.onboarding)
+  const rounds = useProfile((s) => s.rounds)
+
+  return useMemo(() => {
     if (!onboarding && rounds.length === 0) return null
     return computeGameProfile({
       rounds,
       handicap: onboarding?.handicap,
       handicapSource: onboarding?.handicap ? 'whs' : 'self_assessed',
       priors: onboarding ? priorsFromRatings(onboarding.selfRatings) : undefined,
-      selfAssessedWorst: onboarding ? worstArea(onboarding.selfRatings) : undefined,
+      selfAssessedWorst: onboarding
+        ? worstArea(onboarding.selfRatings)
+        : undefined,
     })
-  },
-}))
+  }, [onboarding, rounds])
+}
