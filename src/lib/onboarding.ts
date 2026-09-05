@@ -13,7 +13,7 @@ export const EXPERIENCE_OPTIONS: {
   // Last: the option that reveals an extra input, so the list doesn't reflow
   // above what you just tapped. Wording stays country-neutral — "handicap
   // index" is the official term under the World Handicap System worldwide.
-  { value: 'handicap', label: 'I have a handicap', sub: 'An official handicap index — enter it below' },
+  { value: 'handicap', label: 'I have a handicap', sub: "An official handicap index — you'll enter it next" },
 ]
 
 /** A newcomer wants the range/first-round content up front. */
@@ -62,50 +62,6 @@ export const ASSESSMENT: AssessQuestion[] = [
     options: ['0–1', 'About 2', 'About 3', '4 or more'],
   },
 ]
-
-/**
- * For golfers who have never played a round. Asking a newcomer about greens in
- * regulation or penalty shots is meaningless — they have no round to recall.
- * These ask about comfort with the movement instead, in plain language, and
- * map to the same four areas so the rest of the app still works.
- */
-export const BEGINNER_ASSESSMENT: AssessQuestion[] = [
-  {
-    area: 'app',
-    eyebrow: 'Full shots',
-    question: 'When you swing at a ball, how often do you make clean contact?',
-    help: 'Nobody starts well here. It is the first thing that improves.',
-    options: ['Most times', 'About half', 'Now and then', "Haven't tried yet"],
-  },
-  {
-    area: 'ott',
-    eyebrow: 'The big clubs',
-    question: 'How do you feel about hitting a driver?',
-    options: [
-      'Comfortable',
-      'It goes somewhere',
-      'A bit wild',
-      "Haven't used one",
-    ],
-  },
-  {
-    area: 'short',
-    eyebrow: 'Around the green',
-    question: 'Have you practised short chips onto a green?',
-    options: ['Often', 'A few times', 'Once or twice', 'Never'],
-  },
-  {
-    area: 'putt',
-    eyebrow: 'Putting',
-    question: 'How comfortable are you on the putting green?',
-    options: ['Comfortable', 'Fairly', 'Not very', 'Never putted'],
-  },
-]
-
-/** The right assessment for where the golfer says they are. */
-export function assessmentFor(experience: Experience): AssessQuestion[] {
-  return experience === 'never' ? BEGINNER_ASSESSMENT : ASSESSMENT
-}
 
 /** Facilities offered in onboarding, mapped to capability-group keys. */
 export const FACILITY_OPTIONS: { key: string; label: string }[] = [

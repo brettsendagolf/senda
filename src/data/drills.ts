@@ -145,6 +145,18 @@ export const COURSE_DRILLS = DRILLS.filter((d) => d.mode === 'course')
 /** Everything the generator may draw from (course drills excluded). */
 export const GENERATABLE_DRILLS = DRILLS.filter((d) => d.mode !== 'course')
 
+/**
+ * What we put in front of someone who has never played. Hand-picked rather
+ * than generated: a brand-new golfer has no game to diagnose, so this is the
+ * honest starting order — grip and setup, then contact, then putting. All are
+ * `build` fundamentals that need nothing but a club.
+ */
+export const BEGINNER_STARTER_IDS = ['h4', 's4', 'h8'] as const
+
+export const STARTER_DRILLS: Drill[] = BEGINNER_STARTER_IDS.map(
+  (id) => BY_ID.get(id),
+).filter((d): d is Drill => Boolean(d))
+
 /** Generatable drills a venue can actually run: ANY capability, ALL equipment. */
 export function eligibleDrills(
   caps: Capability[],

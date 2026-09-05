@@ -3,18 +3,25 @@ import { useNavigate } from 'react-router-dom'
 import type { Area, Experience, OnboardingProfile } from '@/types'
 import { GameProfileCard } from '@/components/GameProfileCard'
 import {
-  assessmentFor,
+  ASSESSMENT,
   EXPERIENCE_OPTIONS,
   FACILITY_OPTIONS,
   profileFromOnboarding,
 } from '@/lib/onboarding'
+import { STARTER_DRILLS } from '@/data/drills'
 import { useProfile } from '@/store/profile'
 import { useSettings } from '@/store/settings'
 
+type StepKey = 'where' | 'handicap' | 'assess' | 'reveal'
+
 /**
- * First run: Where are you now → Quick assessment → Game Profile reveal.
- * No account, no paywall. The job of onboarding is to produce a plan, and to
- * state its confidence honestly from the first screen.
+ * First run. The flow adapts to the answer on screen one:
+ *   never played → Where are you → starter drills. No assessment and no Game
+ *                  Profile: there is no game to diagnose yet, and inventing
+ *                  one would be the dishonesty this product exists to avoid.
+ *   has handicap → Where are you → handicap → assessment → Game Profile.
+ *   otherwise    → Where are you → assessment → Game Profile.
+ * No account, no paywall. The job of onboarding is to produce a plan.
  */
 export function Onboarding() {
   const navigate = useNavigate()
@@ -49,6 +56,17 @@ export function Onboarding() {
   )
   const profile = useMemo(() => profileFromOnboarding(draft), [draft])
 
+  const steps = useMemo<StepKey[]>(() => {
+    if (experience === 'never') return ['where', 'reveal']
+    if (experience === 'handicap')
+      return ['where', 'handicap', 'assess', 'reveal']
+    return ['where', 'assess', 'reveal']
+  }, [experience])
+
+  // Experience can only be changed on the first screen, so the index stays
+  // valid; the clamp is belt and braces.
+  const current = steps[Math.min(step, steps.length - 1)]
+
   const finish = async () => {
     await saveOnboarding(draft)
     if (handicap !== undefined) setHandicap(handicap)
@@ -63,7 +81,7 @@ export function Onboarding() {
       >
         {/* Progress dots */}
         <div className="mb-5 flex gap-1.5">
-          {[0, 1, 2].map((i) => (
+          {steps.map((_, i) => (
             <span
               key={i}
               className={
@@ -83,17 +101,14 @@ export function Onboarding() {
           </button>
         )}
 
-        {step === 0 && (
-          <StepWhere
-            experience={experience}
-            onPick={setExperience}
-            handicap={handicap}
-            onHandicap={setHcp}
-          />
+        {current === 'where' && (
+          <StepWhere experience={experience} onPick={setExperience} />
         )}
-        {step === 1 && (
+        {current === 'handicap' && (
+          <StepHandicap handicap={handicap} onHandicap={setHcp} />
+        )}
+        {current === 'assess' && (
           <StepAssess
-            experience={experience}
             ratings={ratings}
             onRate={(area, v) => setRatings((r) => ({ ...r, [area]: v }))}
             facilities={facilities}
@@ -104,7 +119,9 @@ export function Onboarding() {
             }
           />
         )}
-        {step === 2 && <StepReveal profile={profile} experience={experience} />}
+        {current === 'reveal' && (
+          <StepReveal profile={profile} experience={experience} />
+        )}
       </div>
 
       <div
@@ -113,20 +130,20 @@ export function Onboarding() {
       >
         <button
           type="button"
-          onClick={() => (step === 2 ? finish() : setStep(step + 1))}
+          onClick={() => (current === 'reveal' ? finish() : setStep(step + 1))}
           className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
         >
-          {step === 0
-            ? 'Continue'
-            : step === 1
-              ? experience === 'never'
-                ? 'Show me where to start'
-                : 'Build my Game Profile'
-            : isRetake
+          {current === 'reveal'
+            ? isRetake
               ? 'Save'
-              : "Let's go"}
+              : "Let's go"
+            : current === 'assess'
+              ? 'Build my Game Profile'
+              : current === 'where' && experience === 'never'
+                ? 'Show me where to start'
+                : 'Continue'}
         </button>
-        {step === 0 && (
+        {current === 'where' && (
           <p className="mt-2 text-center text-xs text-ink-mute">
             No account needed yet.
           </p>
@@ -148,13 +165,9 @@ export function Onboarding() {
 function StepWhere({
   experience,
   onPick,
-  handicap,
-  onHandicap,
 }: {
   experience: Experience
   onPick: (e: Experience) => void
-  handicap?: number
-  onHandicap: (n: number | undefined) => void
 }) {
   return (
     <div>
@@ -193,58 +206,83 @@ function StepWhere({
         })}
       </div>
 
-      {experience === 'handicap' && (
-        <div className="mt-4 rounded-2xl border border-line bg-card p-4">
-          <label className="text-xs font-semibold uppercase tracking-wide text-ink-mute">
-            Your handicap index
-          </label>
-          <div className="mt-2 flex items-center gap-3">
-            <input
-              inputMode="decimal"
-              value={handicap ?? ''}
-              onChange={(e) => {
-                const v = e.target.value.replace(/[^\d.]/g, '')
-                onHandicap(v === '' ? undefined : Math.min(54, Number(v)))
-              }}
-              placeholder="e.g. 18.4"
-              className="tabular h-12 w-28 rounded-lg border border-line bg-paper px-3 text-lg text-ink"
-            />
-            <span className="text-sm text-ink-mute">Up to 54. You can change this later.</span>
-          </div>
+    </div>
+  )
+}
+
+/** Only shown to a golfer who says they have an index. */
+function StepHandicap({
+  handicap,
+  onHandicap,
+}: {
+  handicap?: number
+  onHandicap: (n: number | undefined) => void
+}) {
+  return (
+    <div>
+      <h1 className="text-3xl font-bold tracking-tight text-ink">
+        What's your handicap?
+      </h1>
+      <p className="mt-1.5 text-ink-soft">
+        We use it to compare you with golfers at your level — never against tour
+        players. That comparison is the whole point.
+      </p>
+
+      <div className="mt-5 rounded-2xl border border-line bg-card p-4">
+        <label
+          htmlFor="hcp"
+          className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute"
+        >
+          Handicap index
+        </label>
+        <div className="mt-2 flex items-center gap-3">
+          <input
+            id="hcp"
+            inputMode="decimal"
+            value={handicap ?? ''}
+            onChange={(e) => {
+              const v = e.target.value.replace(/[^\d.]/g, '')
+              onHandicap(v === '' ? undefined : Math.min(54, Number(v)))
+            }}
+            placeholder="e.g. 18.4"
+            className="tabular h-14 w-32 rounded-xl border border-line bg-paper px-3 text-2xl font-semibold text-ink"
+          />
+          <span className="text-sm text-ink-mute">
+            Up to 54. You can change this any time.
+          </span>
         </div>
-      )}
+      </div>
+
+      <p className="mt-3 text-xs leading-relaxed text-ink-mute">
+        Don't know it offhand? Leave it blank — we'll estimate one from your
+        scores once you've logged a few rounds.
+      </p>
     </div>
   )
 }
 
 function StepAssess({
-  experience,
   ratings,
   onRate,
   facilities,
   onToggleFacility,
 }: {
-  experience: Experience
   ratings: Partial<Record<Area, number>>
   onRate: (area: Area, v: number) => void
   facilities: string[]
   onToggleFacility: (k: string) => void
 }) {
-  const never = experience === 'never'
-  const questions = assessmentFor(experience)
   return (
     <div>
       <h1 className="text-3xl font-bold tracking-tight text-ink">
-        {never ? 'A few quick questions' : 'Quick assessment'}
+        Quick assessment
       </h1>
       <p className="mt-1.5 text-ink-soft">
-        {never
-          ? "Nothing here needs a score or a round — just how you feel about each part. Not sure? Pick the last option."
-          : 'A few taps. Think about your last few rounds — rough is fine.'}
+        A few taps. Think about your last few rounds — rough is fine.
       </p>
 
       <div className="mt-5 space-y-3">
-        {questions.map((q) => (
+        {ASSESSMENT.map((q) => (
           <div key={q.area} className="rounded-2xl border border-line bg-card p-4">
             <div className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
               {q.eyebrow}
@@ -274,8 +312,7 @@ function StepAssess({
                 )
               })}
             </div>
-            {/* The penalties rationale only lands for someone who has played. */}
-            {!never && q.area === 'ott' && (
+            {q.area === 'ott' && (
               <p className="mt-2 text-xs leading-relaxed text-ink-mute">
                 We ask about penalties, not fairways hit. Fairway accuracy barely
                 changes between a 25 and a scratch golfer — penalty shots change
@@ -333,27 +370,39 @@ function StepReveal({
           Your starting point
         </div>
         <h1 className="mt-1 text-3xl font-bold leading-tight tracking-tight text-ink">
-          Let's get you swinging.
+          Start with these three.
         </h1>
         <p className="mt-2 text-ink-soft">
-          You haven't played yet, so there's nothing to diagnose — and we're not
-          going to invent it. Here's where beginners get the most out of their
-          first few sessions.
+          You haven't played yet, so there's nothing to diagnose and we're not
+          going to invent it. These are the fundamentals, in the order they're
+          worth learning. Each needs nothing but a club.
         </p>
 
-        <div className="mt-5 rounded-2xl border border-accent bg-accent-soft p-4">
-          <div className="text-[11px] font-semibold uppercase tracking-wide text-accent">
-            Start with
-          </div>
-          <p className="mt-1 text-lg font-semibold text-ink">
-            Contact, then the short game
-          </p>
-          <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
-            Clean contact is the one thing everything else is built on, and
-            chipping and putting are where a beginner saves the most shots
-            fastest. Pick your time and place on Today and we'll build it.
-          </p>
-        </div>
+        <ol className="mt-5 space-y-2.5">
+          {STARTER_DRILLS.map((d, i) => (
+            <li
+              key={d.id}
+              className="rounded-2xl border border-line bg-card p-4"
+            >
+              <div className="flex items-baseline gap-2.5">
+                <span className="tabular grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent-soft text-[13px] font-bold text-accent">
+                  {i + 1}
+                </span>
+                <span className="font-semibold text-ink">{d.name}</span>
+                <span className="tabular ml-auto shrink-0 text-sm text-ink-mute">
+                  {d.minutes} min
+                </span>
+              </div>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
+                {d.purpose}
+              </p>
+            </li>
+          ))}
+        </ol>
+
+        <p className="mt-3 text-xs leading-relaxed text-ink-mute">
+          You'll find these and the rest of the library under Practice.
+        </p>
 
         <div className="mt-3 rounded-2xl border border-line bg-card p-4">
           <div className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
