@@ -11,6 +11,7 @@ import { DrillDetailScreen } from '@/screens/DrillDetailScreen'
 import { Progress } from '@/screens/Progress'
 import { Learn, LearnArticleScreen } from '@/screens/Learn'
 import { Profile } from '@/screens/Profile'
+import { LogRound } from '@/screens/LogRound'
 import { Settings } from '@/screens/Settings'
 
 /** Tabbed shell: one scroll container (`main`), fixed nav below it. */
@@ -48,6 +49,7 @@ function App() {
         <Route path="profile" element={<Profile />} />
         {/* Reached from Profile, not from a tab. */}
         <Route path="progress" element={<Progress />} />
+        <Route path="log-round" element={<LogRound />} />
         <Route path="learn" element={<Learn />} />
         <Route path="learn/:id" element={<LearnArticleScreen />} />
         <Route path="settings" element={<Settings />} />

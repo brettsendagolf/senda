@@ -237,6 +237,21 @@ export function Today() {
           </button>
         )}
 
+        {/* Played rather than practised? */}
+        <button
+          type="button"
+          onClick={() => navigate('/log-round')}
+          className="flex w-full items-center gap-3 rounded-2xl border border-line bg-card px-4 py-3.5 text-left active:bg-paper"
+        >
+          <div className="min-w-0 flex-1">
+            <div className="font-medium text-ink">Played a round?</div>
+            <div className="mt-0.5 text-[13px] text-ink-mute">
+              Log it in 30 seconds — it sharpens your Game Profile
+            </div>
+          </div>
+          <span className="shrink-0 text-ink-mute">›</span>
+        </button>
+
         {/* Honesty: few drills fit this venue */}
         {venue && eligibleCount > 0 && eligibleCount < HONESTY_MIN_DRILLS && (
           <p className="rounded-lg border border-line bg-card px-3 py-2 text-sm text-ink-soft">

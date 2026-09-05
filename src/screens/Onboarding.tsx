@@ -408,6 +408,8 @@ function StepAccount({ onDone }: { onDone: () => void }) {
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | undefined>()
+  // The address we mailed a confirmation link to, once we have.
+  const [sent, setSent] = useState<string | undefined>()
 
   const submit = async () => {
     setBusy(true)
@@ -416,11 +418,50 @@ function StepAccount({ onDone }: { onDone: () => void }) {
       ? await signUp(email.trim(), password)
       : await signIn(email.trim(), password)
     setBusy(false)
-    if (res.ok) onDone()
-    else setError(res.message)
+    if (!res.ok) return setError(res.message)
+    // A confirmation link means there is no session yet. Say so, rather than
+    // waving them through as though the account were already live.
+    if (res.status === 'confirm-email') setSent(email.trim())
+    else onDone()
   }
 
   const canSubmit = email.includes('@') && password.length >= 6 && !busy
+
+  if (sent) {
+    return (
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-ink">
+          Check your email
+        </h1>
+        <p className="mt-1.5 text-ink-soft">
+          We have sent a confirmation link to{' '}
+          <span className="font-semibold text-ink">{sent}</span>. Open it and
+          the account is live. If that address already had one, the link takes
+          you back into it.
+        </p>
+        <p className="mt-3 text-ink-soft">
+          No need to wait around for it — your plan is ready either way.
+        </p>
+
+        <div className="mt-5 space-y-3">
+          <button
+            type="button"
+            onClick={onDone}
+            className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
+          >
+            Continue
+          </button>
+          <button
+            type="button"
+            onClick={() => { setSent(undefined); setPassword('') }}
+            className="h-11 w-full text-sm font-medium text-accent"
+          >
+            Use a different email
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -429,8 +470,8 @@ function StepAccount({ onDone }: { onDone: () => void }) {
       </h1>
       <p className="mt-1.5 text-ink-soft">
         {mode === 'signup'
-          ? 'An account keeps your rounds and scores safe, and lets you pick up on your phone where you left off on your laptop.'
-          : 'Sign in and we\'ll pull your rounds and scores back down.'}
+          ? 'An account means your practice can follow you between devices once syncing lands. Until then it all stays on this one.'
+          : 'Sign in to your account. Your rounds and scores stay on this device for now — syncing is still to come.'}
       </p>
 
       <div className="mt-5 space-y-3">
@@ -494,8 +535,7 @@ function StepAccount({ onDone }: { onDone: () => void }) {
           Skip for now
         </button>
         <p className="text-center text-xs leading-relaxed text-ink-mute">
-          You can practise without an account — everything stays on this device
-          until you make one.
+          You can practise without an account. Nothing here needs one.
         </p>
       </div>
     </div>

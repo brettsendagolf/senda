@@ -2,7 +2,15 @@ import { create } from 'zustand'
 import type { Session, User } from '@supabase/supabase-js'
 import { isAuthConfigured, supabase } from '@/lib/supabase'
 
-export type AuthResult = { ok: true } | { ok: false; message: string }
+/**
+ * Signing up does not always sign you in. With email confirmation switched on,
+ * Supabase mails a link and returns no session, so the two happy outcomes have
+ * to stay tellable apart all the way up to the screen.
+ */
+export type AuthResult =
+  | { ok: true; status: 'signed-in' }
+  | { ok: true; status: 'confirm-email' }
+  | { ok: false; message: string }
 
 interface AuthState {
   user: User | null
@@ -43,14 +51,23 @@ export const useAuth = create<AuthState>((set) => ({
 
   signUp: async (email, password) => {
     if (!supabase) return { ok: false, message: 'Accounts are not set up yet.' }
-    const { error } = await supabase.auth.signUp({ email, password })
-    return error ? { ok: false, message: friendly(error.message) } : { ok: true }
+    const { data, error } = await supabase.auth.signUp({ email, password })
+    if (error) return { ok: false, message: friendly(error.message) }
+    // No session means a confirmation link is in the post. An address that is
+    // already registered lands here too — Supabase returns success either way
+    // so nobody can probe which emails have accounts — so we cannot tell the
+    // two apart. Happily the honest thing to say is the same for both.
+    return data.session
+      ? { ok: true, status: 'signed-in' }
+      : { ok: true, status: 'confirm-email' }
   },
 
   signIn: async (email, password) => {
     if (!supabase) return { ok: false, message: 'Accounts are not set up yet.' }
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return error ? { ok: false, message: friendly(error.message) } : { ok: true }
+    return error
+      ? { ok: false, message: friendly(error.message) }
+      : { ok: true, status: 'signed-in' }
   },
 
   signOut: async () => {

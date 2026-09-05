@@ -85,6 +85,11 @@ export function Profile() {
 
         <Group>
           <Row
+            label="Log a round"
+            hint="Seven numbers, about 30 seconds"
+            onClick={() => navigate('/log-round')}
+          />
+          <Row
             label="Progress"
             hint="Game Profile, drill scores and history"
             onClick={() => navigate('/progress')}
@@ -108,7 +113,7 @@ export function Profile() {
             ) : (
               <Row
                 label="Create an account"
-                hint="Keep your progress safe and sync across devices"
+                hint="Sign in, or make one ready for when syncing lands"
                 onClick={() => navigate('/onboarding')}
               />
             )}
