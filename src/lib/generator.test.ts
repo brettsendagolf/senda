@@ -157,12 +157,24 @@ describe('generateSession', () => {
     const { blocks } = generateSession({
       minutes: 45,
       capabilities: ['putting_green'],
-      focus: 'wedges',
+      focus: ['wedges'],
       allDrills: DRILLS,
     })
     for (const b of scored(blocks)) {
       expect(drillById(b.drillId).category).not.toBe('wedges')
     }
+  })
+
+  it('biases toward every focus category, not just one', () => {
+    const { blocks } = generateSession({
+      minutes: 30,
+      capabilities: ALL_CAPS,
+      focus: ['driving', 'bunker'],
+      allDrills: DRILLS,
+    })
+    const cats = scored(blocks).map((b) => drillById(b.drillId).category)
+    expect(cats).toContain('driving')
+    expect(cats).toContain('bunker')
   })
 
   it('avoids a recent drill when an equivalent alternative exists', () => {

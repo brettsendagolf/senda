@@ -26,7 +26,7 @@ interface SessionState {
   build: (opts: {
     venueId: string
     minutes: number
-    focus?: Category
+    focus?: Category[]
   }) => BuildResult | null
   /** Record a score for a block and log it to history. */
   scoreBlock: (index: number, score: number) => void
@@ -119,7 +119,7 @@ export const useSession = create<SessionState>((set, get) => ({
   },
 }))
 
-function emptySession(venueId: string, minutes: number, focus?: Category): Session {
+function emptySession(venueId: string, minutes: number, focus?: Category[]): Session {
   return {
     id: newId(),
     date: new Date().toISOString(),

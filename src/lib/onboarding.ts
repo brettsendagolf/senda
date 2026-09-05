@@ -64,12 +64,36 @@ export const ASSESSMENT: AssessQuestion[] = [
 ]
 
 /** Facilities offered in onboarding, mapped to capability-group keys. */
+/**
+ * Where the golfer can practise. Keys are capabilities so the answers can seed
+ * real venues. Deliberately NOT emoji-labelled, and deliberately separate:
+ * a putting green and a short game area are different places with different
+ * drills. "At home" is left out until we can say precisely what we mean by it
+ * — "none" covers the no-facilities case honestly instead.
+ */
+export const NO_FACILITY = 'none'
+
 export const FACILITY_OPTIONS: { key: string; label: string }[] = [
-  { key: 'range', label: '🎯 Driving range' },
-  { key: 'short', label: '⛳ Short game / green' },
-  { key: 'home', label: '🏠 Net or space at home' },
-  { key: 'enclosed', label: '🖥 Simulator' },
+  { key: 'range', label: 'Driving range' },
+  { key: 'putting_green', label: 'Putting green' },
+  { key: 'short_game', label: 'Short game area' },
+  { key: 'net', label: 'Net' },
+  { key: 'sim', label: 'Simulator' },
+  { key: NO_FACILITY, label: 'None of the above' },
 ]
+
+/** "None" is exclusive — it cannot be true alongside a real facility. */
+export function toggleFacility(current: string[], key: string): string[] {
+  if (key === NO_FACILITY) return current.includes(NO_FACILITY) ? [] : [NO_FACILITY]
+  const next = current.includes(key)
+    ? current.filter((k) => k !== key)
+    : [...current.filter((k) => k !== NO_FACILITY), key]
+  return next
+}
+
+/** True when the golfer has nowhere set up to practise. */
+export const hasNoFacilities = (facilities: string[]) =>
+  facilities.length === 0 || facilities.includes(NO_FACILITY)
 
 /** Self-rated severity (0..3) → a rough z prior; higher z = worse. */
 const RATING_Z = [-0.3, 0.2, 0.6, 1.0]

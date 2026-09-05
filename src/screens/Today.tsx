@@ -44,7 +44,7 @@ export function Today() {
   const [venueId, setVenueId] = useState<string | undefined>(firstVenueId)
   const [minutes, setMinutes] = useState(30)
   const [customOpen, setCustomOpen] = useState(false)
-  const [focus, setFocus] = useState<Category | undefined>()
+  const [focus, setFocus] = useState<Category[]>([])
   const [reason, setReason] = useState<string | undefined>()
 
   const venue = venues.find((v) => v.id === venueId)
@@ -68,7 +68,7 @@ export function Today() {
 
   const selectVenue = (v: Venue) => {
     setVenueId(v.id)
-    setFocus(undefined)
+    setFocus([])
     setReason(undefined)
     const opts = pickerOptionsFor(v.capabilities)
     const max = opts.length ? opts[opts.length - 1] : 0
@@ -80,7 +80,11 @@ export function Today() {
 
   const onBuild = () => {
     if (!venueId) return
-    const result = build({ venueId, minutes: effectiveMinutes, focus })
+    const result = build({
+      venueId,
+      minutes: effectiveMinutes,
+      focus: focus.length ? focus : undefined,
+    })
     setReason(result?.reason)
   }
 
@@ -193,11 +197,19 @@ export function Today() {
               Focus on… <span className="font-normal">(optional)</span>
             </h2>
             <div className="flex flex-wrap gap-2">
-              <Chip selected={focus === undefined} onClick={() => setFocus(undefined)}>
+              <Chip selected={focus.length === 0} onClick={() => setFocus([])}>
                 Any
               </Chip>
               {focusOptions.map((c) => (
-                <Chip key={c} selected={focus === c} onClick={() => setFocus(c)}>
+                <Chip
+                  key={c}
+                  selected={focus.includes(c)}
+                  onClick={() =>
+                    setFocus((f) =>
+                      f.includes(c) ? f.filter((x) => x !== c) : [...f, c],
+                    )
+                  }
+                >
                   {CATEGORY_LABELS[c]}
                 </Chip>
               ))}

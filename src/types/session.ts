@@ -14,6 +14,6 @@ export interface Session {
   date: string
   venueId: string
   requestedMinutes: number
-  focus?: Category //  optional user-chosen emphasis
+  focus?: Category[] //  optional user-chosen emphasis (may be several)
   blocks: SessionBlock[]
 }

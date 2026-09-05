@@ -21,7 +21,7 @@ export interface GenerateOptions {
   minutes: number
   capabilities: Capability[]
   equipment?: Equipment[] //   kit available; a drill needs ALL of its equipment
-  focus?: Category
+  focus?: Category[] //        bias toward these categories (may be several)
   recentDrillIds?: string[]
   allDrills: Drill[]
   /** maxBlockMinutes per capability — caps time spent on any one activity. */
@@ -69,13 +69,13 @@ interface PickContext {
   eligible: Drill[]
   chosenIds: Set<string>
   recent: Set<string>
-  focus?: Category
+  focus?: Category[]
   usedCategories: Map<Category, number>
   usedSkills: Map<SkillId, number>
 }
 
 function rank(d: Drill, ctx: PickContext): number {
-  const focusMatch = ctx.focus && d.category === ctx.focus ? 1 : 0
+  const focusMatch = ctx.focus?.length && ctx.focus.includes(d.category) ? 1 : 0
   const fresh = ctx.recent.has(d.id) ? 0 : 1
   const unusedSkill = (ctx.usedSkills.get(d.primarySkill) ?? 0) === 0 ? 1 : 0
   const unusedCategory = (ctx.usedCategories.get(d.category) ?? 0) === 0 ? 1 : 0

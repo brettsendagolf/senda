@@ -6,10 +6,14 @@ import {
   ASSESSMENT,
   EXPERIENCE_OPTIONS,
   FACILITY_OPTIONS,
+  hasNoFacilities,
   profileFromOnboarding,
+  toggleFacility,
 } from '@/lib/onboarding'
 import { STARTER_DRILLS } from '@/data/drills'
+import { venuesFromFacilities } from '@/data/venues'
 import { useProfile } from '@/store/profile'
+import { useVenues } from '@/store/venues'
 import { useSettings } from '@/store/settings'
 
 type StepKey = 'where' | 'handicap' | 'assess' | 'reveal'
@@ -28,25 +32,27 @@ export function Onboarding() {
   const saveOnboarding = useProfile((s) => s.saveOnboarding)
   const existing = useProfile((s) => s.onboarding)
   const setHandicap = useSettings((s) => s.setHandicap)
+  const replaceVenues = useVenues((s) => s.replaceAll)
 
   // Re-taking from Profile: start from the previous answers and go back there.
   const isRetake = existing !== null
 
   const [step, setStep] = useState(0)
-  const [experience, setExperience] = useState<Experience>(
-    existing?.experience ?? 'learning',
+  const [experience, setExperience] = useState<Experience | undefined>(
+    existing?.experience,
   )
   const [handicap, setHcp] = useState<number | undefined>(existing?.handicap)
   const [ratings, setRatings] = useState<Partial<Record<Area, number>>>(
     existing?.selfRatings ?? {},
   )
   const [facilities, setFacilities] = useState<string[]>(
-    existing?.facilities ?? ['range', 'short'],
+    existing?.facilities ?? [],
   )
 
   const draft: OnboardingProfile = useMemo(
     () => ({
-      experience,
+      // Guarded by the disabled CTA — you cannot leave screen one unanswered.
+      experience: experience ?? 'learning',
       handicap,
       selfRatings: ratings,
       facilities,
@@ -70,6 +76,9 @@ export function Onboarding() {
   const finish = async () => {
     await saveOnboarding(draft)
     if (handicap !== undefined) setHandicap(handicap)
+    // First run only: name the venues from the facilities they picked. On a
+    // re-take we leave venues alone — they may have been edited since.
+    if (!isRetake) await replaceVenues(venuesFromFacilities(facilities))
     navigate(isRetake ? '/profile' : '/', { replace: true })
   }
 
@@ -112,15 +121,15 @@ export function Onboarding() {
             ratings={ratings}
             onRate={(area, v) => setRatings((r) => ({ ...r, [area]: v }))}
             facilities={facilities}
-            onToggleFacility={(k) =>
-              setFacilities((f) =>
-                f.includes(k) ? f.filter((x) => x !== k) : [...f, k],
-              )
-            }
+            onToggleFacility={(k) => setFacilities((f) => toggleFacility(f, k))}
           />
         )}
         {current === 'reveal' && (
-          <StepReveal profile={profile} experience={experience} />
+          <StepReveal
+            profile={profile}
+            experience={experience}
+            facilities={facilities}
+          />
         )}
       </div>
 
@@ -131,7 +140,8 @@ export function Onboarding() {
         <button
           type="button"
           onClick={() => (current === 'reveal' ? finish() : setStep(step + 1))}
-          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
+          disabled={current === 'where' && !experience}
+          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90 disabled:opacity-40"
         >
           {current === 'reveal'
             ? isRetake
@@ -166,7 +176,7 @@ function StepWhere({
   experience,
   onPick,
 }: {
-  experience: Experience
+  experience?: Experience
   onPick: (e: Experience) => void
 }) {
   return (
@@ -218,6 +228,30 @@ function StepHandicap({
   handicap?: number
   onHandicap: (n: number | undefined) => void
 }) {
+  // Hold the raw text. Deriving the field's value from the parsed number ate
+  // the decimal point the moment it was typed ("8." -> 8 -> "8"), so "8.2"
+  // became "82" and then clamped to 54.
+  const [text, setText] = useState(
+    handicap === undefined ? '' : String(handicap),
+  )
+
+  const onType = (raw: string) => {
+    // digits plus at most one decimal point
+    const cleaned = raw.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1')
+    setText(cleaned)
+    if (cleaned === '' || cleaned === '.') return onHandicap(undefined)
+    const n = Number(cleaned)
+    onHandicap(Number.isNaN(n) ? undefined : Math.min(54, n))
+  }
+
+  // Only tidy up once they've finished typing, so clamping never fights them
+  // mid-entry.
+  const normalise = () => {
+    if (text === '' || text === '.') return setText('')
+    const n = Number(text)
+    if (!Number.isNaN(n)) setText(String(Math.min(54, n)))
+  }
+
   return (
     <div>
       <h1 className="text-3xl font-bold tracking-tight text-ink">
@@ -239,11 +273,9 @@ function StepHandicap({
           <input
             id="hcp"
             inputMode="decimal"
-            value={handicap ?? ''}
-            onChange={(e) => {
-              const v = e.target.value.replace(/[^\d.]/g, '')
-              onHandicap(v === '' ? undefined : Math.min(54, Number(v)))
-            }}
+            value={text}
+            onChange={(e) => onType(e.target.value)}
+            onBlur={normalise}
             placeholder="e.g. 18.4"
             className="tabular h-14 w-32 rounded-xl border border-line bg-paper px-3 text-2xl font-semibold text-ink"
           />
@@ -354,9 +386,11 @@ function StepAssess({
 function StepReveal({
   profile,
   experience,
+  facilities,
 }: {
   profile: ReturnType<typeof profileFromOnboarding>
-  experience: Experience
+  experience?: Experience
+  facilities: string[]
 }) {
   const worst = [...profile.areas].sort((a, b) => a.rank - b.rank)[0]
   const never = experience === 'never'
@@ -439,6 +473,34 @@ function StepReveal({
         <GameProfileCard profile={profile} />
       </div>
 
+      {hasNoFacilities(facilities) ? (
+        <div className="mt-3 rounded-2xl border border-line bg-card p-4">
+          <div className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
+            Start with these
+          </div>
+          <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">
+            You haven't got anywhere set up to practise yet, so here are the
+            fundamentals — each needs nothing but a club and a bit of floor.
+          </p>
+          <ol className="mt-3 space-y-2">
+            {STARTER_DRILLS.map((d, i) => (
+              <li key={d.id} className="flex items-baseline gap-2.5">
+                <span className="tabular grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent-soft text-[13px] font-bold text-accent">
+                  {i + 1}
+                </span>
+                <span className="font-medium text-ink">{d.name}</span>
+                <span className="tabular ml-auto shrink-0 text-sm text-ink-mute">
+                  {d.minutes} min
+                </span>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-3 text-xs leading-relaxed text-ink-mute">
+            Add a range or a green in Settings whenever you get to one and we'll
+            build fuller sessions.
+          </p>
+        </div>
+      ) : (
       <div className="mt-3 rounded-2xl border border-accent bg-accent-soft p-4">
         <div className="text-[11px] font-semibold uppercase tracking-wide text-accent">
           Where we'll start
@@ -449,6 +511,7 @@ function StepReveal({
           Today.
         </p>
       </div>
+      )}
 
       {profile.flags.includes('putting_myth') && (
         <p className="mt-3 rounded-xl border border-line bg-card px-3 py-2.5 text-sm text-ink-soft">

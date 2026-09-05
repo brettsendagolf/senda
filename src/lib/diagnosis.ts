@@ -272,6 +272,20 @@ const COLD_HEADLINE: Record<Area, [string, string]> = {
   putt: ['Putting is where you feel least sure.', "Putting isn't your main problem."],
 }
 
+/**
+ * The top-ranked area is always where we start, so its line must never read as
+ * a clean bill of health. When someone rates everything well, rank 1 is a
+ * *relative* weak spot — say exactly that rather than "putting isn't your
+ * problem" under a START HERE badge.
+ */
+function coldHeadline(area: Area, prior: number, rank: number): string {
+  const flagged = prior > 0.3
+  if (rank === 1 && !flagged) {
+    return `${AREA_LABEL[area]} is your relative weak spot — nothing here looks badly wrong.`
+  }
+  return COLD_HEADLINE[area][flagged ? 0 : 1]
+}
+
 /** When nothing was self-rated, fall back to where amateurs typically lose most. */
 const TYPICAL_HEADLINE: Record<Area, string> = {
   app: 'Approach play is where most amateurs lose the most.',
@@ -299,7 +313,7 @@ function coldStart(opts: DiagnoseOptions, now: string): GameProfile {
     shotsLostVsScratch: null,
     recoverableShots: null,
     headline: rated
-      ? COLD_HEADLINE[area][(priors[area] ?? 0) > 0.3 ? 0 : 1]
+      ? coldHeadline(area, priors[area] ?? 0, i + 1)
       : TYPICAL_HEADLINE[area],
   }))
   return {

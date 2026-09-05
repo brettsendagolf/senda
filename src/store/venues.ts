@@ -49,6 +49,8 @@ interface VenuesState {
     capabilities: Capability[],
     equipment: Equipment[],
   ) => Venue
+  /** Swap the whole set — used once, when onboarding names the venues. */
+  replaceAll: (venues: Venue[]) => Promise<void>
   updateVenue: (id: string, patch: Partial<Omit<Venue, 'id'>>) => void
   removeVenue: (id: string) => void
 }
@@ -76,6 +78,13 @@ export const useVenues = create<VenuesState>((set, get) => ({
     void storage.set(keys.venue(venue.id), venue)
     set({ venues: [...get().venues, venue] })
     return venue
+  },
+
+  replaceAll: async (venues) => {
+    const existing = await storage.list<Venue>(keys.venuePrefix)
+    await Promise.all(existing.map((v) => storage.remove(keys.venue(v.id))))
+    await Promise.all(venues.map((v) => storage.set(keys.venue(v.id), v)))
+    set({ venues })
   },
 
   updateVenue: (id, patch) => {

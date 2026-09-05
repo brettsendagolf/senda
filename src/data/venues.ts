@@ -27,3 +27,48 @@ export const STARTER_VENUES: Venue[] = [
     equipment: ['putter', 'two_coins', 'mirror'],
   },
 ]
+
+/**
+ * Turn the onboarding "where can you practise" answers into real venues, so
+ * Today offers the places the golfer actually named rather than a generic
+ * seed. One venue per facility: they are genuinely different places with
+ * different drills, and they stay editable in Settings.
+ */
+export function venuesFromFacilities(facilities: string[]): Venue[] {
+  const make = (
+    id: string,
+    name: string,
+    capabilities: Venue['capabilities'],
+    equipment: Venue['equipment'],
+  ): Venue => ({ id, name, capabilities, equipment })
+
+  const venues: Venue[] = []
+  if (facilities.includes('range'))
+    venues.push(make('venue_range', 'Driving range', ['range_mat'], ['wedge']))
+  if (facilities.includes('putting_green'))
+    venues.push(
+      make('venue_green', 'Putting green', ['putting_green'], ['putter', 'two_coins']),
+    )
+  if (facilities.includes('short_game'))
+    venues.push(
+      make('venue_short', 'Short game area', ['short_game'], ['wedge', 'towel']),
+    )
+  if (facilities.includes('net'))
+    venues.push(make('venue_net', 'Net', ['net'], ['towel']))
+  if (facilities.includes('sim'))
+    venues.push(make('venue_sim', 'Simulator', ['sim'], []))
+
+  // Nowhere set up yet — give them somewhere the fundamentals still work.
+  if (venues.length === 0)
+    venues.push(
+      make(
+        'venue_indoors',
+        'Indoors',
+        ['home_mirror', 'home_putting'],
+        ['putter'],
+      ),
+    )
+
+  venues[0].isDefault = true
+  return venues
+}
