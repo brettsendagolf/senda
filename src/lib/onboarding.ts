@@ -9,8 +9,11 @@ export const EXPERIENCE_OPTIONS: {
 }[] = [
   { value: 'never', label: "I've never played", sub: 'Never hit a ball, or only at a range once or twice' },
   { value: 'learning', label: "I'm learning, no handicap yet", sub: 'Playing occasionally, still finding my feet' },
-  { value: 'handicap', label: 'I have a handicap', sub: 'Official WHS index — you can enter it' },
   { value: 'untracked', label: "I play, but I don't track anything", sub: 'Regular golfer, no stats, no index' },
+  // Last: the option that reveals an extra input, so the list doesn't reflow
+  // above what you just tapped. Wording stays country-neutral — "handicap
+  // index" is the official term under the World Handicap System worldwide.
+  { value: 'handicap', label: 'I have a handicap', sub: 'An official handicap index — enter it below' },
 ]
 
 /** A newcomer wants the range/first-round content up front. */
