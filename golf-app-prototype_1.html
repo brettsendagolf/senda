@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Senda — Golf Practice App · Design Prototype</title>
+<style>
+/* ============ LINKS DESIGN SYSTEM TOKENS ============ */
+:root{
+  --bg-page:#F5F3EE; --bg-card:#FFFFFF; --bg-sunken:#EDEAE2;
+  --ink-1:#0D1A15; --ink-2:#4C5C55; --ink-3:#7C8A84; --line:#E3E0D8;
+  --brand:#0B5C42; --brand-press:#08402E; --brand-tint:#E6F0EB;
+  --signal:#C9F24C;
+  --good:#146B3A; --warn:#8A5A00; --crit:#B3261E;
+  --g100:#DCEBE4; --g200:#B9D7C9; --g300:#8DBDA8; --g400:#5C9E82; --g500:#2E7D5D; --g600:#0B5C42; --g700:#08402E;
+  --s1:#2A78D6; --s2:#EB6834; --s3:#1BAF7A;
+  --shadow:0 1px 2px rgba(13,26,21,.05);
+  --stage:#E8E4DA;
+}
+[data-theme="dark"]{
+  --bg-page:#0B1310; --bg-card:#141C19; --bg-sunken:#1E2A25;
+  --ink-1:#F2F5F3; --ink-2:#A7B5AE; --ink-3:#7C8A84; --line:#26332D;
+  --brand:#35B084; --brand-press:#2A8E6A; --brand-tint:#16241E;
+  --signal:#C9F24C;
+  --good:#3FBF6E; --warn:#E0A32E; --crit:#FF6B60;
+  --g100:#16241E; --g200:#1D3229; --g300:#2A5342; --g400:#2E7D5D; --g500:#2C9A72; --g600:#35B084; --g700:#5FC9A2;
+  --s1:#3987E5; --s2:#D95926; --s3:#199E70;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+  --stage:#161A18;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0; background:var(--stage); color:var(--ink-1);
+  font:400 16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  transition:background .2s;
+}
+/* ============ PAGE CHROME ============ */
+.wrap{max-width:1240px;margin:0 auto;padding:28px 20px 60px}
+.masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:22px}
+.brandmark{display:flex;align-items:center;gap:12px}
+.logo{width:44px;height:44px;border-radius:12px;background:var(--brand);display:grid;place-items:center;flex:none}
+.logo svg{width:24px;height:24px}
+.masthead h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.02em}
+.masthead p{margin:2px 0 0;color:var(--ink-2);font-size:14px}
+.ctrls{display:flex;gap:8px;align-items:center}
+.tbtn{border:1px solid var(--line);background:var(--bg-card);color:var(--ink-1);border-radius:999px;padding:9px 16px;font:600 13px/1 system-ui,sans-serif;cursor:pointer}
+.tbtn:hover{border-color:var(--brand)}
+.layout{display:grid;grid-template-columns:216px 1fr;gap:28px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.nav{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;padding:10px;position:sticky;top:20px;box-shadow:var(--shadow)}
+.nav h2{font:500 11px/1 system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin:12px 10px 8px}
+.nav button{display:block;width:100%;text-align:left;border:0;background:none;color:var(--ink-2);padding:9px 10px;border-radius:9px;font:500 14px/1.3 system-ui,sans-serif;cursor:pointer}
+.nav button:hover{background:var(--bg-sunken);color:var(--ink-1)}
+.nav button[aria-current="true"]{background:var(--brand-tint);color:var(--brand);font-weight:700}
+.stagearea{display:flex;flex-direction:column;align-items:center;gap:16px}
+.caption{max-width:520px;text-align:center;color:var(--ink-2);font-size:14px;line-height:1.6}
+.caption b{color:var(--ink-1)}
+
+/* ============ PHONE ============ */
+.phone{
+  width:390px;height:844px;flex:none;border-radius:44px;background:var(--bg-page);
+  border:1px solid var(--line);box-shadow:0 22px 50px -18px rgba(13,26,21,.42),0 0 0 10px #22282500;
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+}
+[data-theme="dark"] .phone{box-shadow:0 22px 50px -18px rgba(0,0,0,.7)}
+.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:110px;height:26px;border-radius:999px;background:var(--ink-1);opacity:.9;z-index:9}
+.statusbar{padding:14px 26px 0;display:flex;justify-content:space-between;font:600 13px/1 system-ui,sans-serif;color:var(--ink-1);flex:none}
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 20px 12px;scrollbar-width:thin}
+.screen::-webkit-scrollbar{width:0}
+.screen[hidden]{display:none}
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--bg-card);padding:9px 6px 22px}
+.tabbar button{border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink-3);font:500 10px/1 system-ui,sans-serif;padding:4px 0}
+.tabbar button svg{width:23px;height:23px}
+.tabbar button[aria-current="true"]{color:var(--brand);font-weight:700}
+.tabbar[hidden]{display:none}
+
+/* ============ APP UI PRIMITIVES ============ */
+.apphead{display:flex;align-items:center;justify-content:space-between;padding:6px 0 14px}
+.apphead h2{margin:0;font-size:28px;font-weight:700;letter-spacing:-.02em}
+.apphead .sub{font-size:13px;color:var(--ink-3);font-weight:500}
+.avatar{width:36px;height:36px;border-radius:999px;background:var(--brand-tint);color:var(--brand);display:grid;place-items:center;font:700 13px/1 system-ui,sans-serif;flex:none}
+.card{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);margin-bottom:12px}
+.card.flush{padding:0;overflow:hidden}
+.eyebrow{font:500 11px/1 system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.btn{display:block;width:100%;border:0;border-radius:12px;background:var(--brand);color:#fff;font:600 17px/1 system-ui,sans-serif;padding:18px;cursor:pointer;text-align:center}
+[data-theme="dark"] .btn{color:#08221A}
+.btn:active{background:var(--brand-press)}
+.btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--line);font-weight:600}
+.btn.sm{padding:13px;font-size:15px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg-card);border:1.5px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:9px;cursor:pointer;font:400 16px/1.35 system-ui,sans-serif;color:var(--ink-1)}
+.opt small{display:block;color:var(--ink-3);font-size:13px;margin-top:3px}
+.opt[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-tint)}
+.opt[aria-pressed="true"] small{color:var(--brand)}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg-sunken);border-radius:999px;padding:6px 12px;font:600 12px/1 system-ui,sans-serif;color:var(--ink-2);margin:0 6px 6px 0}
+.chip.on{background:var(--brand-tint);color:var(--brand)}
+.progressdots{display:flex;gap:5px;margin:8px 0 18px}
+.progressdots i{height:4px;flex:1;border-radius:999px;background:var(--bg-sunken)}
+.progressdots i.on{background:var(--brand)}
+.stat{font:700 40px/1 system-ui,sans-serif;letter-spacing:-.03em}
+.metric{font-variant-numeric:tabular-nums}
+.divider{height:1px;background:var(--line);margin:14px -16px}
+
+/* bars */
+.bar{margin-bottom:13px}
+.barhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;font-size:14px}
+.barhead b{font-weight:600}
+.barhead span{font:600 14px/1 system-ui,sans-serif;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.track{height:11px;background:var(--bg-sunken);border-radius:4px;overflow:hidden}
+.fill{height:100%;border-radius:4px}
+.tagline{font-size:12px;color:var(--ink-3);margin-top:4px}
+.barhead .pill,.pill{display:inline-block;font:700 10px/1 system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:5px;background:var(--brand);color:#FFFFFF;vertical-align:2px;margin-left:7px}
+[data-theme="dark"] .barhead .pill,[data-theme="dark"] .pill{color:#08221A}
+
+/* streak strip */
+.streak{display:flex;align-items:center;gap:10px;background:var(--ink-1);color:var(--bg-page);border-radius:14px;padding:13px 15px;margin-bottom:12px}
+.streak .wk{display:flex;gap:4px;margin-left:auto}
+.streak .wk i{width:9px;height:9px;border-radius:3px;background:rgba(255,255,255,.22);display:block}
+[data-theme="dark"] .streak .wk i{background:rgba(0,0,0,.3)}
+.streak .wk i.on{background:var(--signal)}
+.streak b{font:600 13px/1 system-ui,sans-serif}
+.streak small{font-size:11px;opacity:.7;display:block;margin-top:3px}
+
+/* hero session card */
+.hero{background:var(--brand);color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}
+[data-theme="dark"] .hero{color:#EAFBF4}
+.hero .eyebrow{color:rgba(255,255,255,.72)}
+.hero h3{margin:0 0 4px;font-size:25px;font-weight:700;letter-spacing:-.02em}
+.hero .meta{font-size:14px;opacity:.85;margin-bottom:14px}
+.hero .targets{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.hero .targets span{background:rgba(255,255,255,.16);border-radius:999px;padding:5px 11px;font:600 12px/1 system-ui,sans-serif}
+.hero .btn{background:var(--signal);color:#0D1A15}
+
+/* session player */
+.player{position:absolute;inset:0;background:var(--bg-page);display:flex;flex-direction:column;padding:56px 22px 34px;z-index:20}
+.player[hidden]{display:none}
+.player .top{display:flex;align-items:center;justify-content:space-between;font:600 12px/1 system-ui,sans-serif;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase}
+.beads{display:flex;gap:4px}
+.beads i{width:8px;height:8px;border-radius:999px;background:var(--bg-sunken);display:block}
+.beads i.on{background:var(--brand)}
+.player .mid{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.player .club{font:700 46px/1 system-ui,sans-serif;letter-spacing:-.03em;margin-bottom:6px}
+.player .dist{font-size:20px;color:var(--ink-2);margin-bottom:30px}
+.cue{background:var(--bg-card);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:12px;padding:15px;text-align:left;font-size:16px;line-height:1.45;color:var(--ink-1)}
+.cue em{display:block;font:500 11px/1 system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);font-style:normal;margin-bottom:6px}
+.hitmiss{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px}
+.hitmiss button{border:0;border-radius:16px;padding:26px 0;font:700 19px/1 system-ui,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px}
+.hitmiss .hit{background:var(--brand);color:#fff}
+[data-theme="dark"] .hitmiss .hit{color:#08221A}
+.hitmiss .miss{background:var(--bg-sunken);color:var(--ink-2)}
+.hitmiss svg{width:30px;height:30px}
+.undo{text-align:center;font:600 14px/1 system-ui,sans-serif;color:var(--ink-3);background:none;border:0;width:100%;padding:10px;cursor:pointer}
+
+/* list rows */
+.lrow{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+.lrow:last-child{border-bottom:0}
+.lico{width:38px;height:38px;border-radius:11px;background:var(--brand-tint);color:var(--brand);display:grid;place-items:center;flex:none}
+.lico svg{width:19px;height:19px}
+.lrow .t{flex:1;min-width:0}
+.lrow .t b{display:block;font:600 15px/1.3 system-ui,sans-serif}
+.lrow .t small{color:var(--ink-3);font-size:13px}
+.lrow .v{font:700 15px/1 system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.lock{width:17px;height:17px;color:var(--ink-3);flex:none}
+
+/* paywall */
+.plan{border:2px solid var(--line);border-radius:15px;padding:15px;margin-bottom:10px;cursor:pointer;position:relative;background:var(--bg-card)}
+.plan[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-tint)}
+.plan .pt{display:flex;justify-content:space-between;align-items:center}
+.plan b{font-size:17px;font-weight:700}
+.plan .pr{font:700 19px/1 system-ui,sans-serif}
+.plan small{color:var(--ink-2);font-size:13px;display:block;margin-top:3px}
+.save{position:absolute;top:-9px;right:14px;background:var(--signal);color:#0D1A15;font:700 10px/1 system-ui,sans-serif;letter-spacing:.05em;padding:5px 8px;border-radius:5px;text-transform:uppercase}
+.ben{display:flex;gap:11px;align-items:flex-start;margin-bottom:13px}
+.ben svg{width:20px;height:20px;color:var(--brand);flex:none;margin-top:1px}
+.ben b{display:block;font:600 15px/1.3 system-ui,sans-serif}
+.ben small{color:var(--ink-2);font-size:13px;line-height:1.4}
+.xbtn{width:34px;height:34px;border-radius:999px;border:0;background:var(--bg-sunken);color:var(--ink-2);display:grid;place-items:center;cursor:pointer}
+
+/* line chart */
+.chartwrap{position:relative}
+.chartwrap svg{display:block;width:100%;height:auto}
+.axl{font:500 10px/1 system-ui,sans-serif;fill:var(--ink-3);font-variant-numeric:tabular-nums}
+
+/* design system sheet */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:9px}
+.sw{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--bg-card)}
+.sw .c{height:52px}
+.sw .m{padding:8px 9px;font:600 11px/1.35 system-ui,sans-serif}
+.sw .m span{display:block;color:var(--ink-3);font-weight:500;font-variant-numeric:tabular-nums;text-transform:uppercase}
+.sw .m i{font-style:normal;display:block;color:var(--good);font-size:10px;margin-top:2px}
+table.spec{width:100%;border-collapse:collapse;font-size:13px}
+table.spec th{text-align:left;font:500 10px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:0 0 8px}
+table.spec td{padding:8px 0;border-top:1px solid var(--line);vertical-align:top}
+table.spec td:last-child{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-2);font-weight:600}
+.note{font-size:12px;color:var(--ink-3);line-height:1.5;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="brandmark">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M5.5 21C5.5 16 10 15 12 12S15 5.5 18.5 3.5" stroke="#C9F24C" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 3.6" opacity=".55"/><circle cx="5.6" cy="20.6" r="2.1" fill="#C9F24C" opacity=".5"/><circle cx="11.6" cy="12.6" r="2.4" fill="#C9F24C" opacity=".75"/><circle cx="18.5" cy="3.9" r="2.8" fill="#C9F24C"/></svg></div>
+      <div>
+        <h1>Senda</h1>
+        <p>Golf practice app · interactive design prototype v1.0</p>
+      </div>
+    </div>
+    <div class="ctrls">
+      <button class="tbtn" id="themeBtn">Dark mode</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="nav" id="nav">
+      <h2>Onboarding</h2>
+      <button data-s="ob1" aria-current="true">1 · Where are you now</button>
+      <button data-s="ob2">2 · Quick assessment</button>
+      <button data-s="ob3">3 · Game Profile reveal</button>
+      <h2>Core loop</h2>
+      <button data-s="today">Today</button>
+      <button data-s="player">Session Player</button>
+      <button data-s="summary">Session summary</button>
+      <button data-s="practice">Practice</button>
+      <button data-s="progress">Progress</button>
+      <button data-s="learn">Learn</button>
+      <h2>Monetisation</h2>
+      <button data-s="paywall">Paywall — trigger A</button>
+      <h2>Reference</h2>
+      <button data-s="ds">Colour &amp; type system</button>
+    </nav>
+
+    <div class="stagearea">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="statusbar"><span>9:41</span><span style="letter-spacing:.06em">▮▮▮ ▲ 100%</span></div>
+
+        <!-- ============ ONBOARDING 1 ============ -->
+        <div class="screen" id="s-ob1">
+          <div class="progressdots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+          <h2 style="font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px">Where are you now?</h2>
+          <p style="color:var(--ink-2);margin:0 0 22px;font-size:15px">No wrong answer. This just tells us where to start you.</p>
+          <button class="opt" onclick="pick(this)">I've never played<small>Never hit a ball, or only at a range once or twice</small></button>
+          <button class="opt" onclick="pick(this)" aria-pressed="true">I'm learning, no handicap yet<small>Playing occasionally, still finding my feet</small></button>
+          <button class="opt" onclick="pick(this)">I have a handicap<small>Official WHS index — you'll enter it next</small></button>
+          <button class="opt" onclick="pick(this)">I play, but I don't track anything<small>Regular golfer, no stats, no index</small></button>
+          <div style="height:14px"></div>
+          <button class="btn" onclick="go('ob2')">Continue</button>
+          <p class="note" style="text-align:center">No account needed yet.</p>
+        </div>
+
+        <!-- ============ ONBOARDING 2 ============ -->
+        <div class="screen" id="s-ob2" hidden>
+          <div class="progressdots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+          <h2 style="font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 6px">Quick assessment</h2>
+          <p style="color:var(--ink-2);margin:0 0 20px;font-size:15px">Six taps. Think about your last few rounds — rough is fine.</p>
+
+          <div class="card">
+            <div class="eyebrow">Off the tee</div>
+            <p style="margin:0 0 12px;font-size:15px">How often do you lose a ball or take a penalty?</p>
+            <div class="row2" style="grid-template-columns:repeat(4,1fr)">
+              <button class="opt" style="text-align:center;padding:13px 4px;margin:0;font-size:14px" onclick="pickOne(this)">Never</button>
+              <button class="opt" style="text-align:center;padding:13px 4px;margin:0;font-size:14px" onclick="pickOne(this)">1–2</button>
+              <button class="opt" style="text-align:center;padding:13px 4px;margin:0;font-size:14px" aria-pressed="true" onclick="pickOne(this)">3–4</button>
+              <button class="opt" style="text-align:center;padding:13px 4px;margin:0;font-size:14px" onclick="pickOne(this)">5+</button>
+            </div>
+            <p class="note">We ask about penalties, not fairways hit. Fairway accuracy barely changes between a 25 and a scratch golfer — penalty shots change by 8×.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Approach</div>
+            <p style="margin:0 0 12px;font-size:15px">Out of 18 holes, how many greens do you hit in regulation?</p>
+            <div class="row2" style="grid-template-columns:repeat(4,1fr)">
+              <button class="opt" style="text-align:center;padding:13px 4px;margin:0;font-size:14px" aria-pressed="true" onclick="pickOne(this)">0–2</button>
+              <button class="opt" style="text-align:center;padding:13px 4px;margin:0;font-size:14px" onclick="pickOne(this)">3–5</button>
+              <button class="opt" style="text-align:center;padding:13px 4px;margin:0;font-size:14px" onclick="pickOne(this)">6–9</button>
+              <button class="opt" style="text-align:center;padding:13px 4px;margin:0;font-size:14px" onclick="pickOne(this)">10+</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Where can you practise?</div>
+            <div style="margin-top:2px">
+              <button class="chip on" onclick="tog(this)">🎯 Driving range</button>
+              <button class="chip on" onclick="tog(this)">⛳ Practice green</button>
+              <button class="chip" onclick="tog(this)">🏠 Net at home</button>
+              <button class="chip" onclick="tog(this)">🖥 Simulator</button>
+            </div>
+          </div>
+
+          <button class="btn" onclick="go('ob3')">Build my Game Profile</button>
+          <div style="height:8px"></div>
+        </div>
+
+        <!-- ============ ONBOARDING 3 — GAME PROFILE ============ -->
+        <div class="screen" id="s-ob3" hidden>
+          <div class="progressdots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+          <div class="eyebrow">Your Game Profile</div>
+          <h2 style="font-size:28px;font-weight:700;letter-spacing:-.02em;margin:0 0 4px">Here's where your<br>shots are going.</h2>
+          <p style="color:var(--ink-2);margin:6px 0 20px;font-size:15px">Estimated shots lost per round, against golfers at your level.</p>
+
+          <div class="card">
+            <div class="bar">
+              <div class="barhead"><b>Approach<span class="pill">Start here</span></b><span class="metric">6.2</span></div>
+              <div class="track"><div class="fill" style="width:100%;background:var(--g600)"></div></div>
+              <div class="tagline">Your biggest single leak — and the most fixable.</div>
+            </div>
+            <div class="bar">
+              <div class="barhead"><b>Off the tee</b><span class="metric">3.9</span></div>
+              <div class="track"><div class="fill" style="width:63%;background:var(--g400)"></div></div>
+              <div class="tagline">Mostly penalty shots, not accuracy.</div>
+            </div>
+            <div class="bar">
+              <div class="barhead"><b>Short game</b><span class="metric">3.4</span></div>
+              <div class="track"><div class="fill" style="width:55%;background:var(--g300)"></div></div>
+              <div class="tagline">The 25–50 yard pitch is the weak spot.</div>
+            </div>
+            <div class="bar" style="margin-bottom:0">
+              <div class="barhead"><b>Putting</b><span class="metric">2.1</span></div>
+              <div class="track"><div class="fill" style="width:34%;background:var(--g200)"></div></div>
+              <div class="tagline">Better than you think. Most golfers get this wrong.</div>
+            </div>
+            <div class="divider"></div>
+            <p style="margin:0;font-size:13px;color:var(--ink-3);line-height:1.5"><b style="color:var(--warn)">Low confidence</b> — built from your answers plus data from golfers at your level. This sharpens fast once you log 5 rounds.</p>
+          </div>
+
+          <div class="card" style="background:var(--brand-tint);border-color:var(--brand)">
+            <div class="eyebrow" style="color:var(--brand)">Your first session is ready</div>
+            <b style="font-size:19px;display:block;margin-bottom:3px">Approach Ladder</b>
+            <span style="font-size:14px;color:var(--ink-2)">45 min · 50 balls · driving range</span>
+          </div>
+
+          <button class="btn" onclick="go('today')">Let's go</button>
+          <div style="height:10px"></div>
+        </div>
+
+        <!-- ============ TODAY ============ -->
+        <div class="screen" id="s-today" hidden>
+          <div class="apphead">
+            <div><div class="sub">Saturday 15 August</div><h2>Today</h2></div>
+            <div class="avatar">B</div>
+          </div>
+
+          <div class="streak">
+            <div><b>Week 3 · on track</b><small>2 of 2 sessions done</small></div>
+            <div class="wk"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="hero">
+            <div class="eyebrow">Today's session</div>
+            <h3>Approach Ladder</h3>
+            <div class="meta">45 min · 50 balls · driving range</div>
+            <div class="targets"><span>100 yds</span><span>130 yds</span><span>160 yds</span></div>
+            <button class="btn" onclick="go('player')">Start session</button>
+          </div>
+
+          <div class="row2" style="margin-bottom:14px">
+            <button class="btn ghost sm">Log a round</button>
+            <button class="btn ghost sm">Log a session</button>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Your focus</div>
+            <div class="bar" style="margin-bottom:6px">
+              <div class="barhead"><b>Approach</b><span class="metric">5.4 shots</span></div>
+              <div class="track"><div class="fill" style="width:87%;background:var(--g600)"></div></div>
+            </div>
+            <p style="margin:8px 0 0;font-size:14px;color:var(--good);font-weight:600">↓ 0.8 shots since you started</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Coming up</div>
+            <div class="lrow">
+              <div class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+              <div class="t"><b>Tuesday · Pressure Putting</b><small>25 min · practice green</small></div>
+            </div>
+            <div class="lrow">
+              <div class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/></svg></div>
+              <div class="t"><b>Sunday · Par 18 benchmark</b><small>Monthly checkpoint · 30 min</small></div>
+            </div>
+          </div>
+          <div style="height:6px"></div>
+        </div>
+
+        <!-- ============ PRACTICE ============ -->
+        <div class="screen" id="s-practice" hidden>
+          <div class="apphead"><div><div class="sub">Break 90 · Week 3 of 12</div><h2>Practice</h2></div><div class="avatar">B</div></div>
+
+          <div class="card">
+            <div class="eyebrow">Your plan</div>
+            <div class="lrow"><div class="lico" style="background:var(--brand);color:#fff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg></div><div class="t"><b>Weeks 1–2 · Foundations</b><small>4 sessions · complete</small></div></div>
+            <div class="lrow"><div class="lico"><b style="font:700 14px system-ui">3</b></div><div class="t"><b>Week 3 · Approach control</b><small>2 of 2 done · 1 bonus available</small></div><div class="v" style="color:var(--brand)">Now</div></div>
+            <div class="lrow" style="opacity:.5"><div class="lico" style="background:var(--bg-sunken);color:var(--ink-3)"><b style="font:700 14px system-ui">4</b></div><div class="t"><b>Week 4 · Wedge distance</b><small>Unlocks Monday</small></div></div>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Drill library</div>
+            <div style="margin-bottom:10px">
+              <button class="chip on" onclick="tog(this)">All</button><button class="chip" onclick="tog(this)">Approach</button><button class="chip" onclick="tog(this)">Short game</button><button class="chip" onclick="tog(this)">Putting</button><button class="chip" onclick="tog(this)">Tee</button>
+            </div>
+            <div class="lrow"><div class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V8m5 12V4m5 16v-8m5 8V10"/></svg></div><div class="t"><b>Approach Ladder</b><small>Random · 3 targets · 45 min</small></div></div>
+            <div class="lrow"><div class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="t"><b>Par 18 short game</b><small>Pressure · 9 shots · 30 min</small></div></div>
+            <div class="lrow"><div class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 8h14"/></svg></div><div class="t"><b>Gate Drill · 3–6 ft</b><small>Blocked · 20 putts · 15 min</small></div></div>
+            <div class="lrow" style="opacity:.55"><div class="lico" style="background:var(--bg-sunken);color:var(--ink-3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div><div class="t"><b>147 more drills</b><small>Senda Plus</small></div><svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
+          </div>
+          <button class="btn ghost" onclick="go('paywall')">Build a custom session</button>
+          <div style="height:8px"></div>
+        </div>
+
+        <!-- ============ PROGRESS ============ -->
+        <div class="screen" id="s-progress" hidden>
+          <div class="apphead"><div><div class="sub">14 rounds · 23 sessions</div><h2>Progress</h2></div><div class="avatar">B</div></div>
+
+          <div class="card">
+            <div class="eyebrow">Handicap index</div>
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:2px">
+              <div class="stat metric">21.4</div>
+              <div style="font:600 15px system-ui;color:var(--good)">↓ 2.3 <span style="color:var(--ink-3);font-weight:500">since March</span></div>
+            </div>
+            <div class="chartwrap" style="margin-top:14px">
+              <svg viewBox="0 0 320 108" role="img" aria-label="Handicap index falling from 23.7 in March to 21.4 in August">
+                <line x1="26" y1="8" x2="316" y2="8" stroke="var(--line)" stroke-width="1"/>
+                <line x1="26" y1="44" x2="316" y2="44" stroke="var(--line)" stroke-width="1"/>
+                <line x1="26" y1="80" x2="316" y2="80" stroke="var(--line)" stroke-width="1"/>
+                <text class="axl" x="0" y="11">24</text><text class="axl" x="0" y="47">22</text><text class="axl" x="0" y="83">20</text>
+                <polyline fill="none" stroke="var(--brand)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  points="34,16 90,22 146,20 202,38 258,44 312,51"/>
+                <circle cx="34" cy="16" r="3.4" fill="var(--bg-card)" stroke="var(--brand)" stroke-width="2"/>
+                <circle cx="90" cy="22" r="3.4" fill="var(--bg-card)" stroke="var(--brand)" stroke-width="2"/>
+                <circle cx="146" cy="20" r="3.4" fill="var(--bg-card)" stroke="var(--brand)" stroke-width="2"/>
+                <circle cx="202" cy="38" r="3.4" fill="var(--bg-card)" stroke="var(--brand)" stroke-width="2"/>
+                <circle cx="258" cy="44" r="3.4" fill="var(--bg-card)" stroke="var(--brand)" stroke-width="2"/>
+                <circle cx="312" cy="51" r="4.6" fill="var(--brand)"/>
+                <text class="axl" x="28" y="102">Mar</text><text class="axl" x="84" y="102">Apr</text><text class="axl" x="140" y="102">May</text><text class="axl" x="196" y="102">Jun</text><text class="axl" x="252" y="102">Jul</text><text class="axl" x="300" y="102">Aug</text>
+              </svg>
+            </div>
+            <p class="note">8 of your last 20 scores are counting. Next score replaces your 24 Jun round.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Game Profile · shots lost per round</div>
+            <div class="bar"><div class="barhead"><b>Approach</b><span class="metric">5.4</span></div><div class="track"><div class="fill" style="width:100%;background:var(--g600)"></div></div></div>
+            <div class="bar"><div class="barhead"><b>Off the tee</b><span class="metric">3.1</span></div><div class="track"><div class="fill" style="width:57%;background:var(--g400)"></div></div></div>
+            <div class="bar"><div class="barhead"><b>Short game</b><span class="metric">2.9</span></div><div class="track"><div class="fill" style="width:54%;background:var(--g300)"></div></div></div>
+            <div class="bar" style="margin-bottom:0"><div class="barhead"><b>Putting</b><span class="metric">1.8</span></div><div class="track"><div class="fill" style="width:33%;background:var(--g200)"></div></div></div>
+            <div class="divider"></div>
+            <p style="margin:0;font-size:13px;color:var(--good);font-weight:600">✓ Good confidence — based on your last 14 rounds.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Marker</div>
+            <div class="lrow" style="border:0;padding-top:4px">
+              <div class="lico" style="background:var(--signal);color:#0D1A15"><b style="font:700 15px system-ui">4</b></div>
+              <div class="t"><b>Marker 4 · Consistent</b><small>Pass the Par 18 test in under 24 to reach Marker 5</small></div>
+            </div>
+            <div class="track" style="margin-top:6px"><div class="fill" style="width:72%;background:var(--signal)"></div></div>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">You vs 20-handicaps</div>
+            <div class="lrow"><div class="t"><b>Greens in regulation</b><small>You 3.4 · peers 3.1</small></div><div class="v" style="color:var(--good)">Ahead</div></div>
+            <div class="lrow"><div class="t"><b>Penalty shots</b><small>You 3.8 · peers 3.0</small></div><div class="v" style="color:var(--crit)">Behind</div></div>
+            <div class="lrow"><div class="t"><b>Putts per green hit</b><small>You 1.86 · peers 1.91</small></div><div class="v" style="color:var(--good)">Ahead</div></div>
+          </div>
+          <div style="height:6px"></div>
+        </div>
+
+        <!-- ============ LEARN ============ -->
+        <div class="screen" id="s-learn" hidden>
+          <div class="apphead"><div><div class="sub">Free, forever</div><h2>Learn</h2></div><div class="avatar">B</div></div>
+
+          <div class="card" style="background:var(--ink-1);border-color:var(--ink-1)">
+            <div class="eyebrow" style="color:rgba(255,255,255,.6)">Start here</div>
+            <b style="color:var(--bg-page);font-size:20px;display:block;margin-bottom:5px">First Tee</b>
+            <p style="color:rgba(255,255,255,.75);margin:0;font-size:14px;line-height:1.5">Everything nobody tells you. What to buy, where to stand, what to do when you're embarrassed.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Getting a handicap in England</div>
+            <div class="lrow"><div class="lico"><b style="font:700 13px system-ui">1</b></div><div class="t"><b>You need 54 holes</b><small>Any mix of 9s and 18s. England Golf's own page doesn't tell you this.</small></div></div>
+            <div class="lrow"><div class="lico"><b style="font:700 13px system-ui">2</b></div><div class="t"><b>Register the card <i>before</i> you tee off</b><small>In MyEG, standing at the course — it's location-checked.</small></div></div>
+            <div class="lrow"><div class="lico"><b style="font:700 13px system-ui">3</b></div><div class="t"><b>You need a marker</b><small>Someone with a membership number who played with you.</small></div></div>
+            <div class="lrow"><div class="lico"><b style="font:700 13px system-ui">4</b></div><div class="t"><b>Submit by midnight</b><small>Same day. No exceptions, no retrospective cards.</small></div></div>
+            <div class="divider"></div>
+            <p style="margin:0;font-size:13px;color:var(--ink-2);line-height:1.5">Not a club member? <b>iGolf costs £47/year</b> and gets you an official index.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">How practice actually works</div>
+            <div class="lrow"><div class="t"><b>Why your putting probably isn't the problem</b><small>4 min read</small></div></div>
+            <div class="lrow"><div class="t"><b>Blocked vs random — and why we do both</b><small>5 min read</small></div></div>
+            <div class="lrow"><div class="t"><b>Fairways hit is a useless stat. Here's why.</b><small>3 min read</small></div></div>
+            <div class="lrow"><div class="t"><b>What 50 balls should actually look like</b><small>6 min read</small></div></div>
+          </div>
+          <div style="height:6px"></div>
+        </div>
+
+        <!-- ============ PAYWALL ============ -->
+        <div class="screen" id="s-paywall" hidden>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0 16px">
+            <button class="xbtn" onclick="go('today')"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            <span style="font:600 13px system-ui;color:var(--ink-3)">Senda Plus</span>
+            <span style="width:34px"></span>
+          </div>
+
+          <div class="card" style="background:var(--brand-tint);border-color:var(--brand)">
+            <div class="eyebrow" style="color:var(--brand)">Three sessions in</div>
+            <p style="margin:0;font-size:19px;line-height:1.35;font-weight:600">Your approach score is up <span style="color:var(--brand)">18%</span> in two weeks.</p>
+            <p style="margin:8px 0 0;font-size:14px;color:var(--ink-2)">You've used this week's free session. Here's what unlimited looks like.</p>
+          </div>
+
+          <div class="ben"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg><div><b>Unlimited sessions, built for you</b><small>Practise as often as you like. 150+ drills across every part of the game.</small></div></div>
+          <div class="ben"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg><div><b>Difficulty that moves with you</b><small>Targets tighten as you improve, holding you at the ~70% success rate where learning is fastest.</small></div></div>
+          <div class="ben"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg><div><b>Full round analysis</b><small>Where each shot went, which miss pattern is costing you, what to do about it.</small></div></div>
+          <div class="ben"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg><div><b>12-week programmes</b><small>Break 90. Get your first handicap. Structured, week by week.</small></div></div>
+
+          <div style="height:6px"></div>
+          <div class="plan" aria-pressed="true" onclick="planPick(this)">
+            <span class="save">Save 48%</span>
+            <div class="pt"><b>Annual</b><span class="pr">£49.99</span></div>
+            <small>£4.17 a month · 7 days free</small>
+          </div>
+          <div class="plan" onclick="planPick(this)">
+            <div class="pt"><b>Monthly</b><span class="pr">£7.99</span></div>
+            <small>Billed monthly</small>
+          </div>
+
+          <button class="btn">Start 7 days free</button>
+          <div style="height:9px"></div>
+          <button class="btn ghost sm" onclick="go('today')">Keep using Senda free</button>
+          <p class="note" style="text-align:center;margin-top:12px">Cancel any time — two taps in Settings.<br>Your handicap, rounds and Learn stay free forever.</p>
+          <div style="height:8px"></div>
+        </div>
+
+        <!-- ============ DESIGN SYSTEM ============ -->
+        <div class="screen" id="s-ds" hidden>
+          <div class="apphead"><div><div class="sub">Links</div><h2>Design system</h2></div></div>
+
+          <div class="card">
+            <div class="eyebrow">Core palette</div>
+            <div class="swatches">
+              <div class="sw"><div class="c" style="background:#F5F3EE"></div><div class="m">Linen<span>#F5F3EE</span></div></div>
+              <div class="sw"><div class="c" style="background:#0B5C42"></div><div class="m">Fairway<span>#0B5C42</span><i>7.22:1 AAA</i></div></div>
+              <div class="sw"><div class="c" style="background:#C9F24C"></div><div class="m">Signal<span>#C9F24C</span><i>fill only</i></div></div>
+              <div class="sw"><div class="c" style="background:#0D1A15"></div><div class="m">Ink<span>#0D1A15</span><i>16.1:1 AAA</i></div></div>
+              <div class="sw"><div class="c" style="background:#4C5C55"></div><div class="m">Ink 2<span>#4C5C55</span><i>6.38:1 AA</i></div></div>
+              <div class="sw"><div class="c" style="background:#E3E0D8"></div><div class="m">Hairline<span>#E3E0D8</span></div></div>
+            </div>
+            <p class="note">Signal lime is never text or an icon on a light background — 1.16:1. It is a fill, and ink sits on top at 13.85:1.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Fairway ramp · single-series charts</div>
+            <div style="display:flex;border-radius:9px;overflow:hidden;height:46px">
+              <div style="flex:1;background:#DCEBE4"></div><div style="flex:1;background:#B9D7C9"></div><div style="flex:1;background:#8DBDA8"></div><div style="flex:1;background:#5C9E82"></div><div style="flex:1;background:#2E7D5D"></div><div style="flex:1;background:#0B5C42"></div><div style="flex:1;background:#08402E"></div>
+            </div>
+            <p class="note">"Shots lost by area" is one measure across four categories — one hue, focus item darkened. Four colours there would imply four unrelated things.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Multi-series · capped at three</div>
+            <div style="display:flex;gap:8px">
+              <div style="flex:1"><div style="height:38px;border-radius:9px;background:#2A78D6"></div><p class="note" style="margin-top:5px">#2A78D6</p></div>
+              <div style="flex:1"><div style="height:38px;border-radius:9px;background:#EB6834"></div><p class="note" style="margin-top:5px">#EB6834</p></div>
+              <div style="flex:1"><div style="height:38px;border-radius:9px;background:#1BAF7A"></div><p class="note" style="margin-top:5px">#1BAF7A</p></div>
+            </div>
+            <p class="note">Validated with all pairs in play, both modes: worst colourblind ΔE 9.2 light / 9.4 dark (target ≥8); worst normal-vision ΔE 24.0 / 20.9 (floor ≥15). A fourth concurrent colour cannot clear those floors — use a segmented control instead.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Status · always with icon + label</div>
+            <div class="lrow"><div class="t"><b style="color:var(--good)">✓ Good · #146B3A</b></div><div class="v">5.93:1</div></div>
+            <div class="lrow"><div class="t"><b style="color:var(--warn)">! Warning · #8A5A00</b></div><div class="v">5.34:1</div></div>
+            <div class="lrow"><div class="t"><b style="color:var(--crit)">✕ Critical · #B3261E</b></div><div class="v">5.89:1</div></div>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Type scale · system sans</div>
+            <table class="spec">
+              <tr><th>Style</th><th></th><th>Spec</th></tr>
+              <tr><td style="font:700 26px/1 system-ui;letter-spacing:-.02em">Display</td><td></td><td>40 / 700</td></tr>
+              <tr><td style="font:700 21px/1 system-ui;letter-spacing:-.02em">Title 1</td><td></td><td>28 / 700</td></tr>
+              <tr><td style="font:600 17px/1 system-ui">Title 2</td><td></td><td>22 / 600</td></tr>
+              <tr><td style="font:600 15px/1 system-ui">Headline</td><td></td><td>17 / 600</td></tr>
+              <tr><td style="font:400 15px/1 system-ui">Body copy</td><td></td><td>17 / 400</td></tr>
+              <tr><td style="font:500 11px/1 system-ui;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)">Caption</td><td></td><td>13 / 500</td></tr>
+            </table>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Shape &amp; touch</div>
+            <table class="spec">
+              <tr><td>Card radius</td><td></td><td>16</td></tr>
+              <tr><td>Button radius</td><td></td><td>12</td></tr>
+              <tr><td>Bar end radius</td><td></td><td>4</td></tr>
+              <tr><td>Spacing base</td><td></td><td>4pt</td></tr>
+              <tr><td>Minimum touch target</td><td></td><td>44pt</td></tr>
+              <tr><td>Session Player target</td><td></td><td>56pt</td></tr>
+            </table>
+            <p class="note">Session Player targets are oversized on purpose — the user is standing on a mat, in wind, wearing a glove, holding a club.</p>
+          </div>
+          <div style="height:6px"></div>
+        </div>
+
+        <!-- ============ SESSION SUMMARY ============ -->
+        <div class="screen" id="s-summary" hidden>
+          <div style="text-align:center;padding:22px 0 10px">
+            <div style="width:64px;height:64px;border-radius:999px;background:var(--signal);display:inline-grid;place-items:center;margin-bottom:14px">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#0D1A15" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div class="eyebrow">Session complete</div>
+            <h2 style="margin:0;font-size:26px;font-weight:700;letter-spacing:-.02em">Approach Ladder</h2>
+          </div>
+
+          <div class="card" style="text-align:center">
+            <div class="eyebrow">Pressure phase score</div>
+            <div style="display:flex;align-items:baseline;justify-content:center;gap:8px">
+              <div class="stat metric">6</div><div style="font:600 20px system-ui;color:var(--ink-3)">/ 9</div>
+            </div>
+            <p style="margin:10px 0 0;font:600 15px system-ui;color:var(--good)">↑ 2 on your last attempt</p>
+            <div class="divider"></div>
+            <p style="margin:0;font-size:14px;color:var(--ink-2);line-height:1.5;text-align:left">Your 100 and 130 yard targets are solid. <b style="color:var(--ink-1)">160 yards is where it falls apart</b> — that's now the focus of Tuesday's session.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">By phase</div>
+            <div class="bar"><div class="barhead"><b>Block · 150 yds</b><span class="metric">11 / 15</span></div><div class="track"><div class="fill" style="width:73%;background:var(--g500)"></div></div></div>
+            <div class="bar"><div class="barhead"><b>Random</b><span class="metric">12 / 18</span></div><div class="track"><div class="fill" style="width:67%;background:var(--g500)"></div></div></div>
+            <div class="bar" style="margin-bottom:0"><div class="barhead"><b>Pressure</b><span class="metric">6 / 9</span></div><div class="track"><div class="fill" style="width:67%;background:var(--g600)"></div></div></div>
+            <div class="divider"></div>
+            <p style="margin:0;font-size:13px;color:var(--ink-3);line-height:1.5">You're sitting at 69% overall — right in the range where learning is fastest. We'll hold the difficulty here.</p>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Marker 4 · Consistent</div>
+            <div class="track"><div class="fill" style="width:72%;background:var(--signal)"></div></div>
+            <p style="margin:9px 0 0;font-size:13px;color:var(--ink-2)">Pass the Par 18 test in under 24 to reach Marker 5.</p>
+          </div>
+
+          <button class="btn">Share your Range Card</button>
+          <div style="height:9px"></div>
+          <button class="btn ghost sm" onclick="go('today')">Done</button>
+          <div style="height:10px"></div>
+        </div>
+
+        <!-- ============ TAB BAR ============ -->
+        <div class="tabbar" id="tabbar" hidden>
+          <button data-s="today" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4l12 4-12 4"/></svg>Today</button>
+          <button data-s="practice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg>Practice</button>
+          <button data-s="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l5-6 4 3 7-8"/></svg>Progress</button>
+          <button data-s="learn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 016.5 3H19v15H6.5A2.5 2.5 0 004 20.5z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H19v3H6.5"/></svg>Learn</button>
+        </div>
+
+        <!-- ============ SESSION PLAYER (overlay) ============ -->
+        <div class="player" id="s-player" hidden>
+          <div class="top">
+            <div class="beads"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+            <span>Random · 5 of 18</span>
+          </div>
+          <div class="mid">
+            <div class="club">7 Iron</div>
+            <div class="dist">to 150 yards</div>
+            <div class="cue"><em>Your cue</em>Start the ball over the left edge of the flag and let it fall right.</div>
+          </div>
+          <div class="hitmiss">
+            <button class="hit" onclick="go('summary')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Hit</button>
+            <button class="miss" onclick="go('summary')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Miss</button>
+          </div>
+          <button class="undo">Undo last shot</button>
+        </div>
+
+      </div>
+
+      <p class="caption" id="cap"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const CAPTIONS={
+  ob1:"<b>Onboarding, screen 1 of 5.</b> No account, no paywall, no card. The only job of onboarding is to produce a plan — 82–86% of subscription trials start on install day, so the first three minutes decide the business.",
+  ob2:"<b>Six taps.</b> Note what is <i>not</i> asked: fairways hit. Fairway accuracy is flat at 46–50% from scratch to 25 handicap, so it tells you nothing. Penalty shots run 0.56 → 4.67 across the same range.",
+  ob3:"<b>The reveal.</b> One measure across four categories, so one hue — the focus bar is darkened, not recoloured. Confidence is stated honestly from the first screen, because within-handicap variation exceeds between-handicap variation.",
+  today:"<b>One question, one action.</b> The streak counts weeks with 2+ sessions, not consecutive days — golf is weather-dependent and range visits cost £8–£12, so a daily streak breaks in week one and takes the user with it.",
+  player:"<b>The Session Player.</b> Blocked → random → pressure, the sequence that beat both pure blocked and pure random on retention. External cues only — never \"rotate your hips\". 56pt targets, no keyboard, glove-friendly.",
+  summary:"<b>Immediate feedback, plainly worded.</b> Signal lime exists for this moment and almost nowhere else. 69% success is deliberately held — the Challenge Point Framework puts fastest learning near 70%.",
+  practice:"<b>Plan, library, tests.</b> ~20 drills free, 150 in Plus. The locked row shows the drill names, never blurs them — bait-and-switch gets punished in reviews.",
+  progress:"<b>Is it working?</b> Handicap free forever: it's the retention hook, and England Golf's own MyEG app sits at 2.4★ from 931 ratings. Peers, not Tour — benchmarking a 20-handicap against the PGA Tour just produces a wall of red.",
+  learn:"<b>Free forever, and the cheapest acquisition channel you have.</b> The verified beginner barrier is procedural, not technical. England Golf's public iGolf page doesn't even state the 54-hole requirement.",
+  paywall:"<b>Trigger A — after the third completed session.</b> Evidence, not aspiration. Visible X from the first frame, an explicit \"keep using Senda free\", and no countdown timer. Arccos sits at 1.9/5 on Trustpilot largely on billing complaints.",
+  ds:"<b>Links.</b> Every value here has been run through WCAG contrast and Machado colourblind simulation — computed, not eyeballed."
+};
+const TABS=['today','practice','progress','learn'];
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.hidden=true);
+  document.getElementById('s-player').hidden=(id!=='player');
+  const el=document.getElementById('s-'+id);
+  if(el&&id!=='player'){el.hidden=false;el.scrollTop=0;}
+  document.getElementById('tabbar').hidden=!TABS.includes(id);
+  document.querySelectorAll('#nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.s===id));
+  document.querySelectorAll('#tabbar button').forEach(b=>b.setAttribute('aria-current',b.dataset.s===id));
+  document.getElementById('cap').innerHTML=CAPTIONS[id]||'';
+  const active=document.querySelector('#nav button[aria-current="true"]');
+  if(active) active.scrollIntoView({block:'nearest'});
+}
+document.querySelectorAll('#nav button,#tabbar button').forEach(b=>b.onclick=()=>go(b.dataset.s));
+function pick(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-pressed','false'));el.setAttribute('aria-pressed','true');}
+function pickOne(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.setAttribute('aria-pressed','false'));el.setAttribute('aria-pressed','true');}
+function tog(el){el.classList.toggle('on');}
+function planPick(el){el.parentElement.querySelectorAll('.plan').forEach(p=>p.setAttribute('aria-pressed','false'));el.setAttribute('aria-pressed','true');}
+document.getElementById('themeBtn').onclick=function(){
+  const d=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',d?'light':'dark');
+  this.textContent=d?'Dark mode':'Light mode';
+};
+go('ob1');
+</script>
+</body>
+</html>

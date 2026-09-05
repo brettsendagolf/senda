@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#E8E6DF">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,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">
+<title>Practice Book</title>
+<style>
+:root{
+  --paper:#E8E6DF;
+  --paper-2:#F2F0EA;
+  --card:#FBFAF6;
+  --ink:#16181C;
+  --ink-2:#4A4F57;
+  --ink-3:#878D96;
+  --rule:#C9C6BC;
+  --rule-2:#DAD7CE;
+  --blue:#1D3557;
+  --blue-soft:#E2E7EE;
+  --flag:#C4342A;
+  --flag-soft:#F6E2E0;
+  --green:#2F6B4F;
+  --green-soft:#E0EBE4;
+  --shadow:0 1px 0 rgba(22,24,28,.06), 0 2px 8px rgba(22,24,28,.05);
+  --tap:56px;
+}
+html[data-theme="dark"]{
+  --paper:#111316;
+  --paper-2:#171A1E;
+  --card:#1C2025;
+  --ink:#EDEDE7;
+  --ink-2:#A8AEB6;
+  --ink-3:#767D86;
+  --rule:#2C3138;
+  --rule-2:#252A30;
+  --blue:#8FB2DE;
+  --blue-soft:#1B2836;
+  --flag:#E4695E;
+  --flag-soft:#33211F;
+  --green:#63B98C;
+  --green-soft:#17281F;
+  --shadow:none;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Avenir Next","Avenir",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(74px + env(safe-area-inset-bottom));
+  overscroll-behavior-y:none;
+}
+h1,h2,h3,.disp{
+  font-family:"Avenir Next Condensed","Futura","Avenir Next",-apple-system,sans-serif;
+  font-weight:600;letter-spacing:.01em;margin:0;
+}
+.num{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer}
+input,select{font:inherit;color:inherit}
+
+/* ---------- header ---------- */
+header{
+  position:sticky;top:0;z-index:40;
+  background:var(--paper);
+  border-bottom:1px solid var(--rule);
+  padding:calc(8px + env(safe-area-inset-top)) 16px 0;
+}
+.head-row{display:flex;align-items:baseline;gap:10px;padding-bottom:8px}
+.head-row h1{font-size:21px;letter-spacing:.02em}
+.head-sub{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-left:auto}
+.theme-btn{
+  width:34px;height:34px;border:1px solid var(--rule);border-radius:50%;
+  display:grid;place-items:center;font-size:14px;margin-left:8px;flex:none;align-self:center
+}
+/* venue chips */
+.chips{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;padding:7px 13px;border:1px solid var(--rule);border-radius:999px;
+  font-size:12.5px;letter-spacing:.03em;color:var(--ink-2);background:var(--card);white-space:nowrap
+}
+.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:var(--paper-2)}
+html[data-theme="dark"] .chip[aria-pressed="true"]{color:#0E1114}
+
+/* ---------- layout ---------- */
+main{padding:16px 16px 24px;max-width:560px;margin:0 auto}
+.eyebrow{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.rule{height:1px;background:var(--rule);margin:18px 0}
+.muted{color:var(--ink-2);font-size:14px}
+.tiny{font-size:12px;color:var(--ink-3)}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--card);border:1px solid var(--rule);border-radius:4px;
+  box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden
+}
+.card-head{padding:14px 15px;display:block;width:100%;text-align:left}
+.card-head h2{font-size:19px;line-height:1.2}
+.card-head .meta{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.tag{
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  padding:3px 7px;border-radius:2px;background:var(--paper-2);color:var(--ink-2);border:1px solid var(--rule-2)
+}
+.tag.build{background:var(--blue-soft);color:var(--blue);border-color:transparent}
+.tag.pressure{background:var(--flag-soft);color:var(--flag);border-color:transparent}
+.tag.course{background:var(--green-soft);color:var(--green);border-color:transparent}
+.card-body{padding:0 15px 15px}
+
+/* stat strip */
+.stat{
+  display:flex;align-items:center;gap:12px;padding:11px 15px;
+  border-top:1px solid var(--rule-2);background:var(--paper-2)
+}
+.stat b{font-size:22px;font-weight:600}
+.stat .lbl{display:block;font-size:12px;color:var(--ink-2);line-height:1.3}
+
+/* drill list rows */
+.drill{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  padding:13px 15px;border-top:1px solid var(--rule-2);min-height:var(--tap)
+}
+.drill .idx{
+  width:26px;height:26px;flex:none;border:1px solid var(--rule);border-radius:50%;
+  display:grid;place-items:center;font-size:12px;color:var(--ink-2)
+}
+.drill .nm{display:block;font-size:16px;font-weight:600;line-height:1.25}
+.drill .sub{display:block;font-size:12px;color:var(--ink-3);margin-top:2px}
+.drill .arw{margin-left:auto;color:var(--ink-3);font-size:18px;flex:none}
+.drill.locked{opacity:.42}
+
+/* ---------- scorecard strip (signature) ---------- */
+.strip{display:flex;align-items:stretch;border:1px solid var(--ink);border-radius:2px;overflow:hidden;background:var(--card)}
+.strip .box{
+  flex:1;min-width:0;border-right:1px solid var(--rule);
+  padding:5px 2px 6px;text-align:center
+}
+.strip .box:last-child{border-right:none}
+.strip .box .v{font-size:16px;font-weight:600;line-height:1.1}
+.strip .box .d{font-size:8.5px;color:var(--ink-3);letter-spacing:.04em;margin-top:2px}
+.strip .box.par{background:var(--ink);color:var(--paper)}
+.strip .box.par .d{color:rgba(255,255,255,.6)}
+.strip .box.hit .v{color:var(--green)}
+.strip .box.miss .v{color:var(--flag)}
+.strip .box.empty .v{color:var(--rule)}
+
+/* ---------- warm up ---------- */
+.block{border:1px solid var(--rule);border-radius:4px;background:var(--card);margin-bottom:12px;box-shadow:var(--shadow)}
+.block-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--rule-2)}
+.block-head h3{font-size:17px}
+.block-head .mins{margin-left:auto;font-size:13px;color:var(--blue);font-weight:600}
+.item{display:flex;gap:12px;padding:12px 14px;border-bottom:1px solid var(--rule-2);align-items:flex-start;width:100%;text-align:left;min-height:var(--tap)}
+.item:last-child{border-bottom:none}
+.tick{
+  width:26px;height:26px;flex:none;border:1.5px solid var(--rule);border-radius:3px;margin-top:1px;
+  display:grid;place-items:center;font-size:15px;color:transparent;transition:background .12s,border-color .12s
+}
+.item[aria-pressed="true"] .tick{background:var(--green);border-color:var(--green);color:#fff}
+.item[aria-pressed="true"] .it-nm{text-decoration:line-through;color:var(--ink-3)}
+.it-nm{display:block;font-weight:600;font-size:15.5px;line-height:1.25}
+.it-do{display:block;font-size:13px;color:var(--ink-2);margin-top:3px}
+.it-rx{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--flag);margin-top:4px}
+.reps{margin-left:auto;flex:none;font-size:12px;color:var(--ink-2);text-align:right;padding-left:8px;max-width:96px}
+
+.progress{height:4px;background:var(--rule-2);border-radius:2px;overflow:hidden;margin:2px 0 16px}
+.progress i{display:block;height:100%;background:var(--green);width:0;transition:width .25s}
+
+/* ---------- drill detail ---------- */
+.sheet{position:fixed;inset:0;z-index:60;background:var(--paper);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sheet-head{
+  position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--rule);z-index:5;
+  padding:calc(10px + env(safe-area-inset-top)) 16px 12px;display:flex;align-items:flex-start;gap:12px
+}
+.sheet-head h2{font-size:20px;line-height:1.15}
+.back{font-size:15px;color:var(--blue);font-weight:600;flex:none;padding:2px 0}
+.sheet-body{padding:16px 16px 40px;max-width:560px;margin:0 auto}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+ol.steps li{
+  counter-increment:s;position:relative;padding:0 0 14px 32px;font-size:15px;line-height:1.5
+}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:1px;width:21px;height:21px;
+  border:1px solid var(--rule);border-radius:50%;display:grid;place-items:center;
+  font-size:11px;color:var(--ink-2);font-family:ui-monospace,"SF Mono",monospace
+}
+.tipbox{border-left:3px solid var(--blue);background:var(--blue-soft);padding:11px 13px;border-radius:0 3px 3px 0;font-size:14px;margin:4px 0 18px}
+.scorebox{border:1px solid var(--rule);border-radius:3px;padding:11px 13px;font-size:14px;background:var(--card)}
+
+/* counters */
+.counter{
+  display:flex;align-items:center;gap:14px;border:1px solid var(--rule);border-radius:4px;
+  background:var(--card);padding:10px 12px;margin-bottom:10px
+}
+.counter .cl{flex:1;min-width:0}
+.counter .cl .n{display:block;font-size:14px;font-weight:600;line-height:1.2}
+.counter .cl .m{display:block;font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.counter .val{font-size:30px;font-weight:600;min-width:52px;text-align:center;line-height:1}
+.cbtn{
+  width:46px;height:46px;flex:none;border:1px solid var(--rule);border-radius:50%;
+  display:grid;place-items:center;font-size:22px;background:var(--paper-2);color:var(--ink)
+}
+.cbtn:active{background:var(--rule-2)}
+.cbtn.plus{background:var(--blue);border-color:var(--blue);color:var(--paper-2)}
+html[data-theme="dark"] .cbtn.plus{color:#0E1114}
+.cbtn[disabled]{opacity:.3}
+
+.field{display:flex;align-items:center;gap:10px;border:1px solid var(--rule);border-radius:4px;background:var(--card);padding:10px 12px;margin-bottom:10px}
+.field label{font-size:14px;font-weight:600;flex:1}
+.field input{
+  width:84px;border:1px solid var(--rule);border-radius:3px;background:var(--paper-2);
+  padding:9px 8px;text-align:center;font-size:17px;font-family:ui-monospace,"SF Mono",monospace
+}
+.field input[type=text]{width:100%;text-align:left;font-family:inherit;font-size:15px}
+.btn{
+  display:block;width:100%;min-height:var(--tap);border-radius:4px;
+  background:var(--ink);color:var(--paper);font-size:16px;font-weight:600;letter-spacing:.02em
+}
+.btn.ghost{background:transparent;border:1px solid var(--rule);color:var(--ink)}
+.btn.flag{background:var(--flag);color:#fff}
+.btn:active{opacity:.85}
+.btn+.btn{margin-top:10px}
+
+/* carry table */
+table.carry{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:12px}
+table.carry th,table.carry td{border:1px solid var(--rule);padding:7px 4px;text-align:center}
+table.carry th{background:var(--paper-2);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);font-weight:600}
+table.carry input{width:100%;border:none;background:transparent;text-align:center;font-size:17px;font-family:ui-monospace,"SF Mono",monospace;padding:4px 0}
+table.carry td.lbl{background:var(--paper-2);font-weight:600}
+
+/* trends */
+.spark{width:100%;height:auto;display:block}
+.kpis{display:flex;gap:0;border:1px solid var(--rule);border-radius:3px;overflow:hidden;margin:12px 0 6px;background:var(--card)}
+.kpi{flex:1;padding:9px 6px;text-align:center;border-right:1px solid var(--rule-2)}
+.kpi:last-child{border-right:none}
+.kpi .v{font-size:20px;font-weight:600;line-height:1.1}
+.kpi .k{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:3px}
+
+.logrow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--rule-2)}
+.logrow:last-child{border-bottom:none}
+.logrow .lv{font-size:19px;font-weight:600;min-width:54px}
+.logrow .ld{display:block;font-size:14px;font-weight:600;line-height:1.2}
+.logrow .lt{display:block;font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.del{margin-left:auto;color:var(--ink-3);font-size:19px;padding:8px;flex:none}
+
+.empty{border:1px dashed var(--rule);border-radius:4px;padding:26px 18px;text-align:center;color:var(--ink-2);font-size:14px}
+.empty b{display:block;font-size:16px;color:var(--ink);margin-bottom:5px}
+
+/* nav */
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:var(--card);border-top:1px solid var(--rule);
+  display:flex;padding-bottom:env(safe-area-inset-bottom)
+}
+nav button{flex:1;padding:9px 2px 8px;display:grid;justify-items:center;gap:3px;color:var(--ink-3);min-height:56px}
+nav button .ic{font-size:19px;line-height:1}
+nav button .tx{font-size:10px;letter-spacing:.09em;text-transform:uppercase;font-weight:600}
+nav button[aria-current="page"]{color:var(--ink)}
+nav button[aria-current="page"] .ic{color:var(--blue)}
+
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));
+  background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:3px;font-size:14px;
+  z-index:80;opacity:0;pointer-events:none;transition:opacity .2s
+}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-row">
+    <h1>Practice Book</h1>
+    <span class="head-sub" id="headSub">Warm up</span>
+    <button class="theme-btn" id="themeBtn" aria-label="Switch theme">◐</button>
+  </div>
+  <div class="chips" id="chips"></div>
+</header>
+
+<main id="view"></main>
+
+<nav>
+  <button data-tab="warmup" aria-current="page"><span class="ic">◷</span><span class="tx">Warm up</span></button>
+  <button data-tab="drills"><span class="ic">⌖</span><span class="tx">Drills</span></button>
+  <button data-tab="trends"><span class="ic">◲</span><span class="tx">Trends</span></button>
+  <button data-tab="log"><span class="ic">☰</span><span class="tx">Log</span></button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   STORAGE  — window.storage first, then device storage,
+   then memory. Never blocks the UI.
+   ========================================================= */
+const KEY='practicebook:v1';
+const mem={};
+const Store={
+  async get(){
+    try{ if(window.storage){const r=await window.storage.get(KEY,false); if(r&&r.value) return JSON.parse(r.value);} }catch(e){}
+    try{ const s=window.localStorage&&localStorage.getItem(KEY); if(s) return JSON.parse(s); }catch(e){}
+    return mem[KEY]||null;
+  },
+  async set(v){
+    const s=JSON.stringify(v); mem[KEY]=v;
+    try{ if(window.storage){await window.storage.set(KEY,s,false); return true;} }catch(e){}
+    try{ if(window.localStorage){localStorage.setItem(KEY,s); return true;} }catch(e){}
+    return false;
+  }
+};
+
+let DB={entries:[],warm:{},facility:'range',theme:'light'};
+async function load(){ const d=await Store.get(); if(d) DB=Object.assign(DB,d); applyTheme(); render(); }
+let saveT; function save(){ clearTimeout(saveT); saveT=setTimeout(()=>Store.set(DB),150); }
+
+/* =========================================================
+   VENUES
+   ========================================================= */
+const VENUES={
+  sgc:{name:'Stockport GC', has:['putting','shortgame','net']},
+  adl:{name:'Adlington Range', has:['range','shortgame']},
+  course:{name:'On course', has:['course']}
+};
+let venue='all';
+
+/* =========================================================
+   WARM UP  (Arccos pre-round routine, Stockport GC)
+   ========================================================= */
+const WARMUP={
+  total:30,
+  blocks:[
+    {id:'w1',name:'Stretch',mins:7,need:'anywhere',items:[
+      {id:'w1a',n:'Torso rotations',r:'12 each way',d:'Arms crossed on chest, hips stable, shoulders turn full. Wake the coil up.'},
+      {id:'w1b',n:'Hip openers',r:'8 each side',d:'Step into a deep lunge, press the hips forward gently.'},
+      {id:'w1c',n:'Arm circles',r:'10 fwd / 10 back',d:'Small to large, loosen shoulders and upper back. Keep it smooth.'},
+      {id:'w1d',n:'Wrist flexor stretch',r:'20s each hand',d:'Arm extended, gently pull the fingers back. Soft hands for the wedges.'},
+      {id:'w1e',n:'Standing torso twist',r:'15 each side',d:'Club behind the shoulders, gentle twists side to side.'}
+    ]},
+    {id:'w2',name:'Loosen up',mins:8,need:'balls',items:[
+      {id:'w2a',n:'58° wedge',r:'4 balls',d:'Half swings. Find the rhythm and the contact.'},
+      {id:'w2b',n:'54° wedge',r:'4 balls',d:'Three quarter swings. These need to be dialled in for scoring.'},
+      {id:'w2c',n:'50° wedge',r:'4 balls',d:'Full tempo swings, building confidence in the wedge game.'}
+    ]},
+    {id:'w3',name:'Dial in',mins:8,need:'balls',items:[
+      {id:'w3a',n:'8 iron',r:'4 balls',d:'Full swings to a target. Mid irons have been solid.'},
+      {id:'w3b',n:'6 iron',r:'4 balls',d:'Commit to each shot, these are a strength.'},
+      {id:'w3c',n:'4 iron',r:'4 balls',d:'Full swings with purpose, trust the strike.'},
+      {id:'w3d',n:'3 iron',r:'3 balls',d:'Game ready swings, get comfortable off the tee with it.'}
+    ]},
+    {id:'w4',name:'Commit',mins:7,need:'balls',items:[
+      {id:'w4a',n:'3 wood',r:'4 balls',d:'Pick a tight target. Extra reps after some inconsistent contact.'},
+      {id:'w4b',n:'Driver',r:'5 balls',d:'Commit to fairway targets. Good strikes are in there, consistency is not.'}
+    ]}
+  ]
+};
+const NETSWAP={
+  w2:'Same clubs, same ball count. No flight to judge, so score it on strike and tempo only.',
+  w3:'Hit the same ladder into the net. Feel the low point, ignore where it would have gone.',
+  w4:'Into the net, cut to 3 balls each. Rehearse the pre-shot routine on every one.'
+};
+
+/* =========================================================
+   DRILLS
+   mode: build | pressure | course
+   metric.low = lower score is better
+   ========================================================= */
+const AREAS=[
+  {
+    id:'rough', name:'15–30 yds from rough', gain:'1.1',
+    stat:'Biggest single gain available. 29% of your total upside sits here.',
+    data:'Rough: −1.6 SG per round over 67 shots. Chipping 15–30 yds: −1.4.',
+    drills:[
+      {id:'r1',name:'Rough Landing Zones',mode:'build',mins:20,need:['range','shortgame'],
+       purpose:'Train precision on short pitches from rough to tight targets.',
+       steps:['Find a section of rough on the range or practice area.','Place a towel on the green 20 yards away.','Hit 10 shots from the rough trying to land within 5 feet of the towel.','After each set of 10, move the towel to a new distance between 15 and 30 yards.','Complete 3 sets of 10 (30 shots total).','Vary your lie: find thicker and thinner rough spots.'],
+       tip:'Start with your most lofted wedge and focus on clean contact through the grass.',
+       score:'Balls finishing within 10 feet of the towel, out of 30.',
+       metric:{label:'Inside 10 ft',max:30,target:15},
+       counters:[{id:'in',label:'Inside 10 ft',max:30},{id:'hit',label:'Shots hit',max:30}], from:'in'},
+      {id:'r2',name:'5-Ball Pressure Test',mode:'pressure',mins:15,need:['range','shortgame'],
+       purpose:'Build consistency under pressure on short rough shots.',
+       steps:['Set up in rough at the range or short game area.','Pick a flag or marker at 25 yards.','You have 5 balls to get 3 within 15 feet of the target.','If you succeed, move to a new distance (20 or 30 yards).','If you fail, repeat the same distance until you pass.','Complete 4 successful rounds at varying distances.'],
+       tip:'Focus on tempo and finish. Rushing these shots costs you the most.',
+       score:'Attempts taken to pass all 4 distances. Six or fewer is the goal.',
+       metric:{label:'Attempts used',max:20,target:6,low:true},
+       counters:[{id:'pass',label:'Distances passed',max:4},{id:'att',label:'Attempts used',max:20}], from:'att'},
+      {id:'r3',name:'In-Play Rough Recovery',mode:'course',mins:25,need:['course'],
+       purpose:'Get up and down from rough around the green under real scoring pressure.',
+       steps:['During a practice round, play your normal round but add a penalty ball whenever you miss a green.','Drop that ball in the nearest rough within 15–30 yards of the hole.','You must get up and down (chip plus one putt, or hole out) to avoid losing the hole to your ghost opponent.','Play 9 holes this way, tracking how many up and downs you convert.','Goal: convert 4 out of 9 to beat par on the challenge.','Focus on clean contact and controlling rollout from rough lies.'],
+       tip:'Start with flatter lies in light rough before tackling deeper spots.',
+       score:'Up and downs converted out of 9. Four or more is a win, six is excellent.',
+       metric:{label:'Up and downs',max:9,target:4},
+       counters:[{id:'ud',label:'Up and downs',max:9},{id:'holes',label:'Holes played',max:9}], from:'ud'}
+    ]
+  },
+  {
+    id:'wedge', name:'25–75 yd wedges', gain:null,
+    stat:'Your own call, not Arccos. Built to sit alongside the rough work.',
+    data:'Club performance is negative across all three wedges: 50° −0.4, 58° −0.3, 54° −0.2 per shot.',
+    drills:[
+      {id:'p1',name:'Yardage Ladder',mode:'build',mins:25,need:['range','shortgame'],
+       purpose:'Build reliable distance control across the four numbers you face most.',
+       steps:['Pick targets at roughly 25, 40, 55 and 70 yards.','Hit 5 balls to 25 yards, then 5 to each of the other rungs, working up.','Score 1 point for a ball inside 15 feet, 2 points inside 8 feet.','Any rung where you score under 5 out of 10, repeat it before moving on.','Finish by hitting one shot to each of the four distances in sequence.','Call the number out loud before each of those final four swings.'],
+       tip:'Change the length of the backswing, not the tempo. Same speed, shorter arc.',
+       score:'Points out of 40 across the four rungs. Twenty four is a solid session.',
+       metric:{label:'Points',max:40,target:24},
+       counters:[{id:'pts',label:'Points',max:40},{id:'rung',label:'Rung',max:4}], from:'pts'},
+      {id:'p2',name:'Carry Calibration',mode:'build',mins:20,need:['range'],
+       purpose:'Log a real carry number for each wedge at each swing length.',
+       steps:['Take the 50, 54 and 58 degree wedges.','Hit 5 balls with each at a half swing, hands to hip height.','Hit 5 balls with each at three quarters, hands to chest height.','Note the average carry for each combination, ignoring obvious mis-hits.','Enter the six numbers below and check the gaps between them.','Repeat next session and compare. Numbers move with conditions.'],
+       tip:'You are collecting data here, not chasing distance. Same tempo on every ball.',
+       score:'The largest gap between consecutive numbers. Under 12 yards means no holes in the set.',
+       metric:{label:'Largest gap (yds)',max:40,target:12,low:true},
+       counters:[], carry:true, from:null},
+      {id:'p3',name:'Random Number Test',mode:'pressure',mins:20,need:['range','shortgame'],
+       purpose:'Handle the awkward in-between numbers you actually get on the course.',
+       steps:['Use the number generator below to draw a yardage between 25 and 75.','Pick the club and swing length, then hit one ball only.','Score 2 points inside 15 feet, 1 point inside 30 feet, 0 outside that.','No practice swings and no second attempts. One look, one ball.','Complete 15 numbers.','Note any band where you keep scoring zero.'],
+       tip:'Decide club and swing length before you look up again. Indecision costs more than technique on these.',
+       score:'Points out of 30 across 15 shots. Eighteen or better is the target.',
+       metric:{label:'Points',max:30,target:18},
+       counters:[{id:'pts',label:'Points',max:30},{id:'shots',label:'Shots hit',max:15}], rng:true, from:'pts'},
+      {id:'p4',name:'In-Play Wedge Ladder',mode:'course',mins:25,need:['course'],
+       purpose:'Test the 25–75 yard wedges under real scoring pressure.',
+       steps:['During a practice round or quiet time, play 9 holes with a second ball.','After holing out, drop a ball somewhere between 25 and 75 yards, changing the number each hole.','Play the wedge shot and putt out. You must get up and down to win the hole.','Vary the lie: fairway, light rough, uphill and downhill.','Track up and downs out of 9.','Goal: 5 out of 9 to pass.'],
+       tip:'Pick the landing spot, not the flag. These are lost long and short, not left and right.',
+       score:'Up and downs converted out of 9. Five or more passes.',
+       metric:{label:'Up and downs',max:9,target:5},
+       counters:[{id:'ud',label:'Up and downs',max:9},{id:'holes',label:'Holes played',max:9}], from:'ud'}
+    ]
+  },
+  {
+    id:'putt', name:'4–7 ft putting', gain:null,
+    stat:'Short range conversion. The cheapest strokes on this list to win back.',
+    data:null,
+    drills:[
+      {id:'u1',name:'Pressure Gate',mode:'pressure',mins:20,need:['putting'],
+       purpose:'Train your stroke under consequence on must-make putts.',
+       steps:['Place two tees 4.5 inches apart, just wider than a ball, on flat ground 5 feet from a hole.','Set 10 balls behind the gate.','Putt each ball through the gate into the hole. It must pass cleanly between the tees and drop.','Miss the gate or the hole and you start again from ball one.','Complete all 10 in a row to finish.','Repeat the drill 2 to 3 times.'],
+       tip:'Start with perfect alignment to the gate before every stroke.',
+       score:'Total attempts needed to make 10 in a row through the gate.',
+       metric:{label:'Attempts',max:80,target:20,low:true},
+       counters:[{id:'row',label:'In a row',max:10},{id:'att',label:'Total attempts',max:120}], from:'att'},
+      {id:'u2',name:'Circle Ladder',mode:'build',mins:15,need:['putting'],
+       purpose:'Build confidence from short to challenging distances with escalating pressure.',
+       steps:['Place tees at 3, 4, 5, 6 and 7 feet from a hole on relatively flat ground.','Start at 3 feet. Make 3 putts in a row, then move to 4 feet.','Make 3 in a row at each distance to advance.','Miss one and you drop back one distance.','Goal: reach 7 feet and make 3 in a row.','Track how many putts it takes to complete the ladder.'],
+       tip:'Focus on starting speed first. These putts break less than you think.',
+       score:'Total putts to finish the ladder from 3 ft to 7 ft.',
+       metric:{label:'Total putts',max:120,target:25,low:true},
+       counters:[{id:'ft',label:'Distance (ft)',max:7,min:3,start:3},{id:'putts',label:'Total putts',max:120}], from:'putts'},
+      {id:'u3',name:'In-Play Pressure Gate',mode:'course',mins:20,need:['course'],
+       purpose:'Test clutch putting from 4–7 feet under real on-course pressure.',
+       steps:['During a practice round or quiet time, pick 9 holes for the drill.','After holing out normally, drop a ball 5 to 6 feet from the hole, varying the position each time: uphill, downhill, breaking left or right.','Place two tees flanking the hole, about 5 inches apart, creating a gate just wider than the hole.','You must make the putt through the gate. Miss the gate or the hole and it is a fail.','Track your score out of 9 attempts.','Once you make 7 out of 9, tighten the gate to 4 inches.'],
+       tip:'Start with confident straight putts to build rhythm before tackling big breakers.',
+       score:'Putts made through the gate out of 9.',
+       metric:{label:'Made',max:9,target:7},
+       counters:[{id:'made',label:'Made',max:9},{id:'att',label:'Attempts',max:9}], from:'made'}
+    ]
+  },
+  {
+    id:'drive', name:'Driving', gain:null,
+    stat:'Good strikes are in there. Dispersion is the problem, not speed.',
+    data:null,
+    drills:[
+      {id:'d1',name:'Fairway Corridor',mode:'build',mins:20,need:['range'],
+       purpose:'Train your driver to find a consistent landing zone under pressure.',
+       steps:['Pick two range markers or flags about 25–30 yards apart at your driver distance to create your fairway.','Hit 10 drives aiming to land between them.','After each shot, note whether it stayed in the corridor or missed left or right.','Start at 10 points and lose one for each miss.','Repeat the set, trying to beat your previous score.','Finish with 5 must-make drives where you verbally commit to a side of the corridor before each swing.'],
+       tip:'Start with a wider corridor if you need to, then tighten it as you improve.',
+       score:'Points remaining after the 10-ball set, plus how many of the final 5 found the corridor.',
+       metric:{label:'Points left',max:10,target:7},
+       counters:[{id:'pts',label:'Points left',max:10,start:10},{id:'commit',label:'Commit drives in',max:5}], from:'pts'},
+      {id:'d2',name:'Nine-Ball Driver Test',mode:'pressure',mins:25,need:['range'],
+       purpose:'Simulate nine tee shots with escalating consequences to sharpen your focus.',
+       steps:['Hit 9 drives, treating each as a different hole on the course.','Before each shot, pick a specific target (flag, sign or marker) and visualise the hole.','Award 2 points for a fairway hit, ball flying toward the target within a 30-yard window, 1 point for playable but offline, 0 for a penalty-worthy miss.','Track your running score out of 18 possible.','On shot 9 you must hit the fairway for 2 points or the entire round resets.','Complete three full rounds, aiming to improve each time.'],
+       tip:'Treat shot 9 like a must-hit fairway on 18. It teaches you to deliver when it matters.',
+       score:'Points per round out of 18. Log your best round.',
+       metric:{label:'Points',max:18,target:12},
+       counters:[{id:'pts',label:'Points',max:18},{id:'shot',label:'Shot',max:9}], from:'pts'},
+      {id:'d3',name:'In-Play Fairway Finder',mode:'course',mins:120,need:['course'],
+       purpose:'Play 9 holes treating every tee shot as a fairway-or-bust test with real consequences.',
+       steps:['Pick 9 holes during a practice round or quiet course time.','On each tee, commit to a smart club choice and target line. If the hole is tight, consider 3 wood or hybrid instead of driver.','Mark each tee shot as fairway (1 point), first cut (0 points), or miss (penalty: re-tee and hit again, costing you the hole).','Play out each hole normally after the tee shot.','Track your fairway points out of 9.','Goal: 6 or more fairways in 9 holes.'],
+       tip:'Start with holes where you historically hit fairways. Build confidence before the trouble spots.',
+       score:'Fairways hit out of 9.',
+       metric:{label:'Fairways',max:9,target:6},
+       counters:[{id:'fw',label:'Fairways',max:9},{id:'holes',label:'Holes played',max:9}], from:'fw'}
+    ]
+  }
+];
+const ALLDRILLS={}; AREAS.forEach(a=>a.drills.forEach(d=>{d.area=a.id;d.areaName=a.name;ALLDRILLS[d.id]=d;}));
+const MODE={build:'Build',pressure:'Pressure',course:'On course'};
+const NEEDNAME={range:'Range',shortgame:'Short game area',putting:'Putting green',net:'Net',course:'Course'};
+
+function available(d){
+  if(venue==='all') return true;
+  const has=VENUES[venue].has;
+  return d.need.some(n=>has.includes(n));
+}
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $=s=>document.querySelector(s);
+const view=$('#view');
+let tab='warmup', sheet=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1700);}
+function fdate(ts){const d=new Date(ts);return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
+function entriesFor(id){return DB.entries.filter(e=>e.drill===id).sort((a,b)=>a.ts-b.ts);}
+function best(id){const d=ALLDRILLS[id],e=entriesFor(id).map(x=>x.score);if(!e.length)return null;return d.metric.low?Math.min(...e):Math.max(...e);}
+function hitTarget(d,v){return d.metric.low? v<=d.metric.target : v>=d.metric.target;}
+
+function applyTheme(){document.documentElement.dataset.theme=DB.theme==='dark'?'dark':'light';}
+$('#themeBtn').onclick=()=>{DB.theme=DB.theme==='dark'?'light':'dark';applyTheme();save();};
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function renderChips(){
+  const c=$('#chips');
+  if(tab!=='drills'){c.style.display='none';return;}
+  c.style.display='flex';
+  const opts=[['all','All'],['sgc','Stockport GC'],['adl','Adlington Range'],['course','On course']];
+  c.innerHTML=opts.map(([k,n])=>`<button class="chip" data-v="${k}" aria-pressed="${venue===k}">${n}</button>`).join('');
+  c.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{venue=b.dataset.v;render();});
+}
+
+function render(){
+  $('#headSub').textContent={warmup:'Warm up',drills:'Drills',trends:'Trends',log:'Log'}[tab];
+  document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===tab?'page':'false'));
+  renderChips();
+  if(tab==='warmup')viewWarmup();
+  if(tab==='drills')viewDrills();
+  if(tab==='trends')viewTrends();
+  if(tab==='log')viewLog();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();});
+
+/* ---- warm up ---- */
+function viewWarmup(){
+  const net=DB.facility==='net';
+  const all=WARMUP.blocks.flatMap(b=>b.items.map(i=>i.id));
+  const done=all.filter(i=>DB.warm[i]).length;
+  let h=`<div class="eyebrow">Pre-round · Stockport GC</div>
+  <h2 style="font-size:26px;margin:4px 0 3px">30 minutes, four blocks</h2>
+  <div class="muted" style="margin-bottom:12px">Work down the list. Tap a line when it is done.</div>
+  <div class="progress"><i style="width:${all.length?done/all.length*100:0}%"></i></div>
+  <div class="chips" style="padding-bottom:14px">
+    <button class="chip" data-fac="range" aria-pressed="${!net}">Range available</button>
+    <button class="chip" data-fac="net" aria-pressed="${net}">Net only</button>
+    <button class="chip" id="resetWarm">Reset</button>
+  </div>`;
+  WARMUP.blocks.forEach((b,i)=>{
+    const swap=net&&NETSWAP[b.id];
+    h+=`<div class="block"><div class="block-head">
+      <span class="eyebrow">${String(i+1).padStart(2,'0')}</span>
+      <h3>${b.name}</h3><span class="mins">${b.mins} min</span></div>`;
+    if(swap)h+=`<div style="padding:10px 14px;border-bottom:1px solid var(--rule-2);background:var(--flag-soft);font-size:13px;color:var(--flag)">Net only: ${swap}</div>`;
+    b.items.forEach(it=>{
+      h+=`<button class="item" data-w="${it.id}" aria-pressed="${!!DB.warm[it.id]}">
+        <span class="tick">✓</span>
+        <span style="flex:1;min-width:0;display:block"><span class="it-nm">${it.n}</span><span class="it-do">${it.d}</span></span>
+        <span class="reps num">${it.r}</span></button>`;
+    });
+    h+='</div>';
+  });
+  h+=`<div class="tiny" style="margin-top:6px">Blocks 2 to 4 need balls. At Stockport that is the net, so switch the toggle above.</div>`;
+  view.innerHTML=h;
+  const bar=view.querySelector('.progress i');
+  view.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.w; DB.warm[k]=!DB.warm[k]; save();
+    b.setAttribute('aria-pressed',!!DB.warm[k]);
+    bar.style.width=(all.filter(i=>DB.warm[i]).length/all.length*100)+'%';
+    if(navigator.vibrate)navigator.vibrate(8);
+  });
+  view.querySelectorAll('[data-fac]').forEach(b=>b.onclick=()=>{DB.facility=b.dataset.fac;save();viewWarmup();});
+  $('#resetWarm').onclick=()=>{DB.warm={};save();viewWarmup();};
+}
+
+/* ---- drills ---- */
+function viewDrills(){
+  let h='';
+  AREAS.forEach(a=>{
+    const list=a.drills.filter(d=>venue==='all'||available(d));
+    if(!list.length)return;
+    h+=`<div class="card"><div class="card-head">
+      <div class="eyebrow">Focus area</div>
+      <h2>${a.name}</h2>
+      <div class="muted" style="margin-top:5px">${a.stat}</div></div>`;
+    if(a.gain)h+=`<div class="stat"><b class="num">${a.gain}</b><span class="lbl">strokes per round<br>on offer if you fix it</span></div>`;
+    if(a.data)h+=`<div class="stat"><span class="lbl">${a.data}</span></div>`;
+    list.forEach((d,i)=>{
+      const b=best(d.id), n=entriesFor(d.id).length;
+      h+=`<button class="drill" data-d="${d.id}">
+        <span class="idx num">${i+1}</span>
+        <span style="flex:1;min-width:0;display:block">
+          <span class="nm">${d.name}</span>
+          <span class="sub">${MODE[d.mode]} · ${d.mins} min · ${d.need.map(x=>NEEDNAME[x]).join(' / ')}</span>
+          ${n?`<span class="sub num" style="color:var(--ink-2)">Best ${b} ${d.metric.label.toLowerCase()} · ${n} logged</span>`:''}
+        </span><span class="arw">›</span></button>`;
+    });
+    h+='</div>';
+  });
+  if(!h)h=`<div class="empty"><b>Nothing here for that venue</b>Pick a different place at the top.</div>`;
+  view.innerHTML=h;
+  view.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>openDrill(b.dataset.d));
+}
+
+/* ---- trends ---- */
+function viewTrends(){
+  const used=Object.keys(ALLDRILLS).filter(id=>entriesFor(id).length);
+  if(!used.length){
+    view.innerHTML=`<div class="empty"><b>No scores yet</b>Run a drill, tap Save score, and the trend lines start here.</div>`;return;
+  }
+  let h='<div class="eyebrow">Scores over time</div><h2 style="font-size:24px;margin:4px 0 14px">What is actually moving</h2>';
+  used.forEach(id=>{
+    const d=ALLDRILLS[id], e=entriesFor(id), vals=e.map(x=>x.score);
+    const last=vals[vals.length-1], bst=best(id);
+    const avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length*10)/10;
+    h+=`<div class="card"><div class="card-head" style="padding-bottom:10px">
+      <div class="eyebrow">${d.areaName}</div><h2 style="font-size:17px">${d.name}</h2>
+      <div class="tiny" style="margin-top:3px">${d.metric.label} · target ${d.metric.low?'≤':'≥'} ${d.metric.target}</div></div>
+      <div class="card-body">${strip(d,vals)}${spark(d,vals)}
+      <div class="kpis">
+        <div class="kpi"><div class="v num" style="color:${hitTarget(d,last)?'var(--green)':'var(--flag)'}">${last}</div><div class="k">Latest</div></div>
+        <div class="kpi"><div class="v num">${bst}</div><div class="k">Best</div></div>
+        <div class="kpi"><div class="v num">${avg}</div><div class="k">Average</div></div>
+        <div class="kpi"><div class="v num">${vals.length}</div><div class="k">Sessions</div></div>
+      </div></div></div>`;
+  });
+  view.innerHTML=h;
+}
+
+function strip(d,vals){
+  const show=vals.slice(-7);
+  let h='<div class="strip"><div class="box par"><div class="v num">'+d.metric.target+'</div><div class="d">TARGET</div></div>';
+  for(let i=0;i<7;i++){
+    const v=show[i];
+    if(v===undefined)h+='<div class="box empty"><div class="v num">–</div><div class="d">&nbsp;</div></div>';
+    else h+=`<div class="box ${hitTarget(d,v)?'hit':'miss'}"><div class="v num">${v}</div><div class="d">${i+1===show.length?'LAST':''}</div></div>`;
+  }
+  return h+'</div>';
+}
+
+function spark(d,vals){
+  const v=vals.slice(-12); if(v.length<2)return '<div class="tiny" style="margin-top:10px">One session logged. Two or more draws the line.</div>';
+  const w=320,hh=64,p=6, mn=Math.min(...v,d.metric.target), mx=Math.max(...v,d.metric.target), rg=(mx-mn)||1;
+  const x=i=>p+i*(w-2*p)/(v.length-1), y=n=>hh-p-((n-mn)/rg)*(hh-2*p);
+  const pts=v.map((n,i)=>`${x(i).toFixed(1)},${y(n).toFixed(1)}`).join(' ');
+  const ty=y(d.metric.target).toFixed(1);
+  return `<svg class="spark" viewBox="0 0 ${w} ${hh}" aria-hidden="true" style="margin-top:10px">
+    <line x1="0" y1="${ty}" x2="${w}" y2="${ty}" stroke="var(--ink-3)" stroke-width="1" stroke-dasharray="3 3"/>
+    <polyline points="${pts}" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${v.map((n,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(n).toFixed(1)}" r="3" fill="${hitTarget(d,n)?'var(--green)':'var(--flag)'}"/>`).join('')}
+  </svg>`;
+}
+
+/* ---- log ---- */
+function viewLog(){
+  const e=[...DB.entries].sort((a,b)=>b.ts-a.ts);
+  let h='<div class="eyebrow">Everything you have logged</div><h2 style="font-size:24px;margin:4px 0 14px">Session log</h2>';
+  if(!e.length){
+    h+=`<div class="empty"><b>Empty for now</b>Scores you save from a drill land here.</div>`;
+  }else{
+    h+='<div class="card">';
+    e.forEach(x=>{
+      const d=ALLDRILLS[x.drill]; if(!d)return;
+      h+=`<div class="logrow">
+        <span class="lv num" style="color:${hitTarget(d,x.score)?'var(--green)':'var(--flag)'}">${x.score}</span>
+        <span style="flex:1;min-width:0;display:block"><span class="ld">${d.name}</span>
+        <span class="lt">${fdate(x.ts)} · ${d.metric.label}${x.note?' · '+esc(x.note):''}</span></span>
+        <button class="del" data-x="${x.id}" aria-label="Delete entry">×</button></div>`;
+    });
+    h+='</div>';
+  }
+  h+=`<div class="rule"></div><div class="eyebrow">Backup</div>
+  <div class="muted" style="margin:6px 0 12px">Scores live on this device. Copy them out before you clear your browser or move phones.</div>
+  <button class="btn ghost" id="exp">Copy my data</button>
+  <button class="btn ghost" id="imp">Paste data back in</button>`;
+  view.innerHTML=h;
+  view.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{
+    DB.entries=DB.entries.filter(z=>z.id!==b.dataset.x);save();viewLog();toast('Entry deleted');
+  });
+  $('#exp').onclick=async()=>{
+    const s=JSON.stringify({entries:DB.entries});
+    try{await navigator.clipboard.writeText(s);toast('Copied to clipboard');}
+    catch(e){prompt('Copy this and keep it safe',s);}
+  };
+  $('#imp').onclick=()=>{
+    const s=prompt('Paste your saved data'); if(!s)return;
+    try{const o=JSON.parse(s); if(!Array.isArray(o.entries))throw 0;
+      const have=new Set(DB.entries.map(x=>x.id));
+      o.entries.forEach(x=>{if(!have.has(x.id))DB.entries.push(x)});
+      save();viewLog();toast('Data restored');
+    }catch(e){toast('That did not look like a backup');}
+  };
+}
+
+/* =========================================================
+   DRILL SHEET
+   ========================================================= */
+let run={};
+function openDrill(id){
+  const d=ALLDRILLS[id];
+  run={counters:{},carry:{},note:'',score:null,rngv:null};
+  (d.counters||[]).forEach(c=>run.counters[c.id]=c.start!==undefined?c.start:(c.min||0));
+  if(d.carry){const last=entriesFor(id).slice(-1)[0]; if(last&&last.carry)run.carry=Object.assign({},last.carry);}
+  drawSheet(d);
+}
+function closeSheet(){ if(sheet){sheet.remove();sheet=null;document.body.style.overflow='';} render(); }
+
+function carryKeys(){return[['50h','50° half'],['50t','50° ¾'],['54h','54° half'],['54t','54° ¾'],['58h','58° half'],['58t','58° ¾']];}
+function carryGap(){
+  const v=carryKeys().map(([k])=>Number(run.carry[k])).filter(n=>n>0).sort((a,b)=>a-b);
+  if(v.length<2)return null;
+  let g=0; for(let i=1;i<v.length;i++)g=Math.max(g,v[i]-v[i-1]);
+  return g;
+}
+
+function drawSheet(d){
+  if(sheet)sheet.remove();
+  sheet=document.createElement('div'); sheet.className='sheet';
+  const e=entriesFor(d.id), vals=e.map(x=>x.score);
+  let h=`<div class="sheet-head"><button class="back" id="bk">‹ Back</button>
+    <div style="flex:1;min-width:0"><div class="eyebrow">${d.areaName}</div><h2>${d.name}</h2></div></div>
+    <div class="sheet-body">
+    <div class="meta" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px">
+      <span class="tag ${d.mode}">${MODE[d.mode]}</span>
+      <span class="tag">${d.mins} min</span>
+      ${d.need.map(x=>`<span class="tag">${NEEDNAME[x]}</span>`).join('')}
+    </div>
+    <div style="font-size:16px;margin-bottom:16px">${d.purpose}</div>`;
+
+  if(vals.length)h+=`<div class="eyebrow" style="margin-bottom:6px">Your last scores · ${d.metric.label}</div>${strip(d,vals)}<div class="rule"></div>`;
+
+  h+=`<div class="eyebrow" style="margin-bottom:9px">Set up</div><ol class="steps">${d.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+    <div class="tipbox"><b>Tip.</b> ${d.tip}</div>`;
+
+  if(d.rng){
+    h+=`<div class="eyebrow" style="margin-bottom:8px">Draw a number</div>
+    <div class="card" style="padding:16px;text-align:center;margin-bottom:16px">
+      <div class="num" id="rngOut" style="font-size:52px;font-weight:600;line-height:1">${run.rngv||'--'}</div>
+      <div class="tiny" style="margin:2px 0 12px">yards</div>
+      <button class="btn" id="rngBtn">Draw next number</button></div>`;
+  }
+
+  if(d.carry){
+    h+=`<div class="eyebrow" style="margin-bottom:8px">Your carry numbers</div>
+    <table class="carry"><tr><th></th><th>Half</th><th>Three quarter</th></tr>`;
+    [['50','50°'],['54','54°'],['58','58°']].forEach(([k,n])=>{
+      h+=`<tr><td class="lbl">${n}</td>
+        <td><input type="number" inputmode="numeric" data-c="${k}h" value="${run.carry[k+'h']||''}" placeholder="–"></td>
+        <td><input type="number" inputmode="numeric" data-c="${k}t" value="${run.carry[k+'t']||''}" placeholder="–"></td></tr>`;
+    });
+    h+=`</table><div class="scorebox" id="gapOut" style="margin-bottom:16px"></div>`;
+  }
+
+  if((d.counters||[]).length){
+    h+=`<div class="eyebrow" style="margin-bottom:9px">Count as you go</div>`;
+    d.counters.forEach(c=>{
+      h+=`<div class="counter" data-cc="${c.id}">
+        <button class="cbtn" data-step="-1" aria-label="Less ${c.label}">−</button>
+        <span class="val num" data-v>${run.counters[c.id]}</span>
+        <button class="cbtn plus" data-step="1" aria-label="More ${c.label}">+</button>
+        <span class="cl"><span class="n">${c.label}</span><span class="m">${c.min!==undefined?'from '+c.min+' ':''}max ${c.max}</span></span>
+      </div>`;
+    });
+    if(d.id==='u1')h+=`<button class="btn flag" id="resetRow" style="margin-bottom:12px">Missed — reset the run to zero</button>`;
+    h+='<div class="rule"></div>';
+  }
+
+  h+=`<div class="eyebrow" style="margin-bottom:6px">How it is scored</div>
+    <div class="scorebox" style="margin-bottom:16px">${d.score}</div>
+    <div class="field"><label for="scoreIn">${d.metric.label}</label>
+      <input id="scoreIn" type="number" inputmode="numeric" placeholder="–" value="${run.score??''}"></div>
+    <div class="field"><label for="noteIn" style="flex:none">Note</label>
+      <input id="noteIn" type="text" placeholder="Optional — conditions, what you felt" value="${esc(run.note)}"></div>
+    <button class="btn" id="saveBtn">Save score</button>
+    <div class="tiny" style="text-align:center;margin-top:9px">Target: ${d.metric.low?'≤':'≥'} ${d.metric.target} ${d.metric.label.toLowerCase()}</div>
+    </div>`;
+
+  sheet.innerHTML=h;
+  document.body.appendChild(sheet);
+  document.body.style.overflow='hidden';
+  wireSheet(d);
+}
+
+function wireSheet(d){
+  sheet.querySelector('#bk').onclick=closeSheet;
+
+  sheet.querySelectorAll('[data-cc]').forEach(row=>{
+    const id=row.dataset.cc, c=d.counters.find(x=>x.id===id), out=row.querySelector('[data-v]');
+    row.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>{
+      const lo=c.min!==undefined?c.min:0;
+      let v=run.counters[id]+Number(b.dataset.step);
+      v=Math.max(lo,Math.min(c.max,v));
+      run.counters[id]=v; out.textContent=v;
+      if(d.from===id){const s=sheet.querySelector('#scoreIn'); s.value=v; run.score=v;}
+      if(navigator.vibrate)navigator.vibrate(8);
+    });
+  });
+
+  const rr=sheet.querySelector('#resetRow');
+  if(rr)rr.onclick=()=>{
+    run.counters.row=0;
+    const row=sheet.querySelector('[data-cc="row"] [data-v]'); if(row)row.textContent='0';
+    toast('Run reset. Attempts kept.');
+  };
+
+  const rb=sheet.querySelector('#rngBtn');
+  if(rb)rb.onclick=()=>{
+    run.rngv=25+Math.floor(Math.random()*51);
+    sheet.querySelector('#rngOut').textContent=run.rngv;
+    if(navigator.vibrate)navigator.vibrate(12);
+  };
+
+  if(d.carry){
+    const paint=()=>{
+      const g=carryGap(), box=sheet.querySelector('#gapOut');
+      if(g===null){box.textContent='Fill in at least two numbers and the largest gap appears here.';return;}
+      const ok=g<=d.metric.target;
+      box.innerHTML=`Largest gap: <b class="num" style="color:${ok?'var(--green)':'var(--flag)'}">${g} yards</b>. ${ok?'No holes in the set.':'Anything over '+d.metric.target+' yards is a distance you cannot cover comfortably.'}`;
+      sheet.querySelector('#scoreIn').value=g; run.score=g;
+    };
+    sheet.querySelectorAll('[data-c]').forEach(i=>i.oninput=()=>{run.carry[i.dataset.c]=i.value;paint();});
+    paint();
+  }
+
+  sheet.querySelector('#scoreIn').oninput=e=>run.score=e.target.value===''?null:Number(e.target.value);
+  sheet.querySelector('#noteIn').oninput=e=>run.note=e.target.value;
+
+  sheet.querySelector('#saveBtn').onclick=()=>{
+    const v=Number(sheet.querySelector('#scoreIn').value);
+    if(sheet.querySelector('#scoreIn').value===''||isNaN(v)){toast('Put a number in first');return;}
+    const rec={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),drill:d.id,score:v,note:run.note.trim(),ts:Date.now()};
+    if(d.carry)rec.carry=Object.assign({},run.carry);
+    DB.entries.push(rec); save();
+    toast(hitTarget(d,v)?'Saved. Target hit.':'Saved.');
+    setTimeout(closeSheet,500);
+  };
+}
+
+load();
+</script>
+</body>
+</html>

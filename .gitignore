@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Personal data and working files — kept local, not pushed
+Rounds - Golfshot.pdf
+files.zip
+* copy.*
