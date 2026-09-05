@@ -19,12 +19,27 @@ const RAMP = [
   'var(--color-g200)',
 ]
 
+/**
+ * How tuned the picture is — never a verdict on the golfer.
+ *
+ * "Low confidence" tested badly: read quickly, it lands as a comment on your
+ * ability rather than on how much data we have. These labels describe the
+ * picture sharpening as you use the app, which is what is actually happening.
+ */
+const CONFIDENCE_LABEL: Record<GameProfile['confidence'], string> = {
+  estimate: 'Starting point',
+  low: 'Tuning to you',
+  medium: 'Getting sharper',
+  good: 'Dialled in',
+}
+
 const CONFIDENCE_COPY: Record<GameProfile['confidence'], string> = {
   estimate:
-    'built from your answers plus data from golfers at your level. This sharpens fast once you log 5 rounds.',
-  low: 'a couple of rounds in. Keep logging and this tightens up.',
-  medium: 'based on the rounds you have logged so far.',
-  good: 'based on a solid run of logged rounds.',
+    'built from your answers and how golfers at your level usually score. Log a round and it starts tuning to you.',
+  low: 'now using your own rounds. The more you log, the more accurate this gets.',
+  medium:
+    'mostly built from your own rounds now. A few more and it is fully dialled in.',
+  good: 'built from a solid run of your own rounds — this is your game, not an average.',
 }
 
 export function GameProfileCard({
@@ -44,8 +59,6 @@ export function GameProfileCard({
     shots !== null
       ? Math.max(8, (shots / maxShots) * 100)
       : [100, 74, 55, 38][i] ?? 30
-
-  const isEstimate = profile.confidence === 'estimate'
 
   return (
     <div className="rounded-2xl border border-line bg-card p-4">
@@ -83,9 +96,16 @@ export function GameProfileCard({
       <p className="mt-3 text-xs leading-relaxed text-ink-mute">
         <span
           className="font-semibold"
-          style={{ color: isEstimate ? 'var(--color-warn)' : 'var(--color-good)' }}
+          style={{
+            // No amber: a "warning" colour reinforces the idea that something
+            // is wrong with the golfer rather than simply early in the data.
+            color:
+              profile.confidence === 'good'
+                ? 'var(--color-good)'
+                : 'var(--color-accent)',
+          }}
         >
-          {isEstimate ? 'Estimate' : `${cap(profile.confidence)} confidence`}
+          {CONFIDENCE_LABEL[profile.confidence]}
         </span>{' '}
         — {CONFIDENCE_COPY[profile.confidence]}
       </p>
@@ -93,4 +113,3 @@ export function GameProfileCard({
   )
 }
 
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
