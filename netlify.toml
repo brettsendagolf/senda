@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Senda is a single-page app: React Router owns /practice, /progress and the
+# rest, and those paths do not exist as files. Without this, opening or
+# refreshing anything other than "/" returns a 404 from the host.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
