@@ -86,7 +86,7 @@ export function WarmupRunner() {
         <button
           type="button"
           onClick={() => (isLast ? navigate('/') : setIndex(index + 1))}
-          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
+          className="h-14 w-full rounded-xl bg-btn text-lg font-semibold text-on-btn active:opacity-90"
         >
           {isLast ? 'Done — to the first tee' : 'Next block'}
         </button>

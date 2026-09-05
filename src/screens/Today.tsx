@@ -266,7 +266,7 @@ export function Today() {
           type="button"
           onClick={onBuild}
           disabled={!venueId}
-          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90 disabled:opacity-40"
+          className="h-14 w-full rounded-xl bg-btn text-lg font-semibold text-on-btn active:opacity-90 disabled:opacity-40"
         >
           Build my session
         </button>
@@ -425,7 +425,7 @@ function WarmupPanel() {
             state: { warmupId, addonIds: [...addons] },
           })
         }
-        className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
+        className="h-14 w-full rounded-xl bg-btn text-lg font-semibold text-on-btn active:opacity-90"
       >
         Start warm-up
       </button>

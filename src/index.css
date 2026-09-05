@@ -23,8 +23,16 @@
   --color-accent-soft: #e6f0eb;
   --color-on-accent: #ffffff; /* ink on a Fairway fill */
 
-  /* Signal — progress + completion only */
-  --color-signal: #c9f24c;
+  /* The primary action. A token, not the brand colour directly — dark mode
+     hands this to bone, and every CTA follows without being touched. */
+  --color-btn: #0b5c42;
+  --color-on-btn: #ffffff;
+  --color-bone: #efe6d2;
+  --color-bone-press: #dcd2bb;
+
+  /* Moment — completion and promotion only. Never routine progress. */
+  --color-moment: #c9f24c;
+  --color-on-moment: #0d1a15;
 
   /* Status — always paired with an icon/label */
   --color-good: #146b3a;
@@ -53,65 +61,85 @@
   --color-course: #5b5750;
 }
 
-/* Dark — stepped for the dark surface (Master Brief §5.3). */
+/*
+  Dark — "Forest & Bone" (Design-Tokens.md §3, which supersedes Master Brief
+  §5.3). Green is the ground and bone is the action, which is the inverse of
+  the competitor this was audited against. Three rules are load-bearing:
+  green is never the primary button, never the third chart series, and the
+  moment colour differs by theme — lime in light, bone in dark.
+*/
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-paper: #0b1310;
-    --color-card: #141c19;
-    --color-sunken: #1e2a25;
-    --color-ink: #f2f5f3;
-    --color-ink-soft: #a7b5ae;
-    --color-ink-mute: #7c8a84;
-    --color-line: #26332d;
-    --color-accent: #35b084;
-    --color-accent-press: #2a8e6a;
-    --color-accent-soft: #16241e;
-    --color-on-accent: #08221a;
-    --color-signal: #c9f24c;
-    --color-good: #3fbf6e;
-    --color-warn: #e0a32e;
-    --color-crit: #ff6b60;
-    --color-g100: #16241e;
-    --color-g200: #1d3229;
-    --color-g300: #2a5342;
-    --color-g400: #2e7d5d;
-    --color-g500: #2c9a72;
-    --color-g600: #35b084;
-    --color-g700: #5fc9a2;
+    --color-paper: #0e1f19;
+    --color-card: #1c332a;
+    --color-sunken: #274134;
+    --color-ink: #f0f6f1;
+    --color-ink-soft: #aec2b4;
+    --color-ink-mute: #7e9488;
+    --color-line: #33513f;
+    /* Green is a FILL colour in dark mode. Never the primary button (rule 1),
+       never the third chart series (rule 2). Both read as generic. */
+    --color-accent: #58b98c;
+    --color-accent-press: #4aa87d;
+    --color-accent-soft: #274134;
+    --color-on-accent: #0e1f19;
+    --color-btn: #efe6d2;
+    --color-on-btn: #0e1f19;
+    --color-bone: #efe6d2;
+    --color-bone-press: #dcd2bb;
+    --color-moment: #efe6d2;
+    --color-on-moment: #0e1f19;
+    --color-good: #6fd3a2;
+    --color-warn: #e8b44f;
+    --color-crit: #ff8a7e;
+    --color-g100: #2b4a3b;
+    --color-g200: #356551;
+    --color-g300: #3f8168;
+    --color-g400: #4a9e7e;
+    --color-g500: #58b98c;
+    --color-g600: #7acfa6;
+    --color-g700: #a3e2c4;
     --color-s1: #3987e5;
     --color-s2: #d95926;
-    --color-s3: #199e70;
+    --color-s3: #e0d6be;
     color-scheme: dark;
   }
 }
 
 /* Explicit toggle wins over the OS preference in both directions. */
 :root[data-theme='dark'] {
-  --color-paper: #0b1310;
-  --color-card: #141c19;
-  --color-sunken: #1e2a25;
-  --color-ink: #f2f5f3;
-  --color-ink-soft: #a7b5ae;
-  --color-ink-mute: #7c8a84;
-  --color-line: #26332d;
-  --color-accent: #35b084;
-  --color-accent-press: #2a8e6a;
-  --color-accent-soft: #16241e;
-  --color-on-accent: #08221a;
-  --color-signal: #c9f24c;
-  --color-good: #3fbf6e;
-  --color-warn: #e0a32e;
-  --color-crit: #ff6b60;
-  --color-g100: #16241e;
-  --color-g200: #1d3229;
-  --color-g300: #2a5342;
-  --color-g400: #2e7d5d;
-  --color-g500: #2c9a72;
-  --color-g600: #35b084;
-  --color-g700: #5fc9a2;
+  --color-paper: #0e1f19;
+  --color-card: #1c332a;
+  --color-sunken: #274134;
+  --color-ink: #f0f6f1;
+  --color-ink-soft: #aec2b4;
+  --color-ink-mute: #7e9488;
+  --color-line: #33513f;
+  /* Green is a FILL colour in dark mode. Never the primary button (rule 1),
+     never the third chart series (rule 2). Both read as generic. */
+  --color-accent: #58b98c;
+  --color-accent-press: #4aa87d;
+  --color-accent-soft: #274134;
+  --color-on-accent: #0e1f19;
+  --color-btn: #efe6d2;
+  --color-on-btn: #0e1f19;
+  --color-bone: #efe6d2;
+  --color-bone-press: #dcd2bb;
+  --color-moment: #efe6d2;
+  --color-on-moment: #0e1f19;
+  --color-good: #6fd3a2;
+  --color-warn: #e8b44f;
+  --color-crit: #ff8a7e;
+  --color-g100: #2b4a3b;
+  --color-g200: #356551;
+  --color-g300: #3f8168;
+  --color-g400: #4a9e7e;
+  --color-g500: #58b98c;
+  --color-g600: #7acfa6;
+  --color-g700: #a3e2c4;
   --color-s1: #3987e5;
   --color-s2: #d95926;
-  --color-s3: #199e70;
+  --color-s3: #e0d6be;
   color-scheme: dark;
 }
 

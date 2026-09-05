@@ -139,7 +139,7 @@ export function DrillDetailScreen() {
                 type="button"
                 onClick={onSave}
                 disabled={value === undefined}
-                className="h-12 flex-1 rounded-xl bg-accent font-semibold text-on-accent active:opacity-90 disabled:opacity-40"
+                className="h-12 flex-1 rounded-xl bg-btn font-semibold text-on-btn active:opacity-90 disabled:opacity-40"
               >
                 Save score
               </button>

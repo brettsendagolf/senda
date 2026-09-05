@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Senda Marker Calibrator</title>
+<style>
+:root{
+  --bg-page:#F5F3EE; --bg-card:#FFFFFF; --bg-sunken:#EDEAE2;
+  --ink-1:#0D1A15; --ink-2:#4C5C55; --ink-3:#7C8A84; --line:#E3E0D8;
+  --brand:#0B5C42; --brand-press:#08402E; --brand-tint:#E6F0EB;
+  --signal:#C9F24C; --good:#146B3A; --warn:#8A5A00; --crit:#B3261E;
+  --shadow:0 1px 2px rgba(13,26,21,.05);
+}
+[data-theme="dark"]{
+  --bg-page:#0B1310; --bg-card:#141C19; --bg-sunken:#1E2A25;
+  --ink-1:#F2F5F3; --ink-2:#A7B5AE; --ink-3:#7C8A84; --line:#26332D;
+  --brand:#35B084; --brand-press:#2A8E6A; --brand-tint:#16241E;
+  --signal:#C9F24C; --good:#3FBF6E; --warn:#E0A32E; --crit:#FF6B60;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg-page);color:var(--ink-1);
+ font:400 16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:30px 20px 70px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:8px}
+.mark{display:flex;gap:12px;align-items:center}
+.logo{width:44px;height:44px;border-radius:12px;background:var(--brand);display:grid;place-items:center;flex:none}
+h1{margin:0;font-size:27px;font-weight:700;letter-spacing:-.02em}
+.sub{margin:2px 0 0;color:var(--ink-2);font-size:14px}
+.tbtn{border:1px solid var(--line);background:var(--bg-card);color:var(--ink-1);
+ border-radius:999px;padding:9px 16px;font:600 13px/1 system-ui,sans-serif;cursor:pointer}
+.tbtn:hover{border-color:var(--brand)}
+.lede{max-width:70ch;color:var(--ink-2);font-size:15px;margin:18px 0 26px}
+.lede b{color:var(--ink-1)}
+.card{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:18px}
+.eyebrow{font:500 11px/1 system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font:500 10px/1.2 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--ink-3);padding:0 8px 10px;vertical-align:bottom}
+td{padding:9px 8px;border-top:1px solid var(--line);vertical-align:middle}
+.tname{font-weight:600;white-space:nowrap}
+.tname small{display:block;font-weight:500;color:var(--ink-3);font-size:12px;letter-spacing:0;text-transform:none}
+input[type=number]{width:74px;padding:9px 10px;border:1.5px solid var(--line);border-radius:10px;
+ background:var(--bg-page);color:var(--ink-1);font:600 15px/1 system-ui,sans-serif;
+ font-variant-numeric:tabular-nums;text-align:center}
+input[type=number]:focus{outline:none;border-color:var(--brand);background:var(--bg-card)}
+input.anchor{border-color:var(--brand);background:var(--brand-tint)}
+.dir{font:600 11px/1 system-ui,sans-serif;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
+.scroller{overflow-x:auto}
+table.out{min-width:640px}
+table.out td.v{text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+table.out th.m{text-align:center}
+table.out th.m span{display:block;font:700 13px/1.3 system-ui,sans-serif;letter-spacing:-.01em;
+ text-transform:none;color:var(--ink-1);margin-bottom:2px}
+td.anchorcell{background:var(--brand-tint);color:var(--brand);border-radius:8px}
+th.anchorcol span{color:var(--brand)}
+.row{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end;margin-bottom:4px}
+.field label{display:block;font:500 11px/1 system-ui,sans-serif;letter-spacing:.08em;
+ text-transform:uppercase;color:var(--ink-3);margin-bottom:7px}
+.note{font-size:13px;color:var(--ink-3);line-height:1.55;margin:12px 0 0}
+.warn{display:flex;gap:10px;align-items:flex-start;background:var(--bg-sunken);border-left:3px solid var(--warn);
+ border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+.warn.bad{border-left-color:var(--crit)}
+.warn.ok{border-left-color:var(--good)}
+.warn b{color:var(--ink-1)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn{border:0;border-radius:11px;background:var(--brand);color:#fff;
+ font:600 14px/1 system-ui,sans-serif;padding:13px 18px;cursor:pointer}
+[data-theme="dark"] .btn{color:#08221A}
+.btn:active{background:var(--brand-press)}
+.btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--line)}
+pre{background:var(--bg-sunken);border:1px solid var(--line);border-radius:12px;padding:15px;
+ overflow-x:auto;font:400 12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
+ color:var(--ink-1);margin:14px 0 0;max-height:340px;white-space:pre}
+pre[hidden]{display:none}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12.5px;color:var(--ink-3)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;background:var(--brand);margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="mark">
+    <div class="logo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none">
+      <path d="M5.5 21C5.5 16 10 15 12 12S15 5.5 18.5 3.5" stroke="#C9F24C" stroke-width="2" stroke-linecap="round" stroke-dasharray="0.1 3.6" opacity=".55"/>
+      <circle cx="5.6" cy="20.6" r="2.1" fill="#C9F24C" opacity=".5"/>
+      <circle cx="11.6" cy="12.6" r="2.4" fill="#C9F24C" opacity=".75"/>
+      <circle cx="18.5" cy="3.9" r="2.8" fill="#C9F24C"/></svg></div>
+    <div><h1>Marker Calibrator</h1><p class="sub">Senda · set the seven Marker bars from your own test scores</p></div>
+  </div>
+  <button class="tbtn" id="theme">Dark mode</button>
+</header>
+
+<p class="lede">Run all six tests once, properly. Put <b>your</b> score in the green column — you play off 9, so that
+score becomes the <b>Marker 5</b> bar. Set the beginner floor to what you think someone in their first session
+manages. Everything else derives from those two points, and you can overwrite any of it.</p>
+
+<div class="card">
+  <div class="eyebrow">Your inputs</div>
+  <div class="scroller">
+  <table id="inputs">
+    <thead><tr>
+      <th style="width:34%">Test</th><th>Direction</th>
+      <th>Beginner floor<br><span style="text-transform:none;letter-spacing:0;font-weight:400">Marker 1</span></th>
+      <th style="color:var(--brand)">Your score<br><span style="text-transform:none;letter-spacing:0;font-weight:400">Marker 5 anchor</span></th>
+      <th>Reference</th>
+    </tr></thead>
+    <tbody></tbody>
+  </table>
+  </div>
+  <div class="row" style="margin-top:20px">
+    <div class="field">
+      <label>Top-end multiplier</label>
+      <input type="number" id="mult" value="1.35" step="0.05" min="1" max="2.5">
+    </div>
+    <p class="note" style="flex:1;min-width:260px;margin:0">How much harder each step gets above your anchor.
+      1.0 means evenly spaced all the way up; 1.35 means the top two rungs are about a third harder to win than
+      the bottom ones. This is the one judgement call in the whole model.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="eyebrow">The Marker bars</div>
+  <div class="scroller">
+    <table class="out" id="out"><thead></thead><tbody></tbody></table>
+  </div>
+  <div class="legend"><span><i></i>Marker 5 — your anchor</span><span>Bars are the score you must clear <b>twice in your last five attempts</b></span></div>
+  <div id="warnings"></div>
+</div>
+
+<div class="card">
+  <div class="eyebrow">Export</div>
+  <div class="btns">
+    <button class="btn" data-fmt="md">Markdown table</button>
+    <button class="btn ghost" data-fmt="json">JSON for the app</button>
+    <button class="btn ghost" data-fmt="ts">TypeScript constant</button>
+    <button class="btn ghost" id="hide">Hide</button>
+  </div>
+  <pre id="output" hidden></pre>
+  <p class="note">Select the text and copy. Paste the Markdown straight back into
+    <code>Skills-Tests-and-Markers.md</code> §5.3, or hand the JSON to a coding session.</p>
+</div>
+
+</div>
+<script>
+const TESTS = [
+  { id:'putting_ladder', name:'Putting Ladder', unit:'/18',  max:18, dir:'high', floor:3,  anchor:10,
+    ref:'Expected: 12.0 at scratch, 8.1 at 20 hcp' },
+  { id:'par18',          name:'Par 18',        unit:'strokes', max:30, dir:'low',  floor:30, anchor:23,
+    ref:'22 or better beats scratch standard', hardFloor:19 },
+  { id:'three_flags',    name:'Three Flags',   unit:'/45',  max:45, dir:'high', floor:5,  anchor:22,
+    ref:'No data — pure guess until you run it' },
+  { id:'ten_fairways',   name:'Ten Fairways',  unit:'/20',  max:20, dir:'high', floor:4,  anchor:12,
+    ref:'Expected: 15.1 at scratch, 10.9 at 20 hcp' },
+  { id:'iron_ladder',    name:'Iron Ladder',   unit:'/45',  max:45, dir:'high', floor:4,  anchor:22,
+    ref:'18 hcp averages 27.5 yds from 180' },
+  { id:'the_nine',       name:'The Nine',      unit:'/27',  max:27, dir:'high', floor:2,  anchor:12,
+    ref:'No data — pure guess until you run it' },
+];
+const MARKERS = [
+  {n:1,name:'Setting Out'},{n:2,name:'Finding Your Feet'},{n:3,name:'Making Ground'},
+  {n:4,name:'Steady Going'},{n:5,name:'Climbing'},{n:6,name:'High Ground'},{n:7,name:'Summit'}
+];
+
+function computeRow(t, mult){
+  const F = t.floor, B = t.anchor;
+  const high = t.dir === 'high';
+  const stepLow  = (high ? (B - F) : (F - B)) / 4;
+  const stepHigh = stepLow * mult;
+  let raw = high
+    ? [F, F+stepLow, F+2*stepLow, F+3*stepLow, B, B+stepHigh, B+2*stepHigh]
+    : [F, F-stepLow, F-2*stepLow, F-3*stepLow, B, B-stepHigh, B-2*stepHigh];
+  let v = raw.map(x => Math.round(x));
+  const ceil  = high ? t.max - 1 : null;
+  const bottom = high ? null : (t.hardFloor || 1);
+  let forced = false, collided = false;
+  for (let i = 1; i < 7; i++){
+    if (high){
+      if (v[i] <= v[i-1]) { v[i] = v[i-1] + 1; forced = true; }
+      if (v[i] > ceil)    { v[i] = ceil; }
+    } else {
+      if (v[i] >= v[i-1]) { v[i] = v[i-1] - 1; forced = true; }
+      if (v[i] < bottom)  { v[i] = bottom; }
+    }
+    if (v[i] === v[i-1]) collided = true;   // the cap actually flattened two Markers
+  }
+  return { values:v, stepLow, forced, collided, invalid: stepLow <= 0 };
+}
+
+function render(){
+  const mult = parseFloat(document.getElementById('mult').value) || 1.35;
+  const oh = document.querySelector('#out thead'), ob = document.querySelector('#out tbody');
+  oh.innerHTML = '<tr><th style="width:23%">Test</th>' + MARKERS.map(m =>
+    `<th class="m${m.n===5?' anchorcol':''}"><span>${m.n}</span>${m.name}</th>`).join('') + '</tr>';
+  ob.innerHTML = '';
+  const warns = [];
+  window.__rows = {};
+  TESTS.forEach(t => {
+    const r = computeRow(t, mult);
+    window.__rows[t.id] = r.values;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="tname">${t.name}<small>${t.unit} · ${t.dir==='high'?'higher better':'lower better'}</small></td>`
+      + r.values.map((x,i) => `<td class="v${i===4?' anchorcell':''}">${x}</td>`).join('');
+    ob.appendChild(tr);
+    if (r.invalid) warns.push({cls:'bad', html:`<b>${t.name}:</b> your score and the beginner floor are the wrong way round for a ${t.dir==='high'?'higher':'lower'}-is-better test. Nothing below that row means anything until it's fixed.`});
+    else {
+      if (r.collided) warns.push({cls:'', html:`<b>${t.name}:</b> two Markers have collapsed onto the same score because the bars ran into the test's ceiling. Lower the multiplier, or lower your anchor — as it stands two Markers are indistinguishable.`});
+      if (r.forced) warns.push({cls:'', html:`<b>${t.name}:</b> bars are landing within a point of each other, so I've forced them apart. The spacing is tighter than the test can reliably measure — consider a lower beginner floor.`});
+      if (r.stepLow < 1.2) warns.push({cls:'', html:`<b>${t.name}:</b> steps of ${r.stepLow.toFixed(1)} are inside this test's single-run noise. Promotions here will feel arbitrary. Widen the range between floor and anchor.`});
+    }
+  });
+  const wEl = document.getElementById('warnings');
+  wEl.innerHTML = warns.length
+    ? warns.map(w => `<div class="warn ${w.cls}">${w.html}</div>`).join('')
+    : `<div class="warn ok"><b>Spacing looks sound.</b> Every bar is far enough from its neighbour to survive the noise in a single run, and nothing is bumping the ceiling.</div>`;
+}
+
+function buildInputs(){
+  const tb = document.querySelector('#inputs tbody');
+  TESTS.forEach((t, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="tname">${t.name}<small>${t.unit}</small></td>
+      <td class="dir">${t.dir==='high'?'▲ high':'▼ low'}</td>
+      <td><input type="number" data-i="${i}" data-k="floor"  value="${t.floor}"></td>
+      <td><input type="number" data-i="${i}" data-k="anchor" value="${t.anchor}" class="anchor"></td>
+      <td style="color:var(--ink-3);font-size:13px">${t.ref}</td>`;
+    tb.appendChild(tr);
+  });
+  tb.addEventListener('input', e => {
+    const el = e.target; if (el.tagName !== 'INPUT') return;
+    TESTS[+el.dataset.i][el.dataset.k] = parseFloat(el.value);
+    render();
+  });
+}
+
+function exportAs(fmt){
+  const rows = window.__rows;
+  if (fmt === 'md'){
+    let s = '| Test | Dir | ' + MARKERS.map(m=>'M'+m.n).join(' | ') + ' |\n';
+    s += '|---|---|' + MARKERS.map(()=>'---').join('|') + '|\n';
+    TESTS.forEach(t => {
+      s += `| **${t.name}** ${t.unit} | ${t.dir} | ` + rows[t.id].map((v,i)=> i===4?`**${v}**`:v).join(' | ') + ' |\n';
+    });
+    return s;
+  }
+  const obj = {
+    version: 1,
+    calibratedFrom: 'Brett, 9 handicap — Marker 5 anchor',
+    calibratedAt: new Date().toISOString().slice(0,10),
+    multiplier: parseFloat(document.getElementById('mult').value),
+    markers: MARKERS,
+    tests: TESTS.map(t => ({
+      id: t.id, name: t.name, unit: t.unit, direction: t.dir, max: t.max,
+      bars: Object.fromEntries(rows[t.id].map((v,i) => ['m'+(i+1), v]))
+    }))
+  };
+  if (fmt === 'json') return JSON.stringify(obj, null, 2);
+  return 'export const MARKER_BARS = ' + JSON.stringify(obj, null, 2) + ' as const;';
+}
+
+document.querySelectorAll('[data-fmt]').forEach(b => b.onclick = () => {
+  const pre = document.getElementById('output');
+  pre.textContent = exportAs(b.dataset.fmt);
+  pre.hidden = false;
+  pre.scrollIntoView({behavior:'smooth', block:'nearest'});
+});
+document.getElementById('hide').onclick = () => { document.getElementById('output').hidden = true; };
+document.getElementById('mult').addEventListener('input', render);
+document.getElementById('theme').onclick = function(){
+  const d = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', d ? 'light' : 'dark');
+  this.textContent = d ? 'Dark mode' : 'Light mode';
+};
+buildInputs(); render();
+</script>
+</body>
+</html>

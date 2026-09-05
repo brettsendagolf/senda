@@ -152,7 +152,7 @@ export function Onboarding() {
           type="button"
           onClick={() => (current === 'reveal' ? finish() : setStep(step + 1))}
           disabled={current === 'where' && !experience}
-          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90 disabled:opacity-40"
+          className="h-14 w-full rounded-xl bg-btn text-lg font-semibold text-on-btn active:opacity-90 disabled:opacity-40"
         >
           {current === 'reveal'
             ? isRetake
@@ -447,7 +447,7 @@ function StepAccount({ onDone }: { onDone: () => void }) {
           <button
             type="button"
             onClick={onDone}
-            className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90"
+            className="h-14 w-full rounded-xl bg-btn text-lg font-semibold text-on-btn active:opacity-90"
           >
             Continue
           </button>
@@ -514,7 +514,7 @@ function StepAccount({ onDone }: { onDone: () => void }) {
           type="button"
           onClick={submit}
           disabled={!canSubmit}
-          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90 disabled:opacity-40"
+          className="h-14 w-full rounded-xl bg-btn text-lg font-semibold text-on-btn active:opacity-90 disabled:opacity-40"
         >
           {busy ? 'One moment…' : mode === 'signup' ? 'Create account' : 'Sign in'}
         </button>

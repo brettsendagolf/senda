@@ -328,7 +328,7 @@ function AddVenue() {
           type="button"
           onClick={save}
           disabled={!name.trim() || caps.length === 0}
-          className="h-11 flex-1 rounded-lg bg-accent text-sm font-semibold text-on-accent disabled:opacity-40"
+          className="h-11 flex-1 rounded-lg bg-btn text-sm font-semibold text-on-btn disabled:opacity-40"
         >
           Add
         </button>
