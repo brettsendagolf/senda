@@ -12,11 +12,13 @@ import {
 } from '@/lib/onboarding'
 import { STARTER_DRILLS } from '@/data/drills'
 import { venuesFromFacilities } from '@/data/venues'
+import { isAuthConfigured } from '@/lib/supabase'
+import { useAuth } from '@/store/auth'
 import { useProfile } from '@/store/profile'
 import { useVenues } from '@/store/venues'
 import { useSettings } from '@/store/settings'
 
-type StepKey = 'where' | 'handicap' | 'assess' | 'reveal'
+type StepKey = 'where' | 'handicap' | 'assess' | 'account' | 'reveal'
 
 /**
  * First run. The flow adapts to the answer on screen one:
@@ -33,6 +35,7 @@ export function Onboarding() {
   const existing = useProfile((s) => s.onboarding)
   const setHandicap = useSettings((s) => s.setHandicap)
   const replaceVenues = useVenues((s) => s.replaceAll)
+  const signedIn = useAuth((s) => s.user !== null)
 
   // Re-taking from Profile: start from the previous answers and go back there.
   const isRetake = existing !== null
@@ -63,11 +66,17 @@ export function Onboarding() {
   const profile = useMemo(() => profileFromOnboarding(draft), [draft])
 
   const steps = useMemo<StepKey[]>(() => {
-    if (experience === 'never') return ['where', 'reveal']
-    if (experience === 'handicap')
-      return ['where', 'handicap', 'assess', 'reveal']
-    return ['where', 'assess', 'reveal']
-  }, [experience])
+    const base: StepKey[] =
+      experience === 'never'
+        ? ['where']
+        : experience === 'handicap'
+          ? ['where', 'handicap', 'assess']
+          : ['where', 'assess']
+    // Account comes after the assessment and before the Game Profile — but
+    // only when accounts are switched on and they aren't already signed in.
+    const account: StepKey[] = isAuthConfigured && !signedIn ? ['account'] : []
+    return [...base, ...account, 'reveal']
+  }, [experience, signedIn])
 
   // Experience can only be changed on the first screen, so the index stays
   // valid; the clamp is belt and braces.
@@ -124,6 +133,7 @@ export function Onboarding() {
             onToggleFacility={(k) => setFacilities((f) => toggleFacility(f, k))}
           />
         )}
+        {current === 'account' && <StepAccount onDone={() => setStep(step + 1)} />}
         {current === 'reveal' && (
           <StepReveal
             profile={profile}
@@ -137,6 +147,7 @@ export function Onboarding() {
         className="shrink-0 border-t border-line px-5 pt-3"
         style={{ paddingBottom: 'calc(var(--safe-bottom) + 0.75rem)' }}
       >
+        {current !== 'account' && (
         <button
           type="button"
           onClick={() => (current === 'reveal' ? finish() : setStep(step + 1))}
@@ -153,6 +164,7 @@ export function Onboarding() {
                 ? 'Show me where to start'
                 : 'Continue'}
         </button>
+        )}
         {current === 'where' && (
           <p className="mt-2 text-center text-xs text-ink-mute">
             No account needed yet.
@@ -378,6 +390,113 @@ function StepAssess({
             })}
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Create an account (or sign in) so progress survives a lost phone and can
+ * follow you between devices. Deliberately skippable: the Master Brief is
+ * clear that onboarding's job is to produce a plan, not to gate one.
+ */
+function StepAccount({ onDone }: { onDone: () => void }) {
+  const signUp = useAuth((s) => s.signUp)
+  const signIn = useAuth((s) => s.signIn)
+  const [mode, setMode] = useState<'signup' | 'signin'>('signup')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | undefined>()
+
+  const submit = async () => {
+    setBusy(true)
+    setError(undefined)
+    const res = mode === 'signup'
+      ? await signUp(email.trim(), password)
+      : await signIn(email.trim(), password)
+    setBusy(false)
+    if (res.ok) onDone()
+    else setError(res.message)
+  }
+
+  const canSubmit = email.includes('@') && password.length >= 6 && !busy
+
+  return (
+    <div>
+      <h1 className="text-3xl font-bold tracking-tight text-ink">
+        {mode === 'signup' ? 'Save your progress' : 'Welcome back'}
+      </h1>
+      <p className="mt-1.5 text-ink-soft">
+        {mode === 'signup'
+          ? 'An account keeps your rounds and scores safe, and lets you pick up on your phone where you left off on your laptop.'
+          : 'Sign in and we\'ll pull your rounds and scores back down.'}
+      </p>
+
+      <div className="mt-5 space-y-3">
+        <div>
+          <label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            className="mt-1.5 h-12 w-full rounded-xl border border-line bg-card px-3 text-ink"
+          />
+        </div>
+        <div>
+          <label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="At least 6 characters"
+            className="mt-1.5 h-12 w-full rounded-xl border border-line bg-card px-3 text-ink"
+          />
+        </div>
+
+        {error && (
+          <p className="rounded-xl border border-line bg-card px-3 py-2 text-sm text-crit">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="button"
+          onClick={submit}
+          disabled={!canSubmit}
+          className="h-14 w-full rounded-xl bg-accent text-lg font-semibold text-on-accent active:opacity-90 disabled:opacity-40"
+        >
+          {busy ? 'One moment…' : mode === 'signup' ? 'Create account' : 'Sign in'}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => { setMode(mode === 'signup' ? 'signin' : 'signup'); setError(undefined) }}
+          className="h-11 w-full text-sm font-medium text-accent"
+        >
+          {mode === 'signup' ? 'I already have an account' : 'Create an account instead'}
+        </button>
+
+        <button
+          type="button"
+          onClick={onDone}
+          className="h-11 w-full text-sm font-medium text-ink-soft"
+        >
+          Skip for now
+        </button>
+        <p className="text-center text-xs leading-relaxed text-ink-mute">
+          You can practise without an account — everything stays on this device
+          until you make one.
+        </p>
       </div>
     </div>
   )

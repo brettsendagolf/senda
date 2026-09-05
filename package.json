@@ -13,6 +13,7 @@
     "coverage": "vitest run src/lib/coverage.report.test.ts --disableConsoleIntercept"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.115.0",
     "idb-keyval": "^6.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

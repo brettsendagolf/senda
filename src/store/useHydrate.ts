@@ -4,6 +4,7 @@ import { useVenues } from './venues'
 import { useEntries } from './entries'
 import { useSession } from './session'
 import { useProfile } from './profile'
+import { useAuth } from './auth'
 
 /** If storage is blocked or wedged, don't hold the app hostage. */
 const HYDRATE_TIMEOUT_MS = 4000
@@ -36,6 +37,7 @@ export function useHydrate(): boolean {
       useEntries.getState().hydrate(),
       useSession.getState().hydrate(),
       useProfile.getState().hydrate(),
+      useAuth.getState().init(),
     ])
       .catch((err) => {
         console.error('Hydration failed, starting with defaults:', err)

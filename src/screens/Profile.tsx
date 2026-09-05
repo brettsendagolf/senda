@@ -6,6 +6,8 @@ import { bandForHandicap } from '@/lib/handicap'
 import { useGameProfile, useProfile } from '@/store/profile'
 import { useSettings } from '@/store/settings'
 import { useEntries } from '@/store/entries'
+import { useAuth } from '@/store/auth'
+import { isAuthConfigured } from '@/lib/supabase'
 
 /**
  * Profile — the hub for everything that isn't "what do I do next" or "practise
@@ -19,6 +21,8 @@ export function Profile() {
   const roundCount = useProfile((s) => s.rounds.length)
   const handicap = useSettings((s) => s.handicap)
   const entryCount = useEntries((s) => s.entries.length)
+  const authUser = useAuth((s) => s.user)
+  const signOut = useAuth((s) => s.signOut)
 
   const experienceLabel = onboarding
     ? EXPERIENCE_OPTIONS.find((o) => o.value === onboarding.experience)?.label
@@ -92,6 +96,25 @@ export function Profile() {
           />
         </Group>
 
+        {isAuthConfigured && (
+          <Group>
+            {authUser ? (
+              <Row
+                label="Signed in"
+                hint={authUser.email ?? undefined}
+                onClick={() => void signOut()}
+                action="Sign out"
+              />
+            ) : (
+              <Row
+                label="Create an account"
+                hint="Keep your progress safe and sync across devices"
+                onClick={() => navigate('/onboarding')}
+              />
+            )}
+          </Group>
+        )}
+
         <Group>
           <Row
             label="About you"
@@ -130,10 +153,12 @@ function Row({
   label,
   hint,
   onClick,
+  action,
 }: {
   label: string
   hint?: string
   onClick: () => void
+  action?: string
 }) {
   return (
     <button
@@ -145,7 +170,9 @@ function Row({
         <div className="font-medium text-ink">{label}</div>
         {hint && <div className="mt-0.5 text-[13px] text-ink-mute">{hint}</div>}
       </div>
-      <span className="shrink-0 text-ink-mute">›</span>
+      <span className="shrink-0 text-sm font-medium text-ink-mute">
+        {action ?? '›'}
+      </span>
     </button>
   )
 }
